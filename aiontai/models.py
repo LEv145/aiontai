@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, NewType
 from enum import Enum
 from dataclasses import dataclass
 
@@ -36,9 +36,10 @@ class Tag:
     url: str
 
 
-Cover = Image
-Thumbnail = Image
-Page = Image
+Cover = NewType("Cover", Image)
+Thumbnail = NewType("Thumbnail", Image)
+Page = NewType("Thumbnail", Image)
+Datetime = NewType("Datetime", datetime)
 
 
 @dataclass
@@ -58,4 +59,4 @@ class Doujin:
     pages: List[Page]
     tags: List[Tag]
     favorites: int
-    upload_date: datetime
+    upload_date: Datetime
