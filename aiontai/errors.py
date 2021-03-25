@@ -1,0 +1,2 @@
+class IsNotValidStructure(Exception):
+    pass
