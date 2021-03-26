@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Dict, Any, NewType, Optional
+from typing import List, NewType
 from enum import Enum
 from dataclasses import dataclass
 
@@ -22,7 +22,7 @@ class TagType(Enum):
 
 @dataclass
 class Image:
-    weight: int
+    width: int
     height: int
     type: ImageType
 
