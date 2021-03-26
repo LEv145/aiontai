@@ -10,7 +10,7 @@ from . import utils
 Datetime = datetime
 
 
-class ImageExtenstion(Enum):
+class ImageExtension(Enum):
     jpg = "j"
     png = "p"
     gif = "g"
@@ -32,22 +32,22 @@ class Image:
     media_id: int
     width: int
     height: int
-    extenstion: ImageExtenstion
+    extension: ImageExtension
 
     @classmethod
     def from_json(cls, json: dict) -> Optional["Image"]:
         if utils.is_valid_structure(config.image_structure, json):
             name = json["name"]
             media_id = json["media_id"]
-            width = json["w"]
-            height = json["h"]
-            extenstion = ImageExtenstion(json["t"])
+            width = json["width"]
+            height = json["height"]
+            extension = ImageExtension(json["extension"])
 
-            return cls(name, media_id, width, height, extenstion)
+            return cls(name, media_id, width, height, extension)
 
     @cached_property
     def url(self) -> str:
-        return f"{config.gallery_url}/{self.media_id}/{self.name}.{self.extenstion}"
+        return f"{config.gallery_url}/{self.media_id}/{self.name}.{self.extension}"
 
 
 @dataclass
