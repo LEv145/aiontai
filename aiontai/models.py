@@ -57,6 +57,7 @@ class Tag:
 
             return cls(tag_id, tag_count, tag_name, tag_type, tag_url)
 
+
 @dataclass
 class Title:
     english: str
@@ -112,4 +113,14 @@ class Doujin:
 
             upload_date = Datetime.utcfromtimestamp(json["upload_date"])
 
-            return cls(id, media_id, title, cover, thumbnail, pages, tags, pages_count, favorites, scanlator, upload_date)
+            return cls(id,
+                       media_id,
+                       title,
+                       cover,
+                       thumbnail,
+                       pages,
+                       tags,
+                       pages_count,
+                       favorites,
+                       scanlator,
+                       upload_date)
