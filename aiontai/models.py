@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from enum import Enum
 from dataclasses import dataclass
+from .config import config
+from . import utils
 
 
 class ImageType(Enum):
@@ -25,6 +27,15 @@ class Image:
     width: int
     height: int
     type: ImageType
+
+    @classmethod
+    def from_json(cls, json: dict) -> Optional["Image"]:
+        if utils.is_valid_structure(config.image_structure, json):
+            image_weight = json["w"]
+            image_height = json["h"]
+            image_type = ImageType(json["t"])
+
+            return cls(image_weight, image_height, image_type)
 
 
 @dataclass
