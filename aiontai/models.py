@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, NewType
+from typing import List
 from enum import Enum
 from dataclasses import dataclass
 
@@ -43,10 +43,10 @@ class Title:
     pretty: str
 
 
-Cover = NewType("Cover", Image)
-Thumbnail = NewType("Thumbnail", Image)
-Page = NewType("Page", Image)
-Datetime = NewType("Datetime", datetime)
+Cover = Image
+Thumbnail = Image
+Page = Image
+Datetime = datetime
 
 
 @dataclass
