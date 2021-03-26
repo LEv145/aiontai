@@ -64,6 +64,15 @@ class Title:
     japanese: str
     pretty: str
 
+    @classmethod
+    def from_json(cls, json: dict) -> Optional["Title"]:
+        if utils.is_valid_structure(config.title_structure, json):
+            title_english = json["english"]
+            title_japanese = json["japanese"]
+            title_pretty = json["pretty"]
+
+            return cls(title_english, title_japanese, title_pretty)
+
 
 Cover = Image
 Thumbnail = Image
