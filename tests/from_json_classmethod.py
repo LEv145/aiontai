@@ -36,6 +36,37 @@ def test_wrong_image_from_json():
         print("Wrong Image from_json test is passed!")
 
 
+def test_tag_from_json():
+    test_json = {
+            "count": 0,
+            "id": 0,
+            "name": "name",
+            "type": "tag",
+            "url": "url"
+    }
+
+    models.Tag.from_json(test_json)
+    print("Tag from_json test is passed!")
+
+
+def test_wrong_tag_from_json():
+    try:
+        test_json = {
+                "count": 0,
+                "id": 0,
+                "name": "name",
+                "type": "type",
+                "url": "url"
+        }
+
+        models.Tag.from_json(test_json)
+        print("Wrong Tag from_json test is not passed!")
+    except ValueError:
+        print("Wrong Tag from_json test is passed!")
+
+
 if __name__ == "__main__":
     test_image_from_json()
     test_wrong_image_from_json()
+    test_tag_from_json()
+    test_wrong_tag_from_json()
