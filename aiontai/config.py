@@ -24,9 +24,9 @@ class Config:
         {
             "name": str,
             "media_id": int,
-            "h": int,
-            "t": str,
-            "w": int
+            "height": int,
+            "extension": str,
+            "width": int
         }
     )
     tag_structure = Schema(

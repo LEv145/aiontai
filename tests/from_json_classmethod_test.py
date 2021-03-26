@@ -10,9 +10,9 @@ def test_image_from_json():
     test_json = {
         "name": "name",
         "media_id": 0,
-        "h": 120,
-        "w": 250,
-        "t": "j"
+        "height": 120,
+        "width": 250,
+        "extension": "j"
     }
 
     assert models.Image.from_json(test_json)
