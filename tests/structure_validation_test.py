@@ -1,9 +1,9 @@
 import os
 import site
 
-from schema import SchemaError
 site.addsitedir(os.getcwd())
 
+from schema import SchemaError
 import pytest
 
 from aiontai import utils, errors
@@ -21,8 +21,8 @@ def test_doujin_structure():
             "thumbnail": {"h": 0, "t": "j", "w": 0},
         },
         "media_id": "0",
-        "num_favorites": 0,
-        "num_pages": 0,
+        "favorites": 0,
+        "pages_count": 0,
         "scanlator": "",
         "tags": [
             {
