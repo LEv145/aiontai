@@ -57,7 +57,6 @@ class Tag:
 
             return cls(tag_id, tag_count, tag_name, tag_type, tag_url)
 
-
 @dataclass
 class Title:
     english: str
@@ -84,10 +83,33 @@ Datetime = datetime
 class Doujin:
     id: int
     media_id: int
-    title: Title
-    cover: Cover
-    thumbnail: Thumbnail
-    pages: List[Page]
-    tags: List[Tag]
+    title: Optional[Title]
+    cover: Optional[Image]
+    thumbnail: Optional[Image]
+    pages: List[Optional[Image]]
+    tags: List[Optional[Tag]]
+    pages_count: int
     favorites: int
+    scanlator: str
     upload_date: Datetime
+
+    @classmethod
+    def from_json(cls, json: dict) -> Optional["Doujin"]:
+        if utils.is_valid_structure(config.doujin_structure, json):
+            id = json["id"]
+            media_id = json["media_id"]
+            scanlator = json["scanlator"]
+            title = Title.from_json(json["title"])
+
+            images = json["images"]
+            cover = Cover.from_json(images["cover"])
+            thumbnail = Thumbnail.from_json(images["thumbnail"])
+
+            favorites = json["num_favorites"]
+            tags = [Tag.from_json(tag_json) for tag_json in json["tags"]]
+            pages = [Page.from_json(page_json) for page_json in images["pages"]]
+            pages_count = len(pages)
+
+            upload_date = Datetime.utcfromtimestamp(json["upload_date"])
+
+            return cls(id, media_id, title, cover, thumbnail, pages, tags, pages_count, favorites, scanlator, upload_date)

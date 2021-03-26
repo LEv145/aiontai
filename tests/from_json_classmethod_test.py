@@ -77,3 +77,72 @@ def test_wrong_title_from_json():
 
     with pytest.raises((ValueError, errors.IsNotValidStructure)):
         models.Title.from_json(test_json)
+
+
+def test_doujin_from_json():
+    test_json = {
+        "id": 0,
+        "images": {
+            "cover": {"h": 0, "t": "j", "w": 0},
+            "pages": [
+                {"h": 0, "t": "j", "w": 0},
+            ],
+            "thumbnail": {"h": 0, "t": "j", "w": 0},
+        },
+        "media_id": "0",
+        "num_favorites": 0,
+        "num_pages": 0,
+        "scanlator": "",
+        "tags": [
+            {
+                "count": 0,
+                "id": 0,
+                "name": "name",
+                "type": "tag",
+                "url": "url",
+            },
+        ],
+        "title": {
+            "english": "english",
+            "japanese": "japanese",
+            "pretty": "pretty",
+        },
+        "upload_date": 0,
+    }
+
+    assert models.Doujin.from_json(test_json)
+
+
+def test_wrong_doujin_from_json():
+    test_json = {
+        "id": 0,
+        "images": {
+            "cover": {"h": 0, "t": "j", "w": 0},
+            "pages": [
+                {"h": 0, "t": "j", "w": 0},
+            ],
+            "thumbnail": {"h": 0, "t": "j", "w": 0},
+        },
+        "media_id": "0",
+        "num_favorites": 0,
+        "num_pages": 0,
+        "scanlator": "",
+        "tags": [
+            {
+                "count": 0,
+                "id": 0,
+                "name": "name",
+                "type": "type",
+                "url": "url",
+            },
+        ],
+        "title": {
+            "english": "english",
+            "japanese": "japanese",
+            "pretty": "pretty",
+        },
+        "upload_date": 0,
+    }
+
+    with pytest.raises((ValueError, errors.IsNotValidStructure)):
+        models.Doujin.from_json(test_json)
