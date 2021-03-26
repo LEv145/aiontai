@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, NewType
+from typing import List, Dict, Any, NewType, Optional
 from enum import Enum
 from dataclasses import dataclass
 
@@ -36,17 +36,17 @@ class Tag:
     url: str
 
 
-Cover = NewType("Cover", Image)
-Thumbnail = NewType("Thumbnail", Image)
-Page = NewType("Thumbnail", Image)
-Datetime = NewType("Datetime", datetime)
-
-
 @dataclass
 class Title:
     english: str
     japanese: str
     pretty: str
+
+
+Cover = NewType("Cover", Image)
+Thumbnail = NewType("Thumbnail", Image)
+Page = NewType("Page", Image)
+Datetime = NewType("Datetime", datetime)
 
 
 @dataclass
