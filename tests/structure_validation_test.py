@@ -1,8 +1,12 @@
 import os
 import site
+
+from schema import SchemaError
 site.addsitedir(os.getcwd())
 
-from aiontai import utils
+import pytest
+
+from aiontai import utils, errors
 from aiontai.config import config
 
 
@@ -37,15 +41,29 @@ def test_doujin_structure():
         "upload_date": 0,
     }
 
-    utils.is_valid_structure(config.doujin_structure, test_structure)
-    print("Doujin structure test is passed")
+    assert utils.is_valid_structure(config.doujin_structure, test_structure)
+
+
+def test_wrong_doujin_structure():
+    test_structure = {
+        "test": "test"
+    }
+
+    with pytest.raises(errors.IsNotValidStructure):
+        utils.is_valid_structure(config.doujin_structure, test_structure)
 
 
 def test_image_structure():
     test_structure = {"h": 0, "t": "j", "w": 0}
 
-    utils.is_valid_structure(config.image_structure, test_structure)
-    print("Image structure test is passed")
+    assert utils.is_valid_structure(config.image_structure, test_structure)
+
+
+def test_wrong_image_structure():
+    test_structure = {0: "test"}
+
+    with pytest.raises(errors.IsNotValidStructure):
+        utils.is_valid_structure(config.image_structure, test_structure)
 
 
 def test_tag_structure():
@@ -57,8 +75,14 @@ def test_tag_structure():
                 "url": "url",
     }
 
-    utils.is_valid_structure(config.tag_structure, test_structure)
-    print("Tag structure test is passed")
+    assert utils.is_valid_structure(config.tag_structure, test_structure)
+
+
+def test_wrong_tag_structure():
+    test_structure = {0: 0}
+
+    with pytest.raises(errors.IsNotValidStructure):
+        utils.is_valid_structure(config.tag_structure, test_structure)
 
 
 def test_title_structure():
@@ -68,12 +92,11 @@ def test_title_structure():
             "pretty": "pretty",
         }
 
-    utils.is_valid_structure(config.title_structure, test_structure)
-    print("Title structure test is passed")
+    assert utils.is_valid_structure(config.title_structure, test_structure)
 
 
-if __name__ == "__main__":
-    test_doujin_structure()
-    test_image_structure()
-    test_tag_structure()
-    test_title_structure()
+def test_wrong_title_structure():
+    test_structure = {0: 0}
+
+    with pytest.raises(errors.IsNotValidStructure):
+        utils.is_valid_structure(config.title_structure, test_structure)

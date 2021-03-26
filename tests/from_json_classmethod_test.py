@@ -56,10 +56,3 @@ def test_wrong_tag_from_json():
 
     with pytest.raises(ValueError):
         models.Tag.from_json(test_json)
-
-
-if __name__ == "__main__":
-    test_image_from_json()
-    test_wrong_image_from_json()
-    test_tag_from_json()
-    test_wrong_tag_from_json()
