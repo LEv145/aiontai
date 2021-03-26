@@ -46,6 +46,17 @@ class Tag:
     type: TagType
     url: str
 
+    @classmethod
+    def from_json(cls, json: dict) -> Optional["Tag"]:
+        if utils.is_valid_structure(config.tag_structure, json):
+            tag_id = json["id"]
+            tag_count = json["count"]
+            tag_name = json["name"]
+            tag_type = TagType(json["type"])
+            tag_url = json["url"]
+
+            return cls(tag_id, tag_count, tag_name, tag_type, tag_url)
+
 
 @dataclass
 class Title:
