@@ -54,7 +54,7 @@ def test_wrong_doujin_structure():
 
 
 def test_image_structure():
-    test_structure = {"h": 0, "t": "j", "w": 0}
+    test_structure = {"name": "name", "media_id": 0, "h": 0, "t": "j", "w": 0}
 
     assert utils.is_valid_structure(config.image_structure, test_structure)
 

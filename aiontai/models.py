@@ -2,11 +2,15 @@ from datetime import datetime
 from typing import List, Optional
 from enum import Enum
 from dataclasses import dataclass
+from functools import cached_property
 from .config import config
 from . import utils
 
 
-class ImageType(Enum):
+Datetime = datetime
+
+
+class ImageExtenstion(Enum):
     jpg = "j"
     png = "p"
     gif = "g"
@@ -24,18 +28,26 @@ class TagType(Enum):
 
 @dataclass
 class Image:
+    name: str
+    media_id: int
     width: int
     height: int
-    type: ImageType
+    extenstion: ImageExtenstion
 
     @classmethod
     def from_json(cls, json: dict) -> Optional["Image"]:
         if utils.is_valid_structure(config.image_structure, json):
-            image_weight = json["w"]
-            image_height = json["h"]
-            image_type = ImageType(json["t"])
+            name = json["name"]
+            media_id = json["media_id"]
+            width = json["w"]
+            height = json["h"]
+            extenstion = ImageExtenstion(json["t"])
 
-            return cls(image_weight, image_height, image_type)
+            return cls(name, media_id, width, height, extenstion)
+
+    @cached_property
+    def url(self) -> str:
+        return f"{config.gallery_url}/{self.media_id}/{self.name}.{self.extenstion}"
 
 
 @dataclass
@@ -74,12 +86,6 @@ class Title:
             return cls(title_english, title_japanese, title_pretty)
 
 
-Cover = Image
-Thumbnail = Image
-Page = Image
-Datetime = datetime
-
-
 @dataclass
 class Doujin:
     id: int
@@ -93,34 +99,3 @@ class Doujin:
     favorites: int
     scanlator: str
     upload_date: Datetime
-
-    @classmethod
-    def from_json(cls, json: dict) -> Optional["Doujin"]:
-        if utils.is_valid_structure(config.doujin_structure, json):
-            id = json["id"]
-            media_id = json["media_id"]
-            scanlator = json["scanlator"]
-            title = Title.from_json(json["title"])
-
-            images = json["images"]
-            cover = Cover.from_json(images["cover"])
-            thumbnail = Thumbnail.from_json(images["thumbnail"])
-
-            favorites = json["num_favorites"]
-            tags = [Tag.from_json(tag_json) for tag_json in json["tags"]]
-            pages = [Page.from_json(page_json) for page_json in images["pages"]]
-            pages_count = len(pages)
-
-            upload_date = Datetime.utcfromtimestamp(json["upload_date"])
-
-            return cls(id,
-                       media_id,
-                       title,
-                       cover,
-                       thumbnail,
-                       pages,
-                       tags,
-                       pages_count,
-                       favorites,
-                       scanlator,
-                       upload_date)

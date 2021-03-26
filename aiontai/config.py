@@ -2,6 +2,7 @@ from schema import Schema, Use, Or
 
 
 class Config:
+    gallery_url = "https://i.nhentai.net/galleries"
     doujin_structure = Schema(
         {
             "id": int,
@@ -21,6 +22,8 @@ class Config:
     )
     image_structure = Schema(
         {
+            "name": str,
+            "media_id": int,
             "h": int,
             "t": str,
             "w": int
