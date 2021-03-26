@@ -3,23 +3,7 @@ from schema import Schema, Use, Or
 
 class Config:
     gallery_url = "https://i.nhentai.net/galleries"
-    doujin_structure = Schema(
-        {
-            "id": int,
-            "images": {
-                "cover": {str: Or(int, str)},
-                "pages": [{str: Or(int, str)}],
-                "thumbnail": {str: Or(int, str)},
-            },
-            "media_id": Use(int),
-            "num_favorites": int,
-            "num_pages": int,
-            "scanlator": str,
-            "tags": [{str: Or(int, str)}],
-            "title": {str: str},
-            "upload_date": int,
-        }
-    )
+    api_url = "https://nhentai.net/api"
     image_structure = Schema(
         {
             "name": str,
@@ -43,6 +27,23 @@ class Config:
             "english": str,
             "japanese": str,
             "pretty": str
+        }
+    )
+    doujin_structure = Schema(
+        {
+            "id": int,
+            "media_id": Use(int),
+            "title": {str: str},
+            "images": {
+                "cover": {str: Or(int, str)},
+                "pages": [{str: Or(int, str)}],
+                "thumbnail": {str: Or(int, str)},
+            },
+            "tags": [{str: Or(int, str)}],
+            "favorites": int,
+            "pages_count": int,
+            "scanlator": str,
+            "upload_date": int,
         }
     )
 
