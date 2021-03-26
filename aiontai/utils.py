@@ -1,6 +1,4 @@
-from typing import Dict, Any
 from schema import SchemaError, Schema
-from .config import config
 from . import errors
 
 
