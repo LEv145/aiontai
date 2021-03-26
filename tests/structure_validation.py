@@ -37,13 +37,15 @@ def test_doujin_structure():
         "upload_date": 0,
     }
 
-    return utils.is_valid_structure(config.doujin_structure, test_structure)
+    utils.is_valid_structure(config.doujin_structure, test_structure)
+    print("Doujin structure test is passed")
 
 
 def test_image_structure():
     test_structure = {"h": 0, "t": "j", "w": 0}
 
-    return utils.is_valid_structure(config.image_structure, test_structure)
+    utils.is_valid_structure(config.image_structure, test_structure)
+    print("Image structure test is passed")
 
 
 def test_tag_structure():
@@ -55,7 +57,8 @@ def test_tag_structure():
                 "url": "url",
     }
 
-    return utils.is_valid_structure(config.tag_structure, test_structure)
+    utils.is_valid_structure(config.tag_structure, test_structure)
+    print("Tag structure test is passed")
 
 
 def test_title_structure():
@@ -65,7 +68,8 @@ def test_title_structure():
             "pretty": "pretty",
         }
 
-    return utils.is_valid_structure(config.title_structure, test_structure)
+    utils.is_valid_structure(config.title_structure, test_structure)
+    print("Title structure test is passed")
 
 
 if __name__ == "__main__":
@@ -73,4 +77,3 @@ if __name__ == "__main__":
     test_image_structure()
     test_tag_structure()
     test_title_structure()
-    print("All tests passed!")
