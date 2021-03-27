@@ -4,6 +4,7 @@ from schema import Schema, Use, Or
 class Config:
     gallery_url = "https://i.nhentai.net/galleries"
     api_url = "https://nhentai.net/api"
+    api_gallery_url = "https://nhentai.net/api/galleries"
     base_url = "https://nhentai.net/"
     image_structure = Schema(
         {
