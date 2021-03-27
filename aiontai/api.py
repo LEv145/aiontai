@@ -123,7 +123,7 @@ class NHentaiAPI:
 
         Usage:
             >>> api = NHentaiAPI()
-            >>> api.search("anime", 2, "popular")
+            >>> api.search_by_tag(1, 2, "popular")
             [{...}, ...]
         """
         utils.is_valid_search_by_tag_parameters(tag_id, page, sort_by)
