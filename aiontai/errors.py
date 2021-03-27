@@ -12,3 +12,7 @@ class IsNotValidSort(Exception):
 
 class WrongPage(Exception):
     pass
+
+
+class WrongTag(Exception):
+    pass
