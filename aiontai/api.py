@@ -140,3 +140,15 @@ class NHentaiAPI:
                     return [result for result in results["result"]]
             except KeyError:
                 raise errors.WrongTag("There is no tag with given tag_id")
+
+    async def get_doujins_from_homepage(self, page: int) -> List[dict]:
+        async with aiohttp.ClientSession() as session:
+            parameters = {
+                "page": page
+            }
+            async with session.get(f"{config.api_gallery_url}/all", params=parameters) as response:
+                results = await response.json()
+                if not results["result"]:
+                    raise errors.WrongPage("Given page is wrong.")
+                else:
+                    return [result for result in results["result"]]

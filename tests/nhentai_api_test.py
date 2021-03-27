@@ -96,3 +96,17 @@ async def test_search_by_tag_wrong_tag():
     nhentai_api = api.NHentaiAPI()
     with pytest.raises(errors.WrongTag):
         await nhentai_api.search_by_tag(-1, 1)
+
+
+@pytest.mark.asyncio
+async def test_get_doujins_from_homepage():
+    nhentai_api = api.NHentaiAPI()
+    results = await nhentai_api.get_doujins_from_homepage(1)
+    assert results
+
+
+@pytest.mark.asyncio
+async def test_get_doujins_from_homepage_wrong_page():
+    nhentai_api = api.NHentaiAPI()
+    with pytest.raises(errors.WrongPage):
+        await nhentai_api.get_doujins_from_homepage(-1)
