@@ -4,3 +4,11 @@ class IsNotValidStructure(Exception):
 
 class DoujinDoesNotExist(Exception):
     pass
+
+
+class IsNotValidSort(Exception):
+    pass
+
+
+class WrongPage(Exception):
+    pass

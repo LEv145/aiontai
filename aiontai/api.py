@@ -1,6 +1,13 @@
+import enum
+from typing import List
 import aiohttp
 from aiontai import errors, utils
 from aiontai.config import config
+
+
+class SortOptions(enum.Enum):
+    date = "date"
+    popularity = "popular"
 
 
 class NHentaiAPI:
@@ -69,3 +76,16 @@ class NHentaiAPI:
                 url = response.url.human_repr()
                 id = int(utils.extract_digits(url))
                 return await self.get_doujin(id)
+
+    async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
+        utils.is_valid_search_parameters(page, sort_by)
+
+        async with aiohttp.ClientSession() as session:
+            parameters = {
+                "query": query,
+                "page": page,
+                "sort": sort_by
+            }
+            async with session.get(f"{config.api_gallery_url}/search", params=parameters) as response:
+                results = await response.json()
+                return [result for result in results["result"]]
