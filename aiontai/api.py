@@ -1,13 +1,11 @@
 import aiohttp
-from aiontai import errors
+from aiontai import errors, utils
 from aiontai.config import config
 
 
 class NHentaiAPI:
     """Class that represents a nhentai API.
 
-    TODO: Получение рандомного комикса
-    TODO: Получение doujin по id
     TODO: Получить n-nую doujin с home page
     TODO: Поиск doujins по тегу
     TODO: Поиск doujins по запросу
@@ -55,3 +53,19 @@ class NHentaiAPI:
             return True
         except errors.DoujinDoesNotExist:
             return False
+
+    async def get_random_doujin(self) -> dict:
+        """Method for getting random doujin.
+        Returns:
+            JSON of random doujin.
+
+        Usage:
+            >>> api = NHentaiAPI()
+            >>> api.random_doujin()
+            {...}
+        """
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{config.base_url}/random/") as response:
+                url = response.url.human_repr()
+                id = int(utils.extract_digits(url))
+                return await self.get_doujin(id)
