@@ -106,3 +106,37 @@ class NHentaiAPI:
             async with session.get(f"{config.api_gallery_url}/search", params=parameters) as response:
                 results = await response.json()
                 return [result for result in results["result"]]
+
+    async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
+        """Method for getting doujin by id.
+        Args:
+            :tag id: Tag for search doujins.
+            :page int: Page, from which we return results.
+            :sort_by str: Sort for search.
+
+        Returns:
+            List of doujins JSON
+
+        Raises:
+            IsNotValidSort if sort is not a member of SortOptions.
+            WrongPage if page less than 1.
+
+        Usage:
+            >>> api = NHentaiAPI()
+            >>> api.search("anime", 2, "popular")
+            [{...}, ...]
+        """
+        utils.is_valid_search_by_tag_parameters(tag_id, page, sort_by)
+
+        async with aiohttp.ClientSession() as session:
+            parameters = {
+                "tag_id": tag_id,
+                "page": page,
+                "sort": sort_by
+            }
+            try:
+                async with session.get(f"{config.api_gallery_url}/tagged", params=parameters) as response:
+                    results = await response.json()
+                    return [result for result in results["result"]]
+            except KeyError:
+                raise errors.WrongTag("There is no tag with given tag_id")

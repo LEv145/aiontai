@@ -68,3 +68,31 @@ async def test_search_wrong_sort():
     nhentai_api = api.NHentaiAPI()
     with pytest.raises(errors.IsNotValidSort):
         await nhentai_api.search("anime", 1, "0")
+
+
+@pytest.mark.asyncio
+async def test_search_by_tag():
+    nhentai_api = api.NHentaiAPI()
+    results = await nhentai_api.search_by_tag(1)
+    assert results
+
+
+@pytest.mark.asyncio
+async def test_search_by_tag_wrong_page():
+    nhentai_api = api.NHentaiAPI()
+    with pytest.raises(errors.WrongPage):
+        await nhentai_api.search_by_tag(0, 0)
+
+
+@pytest.mark.asyncio
+async def test_search_by_tag_wrong_sort():
+    nhentai_api = api.NHentaiAPI()
+    with pytest.raises(errors.IsNotValidSort):
+        await nhentai_api.search_by_tag(0, 1, "0")
+
+
+@pytest.mark.asyncio
+async def test_search_by_tag_wrong_tag():
+    nhentai_api = api.NHentaiAPI()
+    with pytest.raises(errors.WrongTag):
+        await nhentai_api.search_by_tag(-1, 1)
