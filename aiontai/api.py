@@ -15,7 +15,6 @@ class NHentaiAPI:
 
     TODO: Получить n-nую doujin с home page
     TODO: Поиск doujins по тегу
-    TODO: Поиск doujins по запросу
     """
 
     async def get_doujin(self, id: int) -> dict:
@@ -78,6 +77,24 @@ class NHentaiAPI:
                 return await self.get_doujin(id)
 
     async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
+        """Method for getting doujin by id.
+        Args:
+            :query str: Query for search doujins.
+            :page int: Page, from which we return results.
+            :sort_by str: Sort for search.
+
+        Returns:
+            List of doujins JSON
+
+        Raises:
+            IsNotValidSort if sort is not a member of SortOptions.
+            WrongPage if page less than 1.
+
+        Usage:
+            >>> api = NHentaiAPI()
+            >>> api.search("anime", 2, "popular")
+            [{...}, ...]
+        """
         utils.is_valid_search_parameters(page, sort_by)
 
         async with aiohttp.ClientSession() as session:
