@@ -1,5 +1,5 @@
 from schema import SchemaError, Schema
-from . import errors
+from aiontai import errors
 
 
 def is_valid_structure(schema: Schema, json: dict) -> bool:
@@ -10,3 +10,7 @@ def is_valid_structure(schema: Schema, json: dict) -> bool:
         raise errors.IsNotValidStructure(
             "You cant build a class from JSON, because it havent valid JSON structure."
         )
+
+
+def extract_digits(string: str) -> str:
+    return "".join([symbol for symbol in string if symbol.isdigit()])
