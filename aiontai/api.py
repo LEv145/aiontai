@@ -77,7 +77,7 @@ class NHentaiAPI:
                 return await self.get_doujin(id)
 
     async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
-        """Method for getting doujin by id.
+        """Method for search doujins.
         Args:
             :query str: Query for search doujins.
             :page int: Page, from which we return results.
@@ -108,7 +108,7 @@ class NHentaiAPI:
                 return [result for result in results["result"]]
 
     async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
-        """Method for getting doujin by id.
+        """Method for search doujins by tag.
         Args:
             :tag id: Tag for search doujins.
             :page int: Page, from which we return results.
@@ -142,6 +142,21 @@ class NHentaiAPI:
                 raise errors.WrongTag("There is no tag with given tag_id")
 
     async def get_doujins_from_homepage(self, page: int) -> List[dict]:
+        """Method for getting doujins from homepage.
+        Args:
+            :page int: Page, from which we get doujins.
+
+        Returns:
+            List of doujins JSON
+
+        Raises:
+            WrongPage if page less than 1 or page has no content.
+
+        Usage:
+            >>> api = NHentaiAPI()
+            >>> api.get_doujins_from_homepage(1)
+            [{...}, ...]
+        """
         async with aiohttp.ClientSession() as session:
             parameters = {
                 "page": page
