@@ -37,9 +37,29 @@ class Config:
             "media_id": Use(int),
             "title": {str: str},
             "images": {
-                "cover": {str: Or(int, str)},
-                "pages": [{str: Or(int, str)}],
-                "thumbnail": {str: Or(int, str)},
+                "cover": {
+                    "name": str,
+                    "extension": str,
+                    "media_id": int,
+                    "height": int,
+                    "width": int
+                },
+                "pages": [
+                    {
+                        "name": str,
+                        "extension": str,
+                        "media_id": int,
+                        "height": int,
+                        "width": int
+                    },
+                ],
+                "thumbnail": {
+                    "name": str,
+                    "extension": str,
+                    "media_id": int,
+                    "height": int,
+                    "width": int
+                },
             },
             "tags": [{str: Or(int, str)}],
             "favorites": int,
