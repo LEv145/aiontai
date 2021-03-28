@@ -2,7 +2,8 @@ from schema import Schema, Use, Or, Optional
 
 
 class Config:
-    gallery_url = "https://i.nhentai.net/galleries"
+    i_gallery_url = "https://i.nhentai.net/galleries"
+    t_gallery_url = "https://t.nhentai.net/galleries"
     api_url = "https://nhentai.net/api"
     api_gallery_url = "https://nhentai.net/api/galleries"
     base_url = "https://nhentai.net/"
