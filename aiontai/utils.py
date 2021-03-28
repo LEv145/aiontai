@@ -89,7 +89,7 @@ async def make_doujin_json(original: dict) -> dict:
         "pages": pages,
         "tags": tags,
         "favorites": favorites,
-        "pages_count": pages,
+        "pages_count": pages_count,
         "scanlator": scanlator,
         "upload_date": upload_date
     }
