@@ -99,14 +99,14 @@ async def test_search_by_tag_wrong_tag():
 
 
 @pytest.mark.asyncio
-async def test_get_doujins_from_homepage():
+async def test_get_homepage_doujins():
     nhentai_api = api.NHentaiAPI()
-    results = await nhentai_api.get_doujins_from_homepage(1)
+    results = await nhentai_api.get_homepage_doujins(1)
     assert results
 
 
 @pytest.mark.asyncio
-async def test_get_doujins_from_homepage_wrong_page():
+async def test_get_homepage_doujins_wrong_page():
     nhentai_api = api.NHentaiAPI()
     with pytest.raises(errors.WrongPage):
-        await nhentai_api.get_doujins_from_homepage(-1)
+        await nhentai_api.get_homepage_doujins(-1)

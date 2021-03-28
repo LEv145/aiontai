@@ -141,8 +141,8 @@ class NHentaiAPI:
             except KeyError:
                 raise errors.WrongTag("There is no tag with given tag_id")
 
-    async def get_doujins_from_homepage(self, page: int) -> List[dict]:
-        """Method for getting doujins from homepage.
+    async def get_homepage_doujins(self, page: int) -> List[dict]:
+        """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.
 
@@ -154,7 +154,7 @@ class NHentaiAPI:
 
         Usage:
             >>> api = NHentaiAPI()
-            >>> api.get_doujins_from_homepage(1)
+            >>> api.get_homepage_doujins(1)
             [{...}, ...]
         """
         async with aiohttp.ClientSession() as session:
