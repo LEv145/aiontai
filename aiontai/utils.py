@@ -71,9 +71,9 @@ async def make_doujin_json(original: dict) -> dict:
         {
             "name": count,
             "media_id": media_id,
-            "extension": original["images"][count]["t"],
-            "height": original["images"][count]["h"],
-            "width": original["images"][count]["w"]
+            "extension": original["images"]["pages"][count]["t"],
+            "height": original["images"]["pages"][count]["h"],
+            "width": original["images"]["pages"][count]["w"]
         }
         for count, _ in enumerate(original["images"]["pages"], start=1)
     ]
@@ -89,7 +89,7 @@ async def make_doujin_json(original: dict) -> dict:
         "pages": pages,
         "tags": tags,
         "favorites": favorites,
-        "pages_count": pages_count,
+        "pages_count": pages,
         "scanlator": scanlator,
         "upload_date": upload_date
     }
