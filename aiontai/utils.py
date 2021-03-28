@@ -44,3 +44,54 @@ def is_valid_search_by_tag_parameters(tag_id: int, page: int, sort_by: str) -> b
         raise errors.WrongTag("Tag id can not be less than 1")
 
     return True
+
+
+async def make_doujin_json(original: dict) -> dict:
+    id = original["id"]
+    media_id = original["media_id"]
+    title = original["title"]
+    scanlator = original["scanlator"]
+    favorites = original["num_favorites"]
+    upload_date = original["upload_date"]
+    cover = {
+        "name": "cover",
+        "media_id": media_id,
+        "extension": original["images"]["cover"]["t"],
+        "height": original["images"]["cover"]["h"],
+        "width": original["images"]["cover"]["w"]
+    }
+    thumbnail = {
+        "name": "thumbnail",
+        "media_id": media_id,
+        "extension": original["images"]["thumbnail"]["t"],
+        "height": original["images"]["thumbnail"]["h"],
+        "width": original["images"]["thumbnail"]["w"]
+    }
+    pages = [
+        {
+            "name": count,
+            "media_id": media_id,
+            "extension": original["images"][count]["t"],
+            "height": original["images"][count]["h"],
+            "width": original["images"][count]["w"]
+        }
+        for count, _ in enumerate(original["images"]["pages"], start=1)
+    ]
+    pages_count = len(pages)
+    tags = [tag for tag in original["tags"]]
+
+    json = {
+        "id": id,
+        "media_id": media_id,
+        "title": title,
+        "cover": cover,
+        "thumbnail": thumbnail,
+        "pages": pages,
+        "tags": tags,
+        "favorites": favorites,
+        "pages_count": pages,
+        "scanlator": scanlator,
+        "upload_date": upload_date
+    }
+
+    return json
