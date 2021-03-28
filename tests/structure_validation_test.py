@@ -11,6 +11,12 @@ site.addsitedir(os.getcwd())
 def test_doujin_structure():
     test_structure = {
         "id": 0,
+        "media_id": 0,
+        "title": {
+            "english": "english",
+            "japanese": "japanese",
+            "pretty": "pretty",
+        },
         "cover": {
             "name": "name",
             "extension": "j",
@@ -34,7 +40,6 @@ def test_doujin_structure():
             "height": 0,
             "width": 0
         },
-        "media_id": "0",
         "favorites": 0,
         "pages_count": 0,
         "scanlator": "",
@@ -47,11 +52,6 @@ def test_doujin_structure():
                 "url": "url",
             },
         ],
-        "title": {
-            "english": "english",
-            "japanese": "japanese",
-            "pretty": "pretty",
-        },
         "upload_date": 0,
     }
 

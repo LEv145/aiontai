@@ -47,7 +47,7 @@ def is_valid_search_by_tag_parameters(tag_id: int, page: int, sort_by: str) -> b
 
 
 async def make_doujin_json(original: dict) -> dict:
-    id = original["id"]
+    id = int(original["id"])
     media_id = int(original["media_id"])
     title = original["title"]
     scanlator = original["scanlator"]

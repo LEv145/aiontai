@@ -1,4 +1,4 @@
-from schema import Schema, Use, Or
+from schema import Schema, Use, Or, Optional
 
 
 class Config:
@@ -26,16 +26,16 @@ class Config:
     )
     title_structure = Schema(
         {
-            "english": str,
-            "japanese": str,
-            "pretty": str
+            Optional("english"): Or(str, None),
+            Optional("japanese"): Or(str, None),
+            Optional("pretty"): Or(str, None)
         }
     )
     doujin_structure = Schema(
         {
-            "id": int,
+            "id": Use(int),
             "media_id": Use(int),
-            "title": {str: str},
+            "title": {Optional(str): Or(str, None)},
             "cover": {
                 "name": str,
                 "extension": str,
