@@ -61,7 +61,7 @@ async def make_doujin_json(original: dict) -> dict:
         "width": original["images"]["cover"]["w"]
     }
     thumbnail = {
-        "name": "thumbnail",
+        "name": "thumb",
         "media_id": media_id,
         "extension": original["images"]["thumbnail"]["t"],
         "height": original["images"]["thumbnail"]["h"],
