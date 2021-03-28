@@ -48,7 +48,10 @@ class Image:
 
     @cached_property
     def url(self) -> str:
-        return f"{config.gallery_url}/{self.media_id}/{self.name}.{self.extension}"
+        if self.name in ["cover", "thumb"]:
+            return f"{config.t_gallery_url}/{self.media_id}/{self.name}.{self.extension.name}"
+        else:
+            return f"{config.i_gallery_url}/{self.media_id}/{self.name}.{self.extension.name}"
 
 
 @dataclass
