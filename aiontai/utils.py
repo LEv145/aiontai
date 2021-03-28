@@ -48,7 +48,7 @@ def is_valid_search_by_tag_parameters(tag_id: int, page: int, sort_by: str) -> b
 
 async def make_doujin_json(original: dict) -> dict:
     id = original["id"]
-    media_id = original["media_id"]
+    media_id = int(original["media_id"])
     title = original["title"]
     scanlator = original["scanlator"]
     favorites = original["num_favorites"]
@@ -69,13 +69,13 @@ async def make_doujin_json(original: dict) -> dict:
     }
     pages = [
         {
-            "name": count,
+            "name": f"{count + 1}",
             "media_id": media_id,
             "extension": original["images"]["pages"][count]["t"],
             "height": original["images"]["pages"][count]["h"],
             "width": original["images"]["pages"][count]["w"]
         }
-        for count, _ in enumerate(original["images"]["pages"], start=1)
+        for count, _ in enumerate(original["images"]["pages"])
     ]
     pages_count = len(pages)
     tags = [tag for tag in original["tags"]]
@@ -89,7 +89,7 @@ async def make_doujin_json(original: dict) -> dict:
         "pages": pages,
         "tags": tags,
         "favorites": favorites,
-        "pages_count": pages,
+        "pages_count": pages_count,
         "scanlator": scanlator,
         "upload_date": upload_date
     }

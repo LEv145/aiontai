@@ -112,13 +112,13 @@ class Doujin:
         favorites = json["favorites"]
         pages_count = len(json["pages"])
         scanlator = json["scanlator"]
-        upload_date = Datetime.utcfromtimestamp(json["upload_data"])
+        upload_date = Datetime.utcfromtimestamp(json["upload_date"])
 
         title = Title.from_json(json["title"])
         thumbnail = Image.from_json(json["thumbnail"])
         cover = Image.from_json(json["cover"])
 
-        tags = [Tag.from_json(data) for data in json["tag"]]
+        tags = [Tag.from_json(data) for data in json["tags"]]
         pages = [Image.from_json(data) for data in json["pages"]]
 
         return cls(id, media_id, title, cover,
