@@ -1,6 +1,11 @@
 # aiontai
 Async wrapper for nhentai API
 
+## Installation
+```cmd
+pip install aiontai
+```
+
 ## class API
 - ### async get_doujin()
     Method for search doujins by id.
