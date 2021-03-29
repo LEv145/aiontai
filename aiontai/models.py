@@ -26,7 +26,7 @@ class TagType(Enum):
     language = "language"
 
 
-@dataclass
+@dataclass(frozen=True)
 class Image:
     name: str
     media_id: int
@@ -54,7 +54,7 @@ class Image:
             return f"{config.i_gallery_url}/{self.media_id}/{self.name}.{self.extension.name}"
 
 
-@dataclass
+@dataclass(frozen=True)
 class Tag:
     id: int
     count: int
@@ -75,7 +75,7 @@ class Tag:
         return cls(tag_id, tag_count, tag_name, tag_type, tag_url)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Title:
     english: str
     japanese: str
@@ -92,7 +92,7 @@ class Title:
         return cls(title_english, title_japanese, title_pretty)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Doujin:
     id: int
     media_id: int
