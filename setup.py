@@ -8,7 +8,7 @@ with open("README.md", "r") as long_description:
 setup(
   name = "aiontai",
   packages = ["aiontai"],
-  version = "1.0",
+  version = "1.1",
   license="GPLv2",
   description = "Async wrapper for nhentai API",
   long_description=readme,
@@ -16,12 +16,12 @@ setup(
   author = "Alekseyzz", 
   author_email = "thehentwill@gmail.com",
   url = "https://github.com/alekseyzz/aiontai",
-  download_url = "https://github.com/AlekseyZz/aiontai/archive/refs/tags/1.0.tar.gz",
+  download_url = "https://github.com/AlekseyZz/aiontai/archive/refs/tags/1.1.tar.gz",
   project_urls = {
-    "Source": "https://github.com/alekseyzz/aiontai",
-    "Documentation": "https://github.com/alekseyzz/aiontai#class-api",
     "Bag tracker":  "https://github.com/AlekseyZz/aiontai/issues",
-    "Contributing": "https://github.com/alekseyzz/aiontai#contributing"
+    "Contributing": "https://github.com/alekseyzz/aiontai#contributing",
+    "Source": "https://github.com/alekseyzz/aiontai",
+    "Documentation": "https://github.com/AleksepyZz/aiontai/blob/main/README.md"
   },
   keywords = ["HENTAI", "ASYNC", "NHENTAI", "API"],
   install_requires=[
