@@ -7,7 +7,6 @@ site.addsitedir(os.getcwd())
 import pytest
 
 import aiontai
-from aiontai import api
 
 
 @pytest.mark.asyncio
