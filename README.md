@@ -51,7 +51,7 @@ pip install aiontai
     #### Usage:
     ```python
     >>> api = NHentaiAPI()
-    >>> await api.random_doujin()
+    >>> await api.get_random_doujin()
     Doujin(...)
     ```
 
