@@ -1,28 +1,45 @@
-from distutils.core import setup
+from setuptools import setup
+
+readme = ""
+with open("README.md", "r") as long_description:
+  readme = long_description.read()
+
+
 setup(
-  name = 'aiontai',
-  packages = ['aiontai'],
-  version = '0.1',
-  license='GPL',
-  description = 'Async wrapper for nhentai API',
-  author = 'Alekseyzz',                   
-  author_email = 'thehentwill@gmail.com',
-  url = 'https://github.com/alekseyzz/aiontai',
-  download_url = 'https://github.com/AlekseyZz/aiontai/archive/refs/tags/0.1.tar.gz',
-  keywords = ['HENTAI', 'ASYNC', 'NHENTAI', 'API'],
+  name = "aiontai",
+  packages = ["aiontai"],
+  version = "1.0",
+  license="GPLv2",
+  description = "Async wrapper for nhentai API",
+  long_description=readme,
+  long_description_content_type="text/markdown",
+  author = "Alekseyzz", 
+  author_email = "thehentwill@gmail.com",
+  url = "https://github.com/alekseyzz/aiontai",
+  download_url = "https://github.com/AlekseyZz/aiontai/archive/refs/tags/1.0.tar.gz",
+  project_urls = {
+    "Source": "https://github.com/alekseyzz/aiontai",
+    "Documentation": "https://github.com/alekseyzz/aiontai#class-api",
+    "Bag tracker":  "https://github.com/AlekseyZz/aiontai/issues",
+    "Contributing": "https://github.com/alekseyzz/aiontai#contributing"
+  },
+  keywords = ["HENTAI", "ASYNC", "NHENTAI", "API"],
   install_requires=[
-          'schema',
-          'aiohttp',
+          "schema",
+          "aiohttp",
       ],
   classifiers=[
-    'Development Status :: 3 - Alpha',
-    'Intended Audience :: Developers',
-    'Topic :: Software Development :: Build Tools',
-    'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
   ],
 )
