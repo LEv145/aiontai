@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import Iterator, List
 from enum import Enum
 from dataclasses import dataclass
 from functools import cached_property
@@ -127,3 +127,18 @@ class Doujin:
         return cls(id, media_id, title, cover,
                    thumbnail, pages, tags, pages_count,
                    favorites, scanlator, upload_date)
+
+    def __iter__(self) -> Iterator[Image]:
+        return iter(self.pages)
+
+    def __len__(self) -> int:
+        return self.pages_count
+
+    def __reversed__(self) -> Iterator[Image]:
+        return reversed(self.pages)
+
+    def __contains__(self, page: Image) -> bool:
+        return page in self.pages
+
+    def __getitem__(self, key) -> Image:
+        return self.pages[key]
