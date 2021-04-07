@@ -1,53 +1,111 @@
+"""Utils for api."""
+
 from schema import SchemaError, Schema
 from aiontai import errors, api
 
 
 def is_valid_structure(schema: Schema, json: dict) -> bool:
+    """Check, is structure valid to schema.
+
+    Args:
+        :schema Schema: -- structure schema for validation.
+        :json dict: -- json of structure, which we validate.
+
+    Exceptions:
+        IsNotValidStructure if structure of json is not valid to schema.
+
+    Returns:
+        True if structure is valid to schema.
+    """
     try:
         schema.validate(json)
         return True
-    except SchemaError:
+    except SchemaError as exception:
         raise errors.IsNotValidStructure(
             "You cant build a class from JSON, because it havent valid JSON structure."
-        )
+        ) from exception
 
 
 def extract_digits(string: str) -> str:
+    """Util for extracting digits from string.
+
+    Args:
+        :string str: -- String, from which we extract digits.
+
+    Returns:
+        str
+    """
     return "".join([symbol for symbol in string if symbol.isdigit()])
 
 
 def is_valid_search_parameters(page: int, sort_by: str) -> bool:
+    """Check, is valid search parameters.
+
+    Args:
+        :page int: -- Page for checking.
+        :sort_by str: -- Sort options for checking.
+
+    Exceptions:
+        ValueError if sort options is not valid.
+        WrongPage if page is wrong.
+
+    Returns:
+        True if parameters is valid.
+    """
     try:
         api.SortOptions(sort_by)
-    except ValueError:
+    except ValueError as exception:
         raise errors.IsNotValidSort(
-            f"You choose sort, which not in {[option for option in api.SortOptions.__members__]}"
-        )
+            f"You choose sort, which not in {list(api.SortOptions.__members__)}"
+        ) from exception
 
-    if 1 > page:
+    if page < 1:
         raise errors.WrongPage("Page can not be less than 1")
 
     return True
 
 
 def is_valid_search_by_tag_parameters(tag_id: int, page: int, sort_by: str) -> bool:
+    """Check, is valid search parameters.
+
+    Args:
+        :tag_id int: -- Tag id for checking
+        :page int: -- Page for checking.
+        :sort_by str: -- Sort_by for checking.
+
+    Exceptions:
+        ValueError if sort options is not valid.
+        WrongPage if page is wrong.
+        WrongTag is tag id is wrong.
+
+    Returns:
+        True if parameters is valid.
+    """
+    if page < 1:
+        raise errors.WrongPage("Page can not be less than 1")
+    elif tag_id < 1:
+        raise errors.WrongTag("Tag id can not be less than 1")
+
     try:
         api.SortOptions(sort_by)
-    except ValueError:
+    except ValueError as exception:
         raise errors.IsNotValidSort(
-            f"You choose sort, which not in {[option for option in api.SortOptions.__members__]}"
-        )
-
-    if 1 > page:
-        raise errors.WrongPage("Page can not be less than 1")
-    elif 1 > tag_id:
-        raise errors.WrongTag("Tag id can not be less than 1")
+            f"You choose sort, which not in {list(api.SortOptions.__members__)}"
+        ) from exception
 
     return True
 
 
 async def make_doujin_json(original: dict) -> dict:
-    id = int(original["id"])
+    """Convert JSON response to doujin JSON.
+
+    Args:
+        :original dict: -- JSON of response.
+
+    Returns:
+        dictionary of doujin.
+    """
+    doujin_id = int(original["id"])
     media_id = int(original["media_id"])
     title = original["title"]
     scanlator = original["scanlator"]
@@ -78,10 +136,10 @@ async def make_doujin_json(original: dict) -> dict:
         for count, _ in enumerate(original["images"]["pages"])
     ]
     pages_count = len(pages)
-    tags = [tag for tag in original["tags"]]
+    tags = list(original["tags"])
 
     json = {
-        "id": id,
+        "id": doujin_id,
         "media_id": media_id,
         "title": title,
         "cover": cover,

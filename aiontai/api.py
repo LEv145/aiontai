@@ -1,23 +1,23 @@
-import enum
+"""Impementation of NHentaiAPI."""
+
+from enum import Enum
 from typing import List
 import aiohttp
 from aiontai import errors, utils
 from aiontai.config import config
 
 
-class SortOptions(enum.Enum):
-    date = "date"
-    popularity = "popular"
+class SortOptions(Enum):
+    """Enumeration for sort options."""
+
+    DATE = "date"
+    POPULARITY = "popular"
 
 
 class NHentaiAPI:
-    """Class that represents a nhentai API.
+    """Class that represents a nhentai API."""
 
-    TODO: Получить n-nую doujin с home page
-    TODO: Поиск doujins по тегу
-    """
-
-    async def get_doujin(self, id: int) -> dict:
+    async def get_doujin(self, doujin_id: int) -> dict:
         """Method for getting doujin by id.
         Args:
             :id int: Doujin's id, which we get.
@@ -34,17 +34,17 @@ class NHentaiAPI:
             {...}
         """
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{config.api_url}/gallery/{id}") as response:
+            async with session.get(f"{config.api_url}/gallery/{doujin_id}") as response:
                 if response.ok:
                     json: dict = await response.json()
                     return json
                 else:
                     raise errors.DoujinDoesNotExist("That doujin does not exist.")
 
-    async def is_exist(self, id: int) -> bool:
+    async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
         Args:
-            :id int: Doujin's id, which we check.
+            :doujin_id int: Doujin's id, which we check.
 
         Returns:
             True if doujin is exist, False if doujin is not exist.
@@ -55,7 +55,7 @@ class NHentaiAPI:
             True
         """
         try:
-            await self.get_doujin(id)
+            await self.get_doujin(doujin_id)
             return True
         except errors.DoujinDoesNotExist:
             return False
@@ -73,8 +73,8 @@ class NHentaiAPI:
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{config.base_url}/random/") as response:
                 url = response.url.human_repr()
-                id = int(utils.extract_digits(url))
-                return await self.get_doujin(id)
+                doujin_id = int(utils.extract_digits(url))
+                return await self.get_doujin(doujin_id)
 
     async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins.
@@ -105,12 +105,12 @@ class NHentaiAPI:
             }
             async with session.get(f"{config.api_gallery_url}/search", params=parameters) as response:
                 results = await response.json()
-                return [result for result in results["result"]]
+                return list(results["result"])
 
     async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins by tag.
         Args:
-            :tag id: Tag for search doujins.
+            :tag_id int: Tag for search doujins.
             :page int: Page, from which we return results.
             :sort_by str: Sort for search.
 
@@ -137,9 +137,9 @@ class NHentaiAPI:
             try:
                 async with session.get(f"{config.api_gallery_url}/tagged", params=parameters) as response:
                     results = await response.json()
-                    return [result for result in results["result"]]
-            except KeyError:
-                raise errors.WrongTag("There is no tag with given tag_id")
+                    return list(results["result"])
+            except KeyError as exception:
+                raise errors.WrongTag("There is no tag with given tag_id") from exception
 
     async def get_homepage_doujins(self, page: int) -> List[dict]:
         """Method for getting doujins from.
@@ -166,4 +166,4 @@ class NHentaiAPI:
                 if not results["result"]:
                     raise errors.WrongPage("Given page is wrong.")
                 else:
-                    return [result for result in results["result"]]
+                    return list(results["result"])

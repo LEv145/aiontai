@@ -1,18 +1,21 @@
+"""Errors for API and other."""
+
+
 class IsNotValidStructure(Exception):
-    pass
+    """Exception for bad structure."""
 
 
 class DoujinDoesNotExist(Exception):
-    pass
+    """Exception for not existing doujin."""
 
 
 class IsNotValidSort(Exception):
-    pass
+    """Exception for bad sort option."""
 
 
 class WrongPage(Exception):
-    pass
+    """Exception for wrong page."""
 
 
 class WrongTag(Exception):
-    pass
+    """Exception for wrong tag."""

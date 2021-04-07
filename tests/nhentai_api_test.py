@@ -80,15 +80,15 @@ async def test_search_by_tag():
 @pytest.mark.asyncio
 async def test_search_by_tag_wrong_page():
     nhentai_api = api.NHentaiAPI()
-    with pytest.raises(errors.WrongPage):
-        await nhentai_api.search_by_tag(0, 0)
+    with pytest.raises(errors.WrongTag):
+        await nhentai_api.search_by_tag(0, 1)
 
 
 @pytest.mark.asyncio
 async def test_search_by_tag_wrong_sort():
     nhentai_api = api.NHentaiAPI()
     with pytest.raises(errors.IsNotValidSort):
-        await nhentai_api.search_by_tag(0, 1, "0")
+        await nhentai_api.search_by_tag(1, 1, "0")
 
 
 @pytest.mark.asyncio

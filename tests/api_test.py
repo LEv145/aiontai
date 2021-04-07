@@ -13,7 +13,7 @@ async def test_api_get_doujin():
     api = aiontai.API()
     doujin = await api.get_doujin(1)
     assert (
-           doujin.id 
+           doujin.doujin_id 
            and doujin.title
            and doujin.media_id
            and doujin.cover
@@ -50,7 +50,7 @@ async def test_api_get_random_doujin():
     api = aiontai.API()
     doujin = await api.get_random_doujin()
     assert (
-           doujin.id 
+           doujin.doujin_id 
            and doujin.title
            and doujin.media_id
            and doujin.cover

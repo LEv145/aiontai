@@ -1,3 +1,5 @@
+"""Models for API."""
+
 from datetime import datetime
 from typing import Iterator, List
 from enum import Enum
@@ -11,23 +13,29 @@ Datetime = datetime
 
 
 class ImageExtension(Enum):
-    jpg = "j"
-    png = "p"
-    gif = "g"
+    """Enumeration for image extension."""
+
+    JPG = "j"
+    PNG = "p"
+    GIF = "g"
 
 
 class TagType(Enum):
-    tag = "tag"
-    category = "category"
-    artist = "artist"
-    parody = "parody"
-    character = "character"
-    group = "group"
-    language = "language"
+    """Enumeration for tag type."""
+
+    TAG = "tag"
+    CATEGORY = "category"
+    ARTIST = "artist"
+    PARODY = "parody"
+    CHARACTER = "character"
+    GROUP = "group"
+    LANGUAGE = "language"
 
 
 @dataclass(frozen=True)
 class Image:
+    """Class that represents an Image."""
+
     name: str
     media_id: int
     width: int
@@ -36,6 +44,8 @@ class Image:
 
     @classmethod
     def from_json(cls, json: dict) -> "Image":
+        """Classmethod for creating image from JSON."""
+
         utils.is_valid_structure(config.image_structure, json)
 
         name = json["name"]
@@ -48,6 +58,8 @@ class Image:
 
     @cached_property
     def url(self) -> str:
+        """Property of url."""
+
         if self.name in ["cover", "thumb"]:
             return f"{config.t_gallery_url}/{self.media_id}/{self.name}.{self.extension.name}"
         else:
@@ -56,6 +68,8 @@ class Image:
 
 @dataclass(frozen=True)
 class Tag:
+    """Class that represents a tag."""
+
     id: int
     count: int
     name: str
@@ -64,6 +78,8 @@ class Tag:
 
     @classmethod
     def from_json(cls, json: dict) -> "Tag":
+        """Classmethod for creating tag from JSON."""
+
         utils.is_valid_structure(config.tag_structure, json)
 
         tag_id = json["id"]
@@ -77,12 +93,16 @@ class Tag:
 
 @dataclass(frozen=True)
 class Title:
+    """Class that represents a title."""
+
     english: str
     japanese: str
     pretty: str
 
     @classmethod
     def from_json(cls, json: dict) -> "Title":
+        """Classmethod for making title from JSON."""
+
         utils.is_valid_structure(config.title_structure, json)
 
         title_english = json["english"]
@@ -94,7 +114,9 @@ class Title:
 
 @dataclass(frozen=True)
 class Doujin:
-    id: int
+    """Class, that represents a doujin."""
+
+    doujin_id: int
     media_id: int
     title: Title
     cover: Image
@@ -108,9 +130,11 @@ class Doujin:
 
     @classmethod
     def from_json(cls, json: dict) -> "Doujin":
+        """Classmethod for creating doujin from JSON."""
+
         utils.is_valid_structure(config.doujin_structure, json)
 
-        id = json["id"]
+        doujin_id = json["id"]
         media_id = json["media_id"]
         favorites = json["favorites"]
         pages_count = len(json["pages"])
@@ -124,7 +148,7 @@ class Doujin:
         tags = [Tag.from_json(data) for data in json["tags"]]
         pages = [Image.from_json(data) for data in json["pages"]]
 
-        return cls(id, media_id, title, cover,
+        return cls(doujin_id, media_id, title, cover,
                    thumbnail, pages, tags, pages_count,
                    favorites, scanlator, upload_date)
 

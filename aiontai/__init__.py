@@ -1,3 +1,5 @@
+"""Module API wrapper impementation."""
+
 __all__ = ["API"]
 
 from typing import List
@@ -7,11 +9,13 @@ nhentai_api = api.NHentaiAPI()
 
 
 class API:
+    """Impementation of NHentaiAPI wrapper."""
+
     @staticmethod
-    async def get_doujin(id: int) -> models.Doujin:
+    async def get_doujin(doujin_id: int) -> models.Doujin:
         """Method for getting doujin by id.
         Args:
-            :id int: Doujin's id, which we get.
+            :doujin_id int: Doujin's id, which we get.
 
         Returns:
             JSON of doujin.
@@ -24,16 +28,16 @@ class API:
             >>> await api.get_doujin(1)
             Doujin(...)
         """
-        response = await nhentai_api.get_doujin(id)
+        response = await nhentai_api.get_doujin(doujin_id)
         json = await utils.make_doujin_json(response)
 
         return models.Doujin.from_json(json)
 
     @staticmethod
-    async def is_exist(id: int) -> bool:
+    async def is_exist(doujin_id: int) -> bool:
         """Method for checking does doujin exist.
         Args:
-            :id int: Doujin's id, which we check.
+            :doujin_id int: Doujin's id, which we check.
 
         Returns:
             True if doujin is exist, False if doujin is not exist.
@@ -43,7 +47,7 @@ class API:
             >>> await api.is_exist(1)
             True
         """
-        response = await nhentai_api.is_exist(id)
+        response = await nhentai_api.is_exist(doujin_id)
 
         return response
 

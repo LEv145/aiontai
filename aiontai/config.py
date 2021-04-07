@@ -1,7 +1,11 @@
+"""Configuration for module."""
+
 from schema import Schema, Use, Or, Optional
 
 
 class Config:
+    """Module configuration class."""
+
     i_gallery_url = "https://i.nhentai.net/galleries"
     t_gallery_url = "https://t.nhentai.net/galleries"
     api_url = "https://nhentai.net/api"
