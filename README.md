@@ -6,6 +6,40 @@ Async wrapper for nhentai API
 pip install aiontai
 ```
 
+## Examples
+### Get doujin
+```python
+import asyncio
+import aiontai
+
+api = aiontai.API()
+
+
+async def main():
+    doujin = api.get_doujin(1)
+
+
+if __name__ == "__main__":
+    asyncio.run(main()) 
+```
+### Iterate of doujin pages
+```python
+import asyncio
+import aiontai
+
+api = aiontai.API()
+
+
+async def main():
+    doujin = api.get_doujin(1)
+    for page in doujin:
+        print(page)
+
+
+if __name__ == "__main__":
+    asyncio.run(main()) 
+```
+
 # Dataclasses
 - ## ImageExtension
     - Enumeration, that represents an [Image](#Image) type.
@@ -45,7 +79,7 @@ pip install aiontai
     - url {str} -- tag URL
 - ## Doujin
     ### Attributes
-    - id {int} -- id of doujin
+    - doujin_id {int} -- id of doujin
     - media_id {int} -- id for doujin's images
     - title {[Title](#Title)} -- Title of doujin
     - cover {[Image](#Image)} -- The doujin cover
@@ -164,22 +198,6 @@ pip install aiontai
     >>> await api.get_homepage_doujins(page=2)
     [Doujin(...), ...]
     ```
-
-## Example
-```python
-import asyncio
-import aiontai
-
-api = aiontai.API()
-
-
-async def main():
-    doujin = api.get_doujin(1)
-
-
-if __name__ == "__main__":
-    asyncio.run(main()) 
-```
 
 # Contributing
 1. Write your code as PEP8
