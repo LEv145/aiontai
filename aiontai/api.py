@@ -1,7 +1,7 @@
 """Impementation of NHentaiAPI."""
 
 from enum import Enum
-from typing import List
+from typing import List, Optional
 import aiohttp
 from aiontai import errors, utils
 from aiontai.config import config
@@ -15,9 +15,12 @@ class SortOptions(Enum):
 
 
 class NHentaiAPI:
-    """Class that represents a nhentai API."""
 
-    async def get_doujin(self, doujin_id: int) -> dict:
+    def __init__(self, proxy: Optional[str] = None):
+        self.proxy = proxy
+
+    """Class that represents a nhentai API."""
+    async def _get_doujin(self, doujin_id: int) -> dict:
         """Method for getting doujin by id.
         Args:
             :id int: Doujin's id, which we get.
@@ -34,14 +37,14 @@ class NHentaiAPI:
             {...}
         """
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{config.api_url}/gallery/{doujin_id}") as response:
+            async with session.get(f"{config.api_url}/gallery/{doujin_id}", proxy=self.proxy) as response:
                 if response.ok:
                     json: dict = await response.json()
                     return json
                 else:
                     raise errors.DoujinDoesNotExist("That doujin does not exist.")
 
-    async def is_exist(self, doujin_id: int) -> bool:
+    async def _is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
         Args:
             :doujin_id int: Doujin's id, which we check.
@@ -60,7 +63,7 @@ class NHentaiAPI:
         except errors.DoujinDoesNotExist:
             return False
 
-    async def get_random_doujin(self) -> dict:
+    async def _get_random_doujin(self) -> dict:
         """Method for getting random doujin.
         Returns:
             JSON of random doujin.
@@ -71,12 +74,12 @@ class NHentaiAPI:
             {...}
         """
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{config.base_url}/random/") as response:
+            async with session.get(f"{config.base_url}/random/", proxy=self.proxy) as response:
                 url = response.url.human_repr()
                 doujin_id = int(utils.extract_digits(url))
                 return await self.get_doujin(doujin_id)
 
-    async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
+    async def _search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins.
         Args:
             :query str: Query for search doujins.
@@ -103,11 +106,11 @@ class NHentaiAPI:
                 "page": page,
                 "sort": sort_by
             }
-            async with session.get(f"{config.api_gallery_url}/search", params=parameters) as response:
+            async with session.get(f"{config.api_gallery_url}/search", params=parameters, proxy=self.proxy) as response:
                 results = await response.json()
                 return list(results["result"])
 
-    async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
+    async def _search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins by tag.
         Args:
             :tag_id int: Tag for search doujins.
@@ -135,13 +138,13 @@ class NHentaiAPI:
                 "sort": sort_by
             }
             try:
-                async with session.get(f"{config.api_gallery_url}/tagged", params=parameters) as response:
+                async with session.get(f"{config.api_gallery_url}/tagged", params=parameters, proxy=self.proxy) as response:
                     results = await response.json()
                     return list(results["result"])
             except KeyError as exception:
                 raise errors.WrongTag("There is no tag with given tag_id") from exception
 
-    async def get_homepage_doujins(self, page: int) -> List[dict]:
+    async def _get_homepage_doujins(self, page: int) -> List[dict]:
         """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.
@@ -161,7 +164,7 @@ class NHentaiAPI:
             parameters = {
                 "page": page
             }
-            async with session.get(f"{config.api_gallery_url}/all", params=parameters) as response:
+            async with session.get(f"{config.api_gallery_url}/all", params=parameters, proxy=self.proxy) as response:
                 results = await response.json()
                 if not results["result"]:
                     raise errors.WrongPage("Given page is wrong.")

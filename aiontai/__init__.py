@@ -5,14 +5,11 @@ __all__ = ["API"]
 from typing import List
 from aiontai import api, utils, models
 
-nhentai_api = api.NHentaiAPI()
 
-
-class API:
+class API(api.NHentaiAPI):
     """Impementation of NHentaiAPI wrapper."""
 
-    @staticmethod
-    async def get_doujin(doujin_id: int) -> models.Doujin:
+    async def get_doujin(self, doujin_id: int) -> models.Doujin:
         """Method for getting doujin by id.
         Args:
             :doujin_id int: Doujin's id, which we get.
@@ -28,13 +25,12 @@ class API:
             >>> await api.get_doujin(1)
             Doujin(...)
         """
-        response = await nhentai_api.get_doujin(doujin_id)
+        response = await self._get_doujin(doujin_id)
         json = await utils.make_doujin_json(response)
 
         return models.Doujin.from_json(json)
 
-    @staticmethod
-    async def is_exist(doujin_id: int) -> bool:
+    async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
         Args:
             :doujin_id int: Doujin's id, which we check.
@@ -47,12 +43,11 @@ class API:
             >>> await api.is_exist(1)
             True
         """
-        response = await nhentai_api.is_exist(doujin_id)
+        response = await self._is_exist(doujin_id)
 
         return response
 
-    @staticmethod
-    async def get_random_doujin() -> models.Doujin:
+    async def get_random_doujin(self) -> models.Doujin:
         """Method for getting random doujin.
         Returns:
             JSON of random doujin.
@@ -62,13 +57,12 @@ class API:
             >>> await api.random_doujin()
             Doujin(...)
         """
-        response = await nhentai_api.get_random_doujin()
+        response = await self._get_random_doujin()
         json = await utils.make_doujin_json(response)
 
         return models.Doujin.from_json(json)
 
-    @staticmethod
-    async def search(query: str, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
+    async def search(self, query: str, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
         """Method for search doujins.
         Args:
             :query str: Query for search doujins.
@@ -87,12 +81,11 @@ class API:
             >>> await api.search("anime", page=2, sort_by="popular")
             [Doujin(...), ...]
         """
-        response = await nhentai_api.search(query, page, sort_by)
+        response = await self._search(query, page, sort_by)
         results = [await utils.make_doujin_json(json) for json in response]
         return [models.Doujin.from_json(json) for json in results]
 
-    @staticmethod
-    async def search_by_tag(tag: int, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
+    async def search_by_tag(self, tag: int, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
         """Method for search doujins by tag.
         Args:
             :tag id: Tag for search doujins.
@@ -112,13 +105,11 @@ class API:
             >>> awaitapi.search_by_tag(1, page=2, sort_by="popular")
             [Doujin(...), ...]
         """
-        response = await nhentai_api.search_by_tag(tag, page, sort_by)
-        print(response)
+        response = await self._search_by_tag(tag, page, sort_by)
         results = [await utils.make_doujin_json(json) for json in response]
         return [models.Doujin.from_json(json) for json in results]
 
-    @staticmethod
-    async def get_homepage_doujins(*, page: int = 1) -> List[models.Doujin]:
+    async def get_homepage_doujins(self, *, page: int = 1) -> List[models.Doujin]:
         """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.
@@ -134,6 +125,6 @@ class API:
             >>> await api.get_homepage_doujins(1)
             [Doujin(...), ...]
         """
-        response = await nhentai_api.get_homepage_doujins(page)
+        response = await self._get_homepage_doujins(page)
         results = [await utils.make_doujin_json(json) for json in response]
         return [models.Doujin.from_json(json) for json in results]
