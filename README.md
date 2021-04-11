@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     ### Usage:
     ```python
-    >>> api = NHentaiAPI()
+    >>> api = aiontai.API()
     >>> await api.get_doujin(1)
     Doujin(...)
     ```
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     ### Usage:
     ```python
-    >>> api = NHentaiAPI()
+    >>> api = aiontai.API()
     >>> await api.is_exist(1)
     True
     >>> await api.is_exist(-1)
@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
     ### Usage:
     ```python
-    >>> api = NHentaiAPI()
+    >>> api = aiontai.API()
     >>> await api.get_random_doujin()
     Doujin(...)
     ```
@@ -154,7 +154,7 @@ if __name__ == "__main__":
 
     ### Usage:
     ```python
-    >>> api = NHentaiAPI()
+    >>> api = aiontai.API()
     >>> await api.search("anime", page=2, sort_by="popular")
     [Doujin(...), ...]
     ```
@@ -176,7 +176,7 @@ if __name__ == "__main__":
 
     ### Usage:
     ```python
-    >>> api = NHentaiAPI()
+    >>> api = aiontai.API()
     >>> await api.search_by_tag(1)
     [Doujin(...), ...]
     ```
@@ -194,7 +194,7 @@ if __name__ == "__main__":
 
     ### Usage:
     ```python
-    >>> api = NHentaiAPI()
+    >>> api = aiontai.API()
     >>> await api.get_homepage_doujins(page=2)
     [Doujin(...), ...]
     ```
