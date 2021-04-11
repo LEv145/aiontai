@@ -12,7 +12,7 @@ pip install aiontai
 import asyncio
 import aiontai
 
-api = aiontai.API()
+api = aiontai.API(proxi="http://45.67.123.207:30001")
 
 
 async def main():
