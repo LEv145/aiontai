@@ -148,3 +148,9 @@ class NHentaiAPI:
                 raise errors.WrongPage("Given page is wrong.")
             else:
                 return list(results["result"])
+
+    async def close(self):
+        """Method for close API Session."""
+        await self.session.close()
+
+            
