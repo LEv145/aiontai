@@ -96,7 +96,7 @@ def is_valid_search_by_tag_parameters(tag_id: int, page: int, sort_by: str) -> b
     return True
 
 
-async def make_doujin_json(original: dict) -> dict:
+async def make_doujin_json(source: dict) -> dict:
     """Convert JSON response to doujin JSON.
 
     Args:
@@ -105,51 +105,47 @@ async def make_doujin_json(original: dict) -> dict:
     Returns:
         dictionary of doujin.
     """
-    doujin_id = int(original["id"])
-    media_id = int(original["media_id"])
-    title = original["title"]
-    scanlator = original["scanlator"]
-    favorites = original["num_favorites"]
-    upload_date = original["upload_date"]
+    media_id = int(source["media_id"])
+
     cover = {
         "name": "cover",
         "media_id": media_id,
-        "extension": original["images"]["cover"]["t"],
-        "height": original["images"]["cover"]["h"],
-        "width": original["images"]["cover"]["w"]
+        "extension": source["images"]["cover"]["t"],
+        "height": source["images"]["cover"]["h"],
+        "width": source["images"]["cover"]["w"]
     }
     thumbnail = {
         "name": "thumb",
         "media_id": media_id,
-        "extension": original["images"]["thumbnail"]["t"],
-        "height": original["images"]["thumbnail"]["h"],
-        "width": original["images"]["thumbnail"]["w"]
+        "extension": source["images"]["thumbnail"]["t"],
+        "height": source["images"]["thumbnail"]["h"],
+        "width": source["images"]["thumbnail"]["w"]
     }
     pages = [
         {
             "name": f"{count + 1}",
             "media_id": media_id,
-            "extension": original["images"]["pages"][count]["t"],
-            "height": original["images"]["pages"][count]["h"],
-            "width": original["images"]["pages"][count]["w"]
+            "extension": source["images"]["pages"][count]["t"],
+            "height": source["images"]["pages"][count]["h"],
+            "width": source["images"]["pages"][count]["w"]
         }
-        for count, _ in enumerate(original["images"]["pages"])
+        for count in range(len(source["images"]["pages"]))
     ]
     pages_count = len(pages)
-    tags = list(original["tags"])
+    tags = list(source["tags"])
 
     json = {
-        "id": doujin_id,
+        "id": int(source["id"]),
         "media_id": media_id,
-        "title": title,
+        "title": source["title"],
         "cover": cover,
         "thumbnail": thumbnail,
         "pages": pages,
         "tags": tags,
-        "favorites": favorites,
+        "favorites": source["num_favorites"],
         "pages_count": pages_count,
-        "scanlator": scanlator,
-        "upload_date": upload_date
+        "scanlator": source["scanlator"],
+        "upload_date": source["upload_date"]
     }
 
     return json
