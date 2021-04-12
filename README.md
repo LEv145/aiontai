@@ -12,7 +12,7 @@ pip install aiontai
 import asyncio
 import aiontai
 
-api = aiontai.API(proxy="http://45.67.123.207:30001")
+api = aiontai.API()
 
 
 async def main():
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 import asyncio
 import aiontai
 
-api = aiontai.API()
+api = aiontai.API(proxy="http://45.67.123.207:30001") # We can use proxy
 
 
 async def main():
