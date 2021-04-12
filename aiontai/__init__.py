@@ -2,7 +2,7 @@
 
 __all__ = ["API"]
 
-from typing import List, Optional
+from typing import List
 from . import api, utils, models
 
 
@@ -144,5 +144,5 @@ class API:
         for json in response:
             result = await utils.make_doujin_json(json)
             results.append(result)
- 
+
         return [models.Doujin.from_json(json) for json in results]
