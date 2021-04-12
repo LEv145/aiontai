@@ -5,8 +5,8 @@ from typing import Iterator, List
 from enum import Enum
 from dataclasses import dataclass
 from functools import cached_property
-from aiontai.config import config
-from aiontai import utils
+from .config import config
+from . import utils
 
 
 Datetime = datetime
