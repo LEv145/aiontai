@@ -146,3 +146,14 @@ class API:
             results.append(result)
 
         return [models.Doujin.from_json(json) for json in results]
+    
+    async def close(self):
+        """Method for close API Session
+        Usage:
+            >>> api = NHentaiAPI()
+            >>> ...
+            >>> api.close()
+        """
+        await self.nhentai.close()
+
+    
