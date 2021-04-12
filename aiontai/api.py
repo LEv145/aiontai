@@ -73,7 +73,7 @@ class NHentaiAPI:
         Args:
             :query str: Query for search doujins.
             :page int: Page, from which we return results.
-            :sort_by str: Sort for search.
+            :sort_by str:  Sort for search (popular or date).
 
         Returns:
             List of doujins JSON
@@ -101,7 +101,7 @@ class NHentaiAPI:
         Args:
             :tag_id int: Tag for search doujins.
             :page int: Page, from which we return results.
-            :sort_by str: Sort for search.
+            :sort_by str: Sort for search (popular or date).
 
         Returns:
             List of doujins JSON
