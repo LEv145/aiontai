@@ -9,9 +9,9 @@ from aiontai import api, utils, models
 class API:
     """Impementation of NHentaiAPI wrapper."""
 
-    def __init__(self, proxy: Optional[str] = None) -> None:
+    def __init__(self, *args, **kv) -> None:
         self.proxy = proxy
-        self.nhentai = api.NHentaiAPI(proxy=proxy)
+        self.nhentai = api.NHentaiAPI(*args, **kv)
 
     async def get_doujin(self, doujin_id: int) -> models.Doujin:
         """Method for getting doujin by id.
