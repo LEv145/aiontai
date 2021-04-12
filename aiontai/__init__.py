@@ -152,7 +152,7 @@ class API:
         Usage:
             >>> api = NHentaiAPI()
             >>> ...
-            >>> api.close()
+            >>> await api.close()
         """
         await self.nhentai.close()
 
