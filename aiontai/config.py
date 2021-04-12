@@ -10,7 +10,7 @@ class Config:
     t_gallery_url = "https://t.nhentai.net/galleries"
     api_url = "https://nhentai.net/api"
     api_gallery_url = "https://nhentai.net/api/galleries"
-    base_url = "https://nhentai.net/"
+    base_url = "https://nhentai.net"
     image_structure = Schema(
         {
             "name": str,
