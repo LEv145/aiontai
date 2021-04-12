@@ -15,9 +15,9 @@ Datetime = datetime
 class ImageExtension(Enum):
     """Enumeration for image extension."""
 
-    JPG = "j"
-    PNG = "p"
-    GIF = "g"
+    jpg = "j"
+    png = "p"
+    gif = "g"
 
 
 class TagType(Enum):
