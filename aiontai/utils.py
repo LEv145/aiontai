@@ -1,7 +1,7 @@
 """Utils for api."""
 
 from schema import SchemaError, Schema
-from aiontai import errors, api
+from . import errors, api
 
 
 def is_valid_structure(schema: Schema, json: dict) -> bool:
