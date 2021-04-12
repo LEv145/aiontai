@@ -31,9 +31,9 @@ import aiontai
 api = aiontai.API(proxy="http://45.67.123.207:30001") # We can use proxy
 
 async def main():
-    doujin = await api.get_doujin(1)
-    for page in doujin:
-        print(page)
+    doujins = await api.search("anime", page=2, sort_by="popular") # sort_by: popular or date
+    for doujin in doujins:
+        print(doujin.doujin_id)
 
 
 if __name__ == "__main__":
