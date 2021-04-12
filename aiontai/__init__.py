@@ -2,12 +2,16 @@
 
 __all__ = ["API"]
 
-from typing import List
+from typing import List, Optional
 from aiontai import api, utils, models
 
 
-class API(api.NHentaiAPI):
+class API:
     """Impementation of NHentaiAPI wrapper."""
+
+    def __init__(self, proxy: Optional[str] = None) -> None:
+        self.proxy = proxy
+        self.nhentai = api.NHentaiAPI(proxy=proxy)
 
     async def get_doujin(self, doujin_id: int) -> models.Doujin:
         """Method for getting doujin by id.
@@ -25,7 +29,7 @@ class API(api.NHentaiAPI):
             >>> await api.get_doujin(1)
             Doujin(...)
         """
-        response = await self._get_doujin(doujin_id)
+        response = await self.nhentai.get_doujin(doujin_id)
         json = await utils.make_doujin_json(response)
 
         return models.Doujin.from_json(json)
@@ -43,7 +47,7 @@ class API(api.NHentaiAPI):
             >>> await api.is_exist(1)
             True
         """
-        response = await self._is_exist(doujin_id)
+        response = await self.nhentai.is_exist(doujin_id)
 
         return response
 
@@ -57,7 +61,7 @@ class API(api.NHentaiAPI):
             >>> await api.random_doujin()
             Doujin(...)
         """
-        response = await self._get_random_doujin()
+        response = await self.nhentai.get_random_doujin()
         json = await utils.make_doujin_json(response)
 
         return models.Doujin.from_json(json)
@@ -81,8 +85,13 @@ class API(api.NHentaiAPI):
             >>> await api.search("anime", page=2, sort_by="popular")
             [Doujin(...), ...]
         """
-        response = await self._search(query, page, sort_by)
-        results = [await utils.make_doujin_json(json) for json in response]
+        response = await self.nhentai.search(query, page, sort_by)
+
+        results = []
+        for json in response:
+            result = await utils.make_doujin_json(json)
+            results.append(result)
+
         return [models.Doujin.from_json(json) for json in results]
 
     async def search_by_tag(self, tag: int, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
@@ -102,11 +111,16 @@ class API(api.NHentaiAPI):
 
         Usage:
             >>> api = NHentaiAPI()
-            >>> awaitapi.search_by_tag(1, page=2, sort_by="popular")
+            >>> await api.search_by_tag(1, page=2, sort_by="popular")
             [Doujin(...), ...]
         """
-        response = await self._search_by_tag(tag, page, sort_by)
-        results = [await utils.make_doujin_json(json) for json in response]
+        response = await self.nhentai.search_by_tag(tag, page, sort_by)
+
+        results = []
+        for json in response:
+            result = await utils.make_doujin_json(json)
+            results.append(result)
+
         return [models.Doujin.from_json(json) for json in results]
 
     async def get_homepage_doujins(self, *, page: int = 1) -> List[models.Doujin]:
@@ -125,6 +139,11 @@ class API(api.NHentaiAPI):
             >>> await api.get_homepage_doujins(1)
             [Doujin(...), ...]
         """
-        response = await self._get_homepage_doujins(page)
-        results = [await utils.make_doujin_json(json) for json in response]
+        response = await self.nhentai.get_homepage_doujins(page)
+
+        results = []
+        for json in response:
+            result = await utils.make_doujin_json(json)
+            results.append(result)
+ 
         return [models.Doujin.from_json(json) for json in results]
