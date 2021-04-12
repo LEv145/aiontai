@@ -12,11 +12,11 @@ pip install aiontai
 import asyncio
 import aiontai
 
-api = aiontai.API()
-
 
 async def main():
+    api = aiontai.API()
     doujin = await api.get_doujin(1)
+    api.close()
 
 
 if __name__ == "__main__":
@@ -27,13 +27,14 @@ if __name__ == "__main__":
 import asyncio
 import aiontai
 
-api = aiontai.API(proxy="http://45.67.123.207:30001") # We can use proxy
-
 
 async def main():
+    api = aiontai.API(proxy="http://45.67.123.207:30001") # We can use proxy
     doujin = await api.get_doujin(1)
     for page in doujin:
         print(page)
+        
+    await api.close()
 
 
 if __name__ == "__main__":
@@ -198,6 +199,16 @@ if __name__ == "__main__":
     >>> await api.get_homepage_doujins(page=2)
     [Doujin(...), ...]
     ```
+    
+- ## async close()
+    Method for close API Session
+    ### Usage:
+    ```python
+    >>> api = NHentaiAPI()
+    >>> ...
+    >>> await api.close()
+    """
+
 
 # Contributing
 1. Write your code as PEP8
