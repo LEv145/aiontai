@@ -31,11 +31,6 @@ class NHentaiAPI:
 
         Raises:
             DoujinDoesNotExist if doujin was not found.
-
-        Usage:
-            >>> api = NHentaiAPI()
-            >>> await api.get_doujin(1)
-            {...}
         """
         url = f"{config.api_url}/gallery/{doujin_id}"
 
@@ -53,11 +48,6 @@ class NHentaiAPI:
 
         Returns:
             True if doujin is exist, False if doujin is not exist.
-
-        Usage:
-            >>> api = NHentaiAPI()
-            >>> await api.is_exist(1)
-            True
         """
         try:
             await self.get_doujin(doujin_id)
@@ -69,11 +59,6 @@ class NHentaiAPI:
         """Method for getting random doujin.
         Returns:
             JSON of random doujin.
-
-        Usage:
-            >>> api = NHentaiAPI()
-            >>> await api.random_doujin()
-            {...}
         """
         url = f"{config.base_url}/random/"
 
@@ -95,11 +80,6 @@ class NHentaiAPI:
         Raises:
             IsNotValidSort if sort is not a member of SortOptions.
             WrongPage if page less than 1.
-
-        Usage:
-            >>> api = NHentaiAPI()
-            >>> await api.search("anime", 2, "popular")
-            [{...}, ...]
         """
         utils.is_valid_search_parameters(page, sort_by)
 
@@ -127,11 +107,6 @@ class NHentaiAPI:
         Raises:
             IsNotValidSort if sort is not a member of SortOptions.
             WrongPage if page less than 1.
-
-        Usage:
-            >>> api = NHentaiAPI()
-            >>> await api.search_by_tag(1, 2, "popular")
-            [{...}, ...]
         """
         utils.is_valid_search_by_tag_parameters(tag_id, page, sort_by)
 
@@ -160,11 +135,6 @@ class NHentaiAPI:
 
         Raises:
             WrongPage if page less than 1 or page has no content.
-
-        Usage:
-            >>> api = NHentaiAPI()
-            >>> await api.get_homepage_doujins(1)
-            [{...}, ...]
         """
 
         url = f"{config.api_gallery_url}/all"
