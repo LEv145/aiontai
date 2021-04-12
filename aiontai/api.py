@@ -3,8 +3,8 @@
 from enum import Enum
 from typing import List, Optional
 import aiohttp
-from aiontai import errors, utils
-from aiontai.config import config
+from . import errors, utils
+from .config import config
 
 
 class SortOptions(Enum):
