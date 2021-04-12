@@ -3,7 +3,7 @@
 __all__ = ["API"]
 
 from typing import List, Optional
-from aiontai import api, utils, models
+from . import api, utils, models
 
 
 class API:
