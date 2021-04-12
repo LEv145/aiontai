@@ -18,7 +18,6 @@ class NHentaiAPI:
     """Class that represents a nhentai API."""
 
     def __init__(self, proxy: Optional[str] = None):
-        self.session = aiohttp.ClientSession()
         self.proxy = proxy
 
     async def get_doujin(self, doujin_id: int) -> dict:
@@ -34,12 +33,13 @@ class NHentaiAPI:
         """
         url = f"{config.api_url}/gallery/{doujin_id}"
 
-        async with self.session.get(url, proxy=self.proxy) as response:
-            if response.ok:
-                json = await response.json()
-                return json
-            else:
-                raise errors.DoujinDoesNotExist("That doujin does not exist.")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, proxy=self.proxy) as response:
+                if response.ok:
+                    json = await response.json()
+                    return json
+                else:
+                    raise errors.DoujinDoesNotExist("That doujin does not exist.")
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
@@ -62,10 +62,11 @@ class NHentaiAPI:
         """
         url = f"{config.base_url}/random/"
 
-        async with self.session.get(url, proxy=self.proxy) as response:
-            url = response.url.human_repr()
-            doujin_id = int(utils.extract_digits(url))
-            return await self.get_doujin(doujin_id)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, proxy=self.proxy) as response:
+                url = response.url.human_repr()
+                doujin_id = int(utils.extract_digits(url))
+                return await self.get_doujin(doujin_id)
 
     async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins.
@@ -90,9 +91,10 @@ class NHentaiAPI:
             "sort": sort_by
         }
 
-        async with self.session.get(url, params=parameters, proxy=self.proxy) as response:
-            results = await response.json()
-            return list(results["result"])
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=parameters, proxy=self.proxy) as response:
+                results = await response.json()
+                return list(results["result"])
 
     async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins by tag.
@@ -118,9 +120,10 @@ class NHentaiAPI:
         }
 
         try:
-            async with self.session.get(url, params=parameters, proxy=self.proxy) as response:
-                results = await response.json()
-                return list(results["result"])
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=parameters, proxy=self.proxy) as response:
+                    results = await response.json()
+                    return list(results["result"])
 
         except KeyError as exception:
             raise errors.WrongTag("There is no tag with given tag_id") from exception
@@ -142,15 +145,11 @@ class NHentaiAPI:
             "page": page
         }
 
-        async with self.session.get(url, params=parameters, proxy=self.proxy) as response:
-            results = await response.json()
-            if not results["result"]:
-                raise errors.WrongPage("Given page is wrong.")
-            else:
-                return list(results["result"])
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=parameters, proxy=self.proxy) as response:
+                results = await response.json()
+                if not results["result"]:
+                    raise errors.WrongPage("Given page is wrong.")
+                else:
+                    return list(results["result"])
 
-    async def close(self):
-        """Method for close API Session."""
-        await self.session.close()
-
-            
