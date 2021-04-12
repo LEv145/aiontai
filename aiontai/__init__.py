@@ -25,7 +25,7 @@ class API:
             DoujinDoesNotExist if doujin was not found.
 
         Usage:
-            >>> api = NHentaiAPI()
+            >>> api = aiontai.API()
             >>> await api.get_doujin(1)
             Doujin(...)
         """
@@ -43,7 +43,7 @@ class API:
             True if doujin is exist, False if doujin is not exist.
 
         Usage:
-            >>> api = NHentaiAPI()
+            >>> api = aiontai.API()
             >>> await api.is_exist(1)
             True
         """
@@ -57,7 +57,7 @@ class API:
             JSON of random doujin.
 
         Usage:
-            >>> api = NHentaiAPI()
+            >>> api = aiontai.API()
             >>> await api.random_doujin()
             Doujin(...)
         """
@@ -81,7 +81,7 @@ class API:
             WrongPage if page less than 1.
 
         Usage:
-            >>> api = NHentaiAPI()
+            >>> api = aiontai.API()
             >>> await api.search("anime", page=2, sort_by="popular")
             [Doujin(...), ...]
         """
@@ -110,7 +110,7 @@ class API:
             WrongTag if tag with given id does not exist.
 
         Usage:
-            >>> api = NHentaiAPI()
+            >>> api = aiontai.API()
             >>> await api.search_by_tag(1, page=2, sort_by="popular")
             [Doujin(...), ...]
         """
@@ -135,7 +135,7 @@ class API:
             WrongPage if page less than 1 or page has no content.
 
         Usage:
-            >>> api = NHentaiAPI()
+            >>> api = aiontai.API()
             >>> await api.get_homepage_doujins(1)
             [Doujin(...), ...]
         """
