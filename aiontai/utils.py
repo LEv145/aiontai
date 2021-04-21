@@ -1,7 +1,7 @@
 """Utils for api."""
 
 from schema import SchemaError, Schema
-from . import errors, api
+from . import errors, api, models
 
 
 def is_valid_structure(schema: Schema, json: dict) -> bool:
@@ -149,3 +149,15 @@ async def make_doujin_json(source: dict) -> dict:
     }
 
     return json
+
+async def make_doujin(response: dict) -> models.Doujin:
+    results = []
+    for json in response:
+        result = await make_doujin_json(json)
+        results.append(result)
+
+    if len(results) > 1:
+        return [models.Doujin.from_json(json) for json in results]
+    else:
+        return models.Doujin.from_json(results[0])
+
