@@ -181,7 +181,7 @@ if __name__ == "__main__":
     [Doujin(...), ...]
     ```
 
-- ## async search_all_by_tag()
+- ## async search_all_by_tags()
     Method for search doujins by tags.
     ### Args:
     - tag_ids {list}: [description]
