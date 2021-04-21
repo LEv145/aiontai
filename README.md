@@ -3,7 +3,7 @@ Async wrapper for nhentai API
 
 # Installation
 ```cmd
-pip install aiontai
+pip install git+https://github.com/LEv145/aiontai
 ```
 
 ## Examples
@@ -181,21 +181,22 @@ if __name__ == "__main__":
     [Doujin(...), ...]
     ```
 
-- ## async get_homepage_doujins()
-    Method for getting doujins from.
+- ## async search_all_by_tag()
+    Method for search doujins by tags.
     ### Args:
-    - page {int} = 1 -- Page, from which we get doujins.
+    - tag_ids {list}: [description]
 
     ### Returns:
     - List\[[Doujin](#Doujin)\]
 
     ### Raises:
-    - WrongPage if page less than 1 or page has no content.
+    - IsNotValidSort if sort is not a member of SortOptions.
+    - WrongPage if page less than 1.
 
     ### Usage:
-    ```python
+    ```py
     >>> api = aiontai.API()
-    >>> await api.get_homepage_doujins(page=2)
+    >>> await api.search_all_by_tag([11])
     [Doujin(...), ...]
     ```
 
