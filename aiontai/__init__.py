@@ -29,9 +29,8 @@ class API:
             Doujin(...)
         """
         response = await self.nhentai.get_doujin(doujin_id)
-        json = await utils.make_doujin_json(response)
 
-        return models.Doujin.from_json(json)
+        return await utils.make_doujin(response)
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
@@ -61,9 +60,8 @@ class API:
             Doujin(...)
         """
         response = await self.nhentai.get_random_doujin()
-        json = await utils.make_doujin_json(response)
 
-        return models.Doujin.from_json(json)
+        return await utils.make_doujin(response)
 
     async def search(self, query: str, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
         """Method for search doujins.
@@ -78,6 +76,7 @@ class API:
         Raises:
             IsNotValidSort if sort is not a member of SortOptions.
             WrongPage if page less than 1.
+            WrongSearch if any errors
 
         Usage:
             >>> api = aiontai.API()
@@ -86,12 +85,7 @@ class API:
         """
         response = await self.nhentai.search(query, page, sort_by)
 
-        results = []
-        for json in response:
-            result = await utils.make_doujin_json(json)
-            results.append(result)
-
-        return [models.Doujin.from_json(json) for json in results]
+        return await utils.make_doujin(response)
 
     async def search_by_tag(self, tag: int, *, page: int = 1, sort_by: str = "date") -> List[models.Doujin]:
         """Method for search doujins by tag.
@@ -115,12 +109,7 @@ class API:
         """
         response = await self.nhentai.search_by_tag(tag, page, sort_by)
 
-        results = []
-        for json in response:
-            result = await utils.make_doujin_json(json)
-            results.append(result)
-
-        return [models.Doujin.from_json(json) for json in results]
+        return await utils.make_doujin(response)
 
     async def get_homepage_doujins(self, *, page: int = 1) -> List[models.Doujin]:
         """Method for getting doujins from.
@@ -140,10 +129,27 @@ class API:
         """
         response = await self.nhentai.get_homepage_doujins(page)
 
-        results = []
-        for json in response:
-            result = await utils.make_doujin_json(json)
-            results.append(result)
+        return await utils.make_doujin(response)
 
-        return [models.Doujin.from_json(json) for json in results]
+    async def search_all_by_tag(self, tag_ids: list) -> List[models.Doujin]:
+        """
 
+        Args:
+            tag_ids (list): [description]
+
+        Returns:
+            List of doujins JSON
+
+        Raises:
+            IsNotValidSort if sort is not a member of SortOptions.
+            WrongPage if page less than 1.
+
+        Usage:
+            >>> api = aiontai.API()
+            >>> await api.search_all_by_tag([11])
+            [Doujin(...), ...]
+        """
+
+        response = await self.nhentai.search_all_by_tag(tag_ids)
+
+        return await utils.make_doujin(response)
