@@ -1,11 +1,11 @@
 """Impementation of NHentaiAPI."""
+import asyncio
 
 from enum import Enum
 from typing import List, Optional
 import aiohttp
 from . import errors, utils
 from .config import config
-
 
 class SortOptions(Enum):
     """Enumeration for sort options."""
@@ -20,6 +20,11 @@ class NHentaiAPI:
     def __init__(self, proxy: Optional[str] = None):
         self.proxy = proxy
 
+    async def _get_requests(self, *args, **kw):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(*args, **kw, proxy=self.proxy) as response:
+                return (await response.json()) if response.ok else None
+
     async def get_doujin(self, doujin_id: int) -> dict:
         """Method for getting doujin by id.
         Args:
@@ -33,13 +38,12 @@ class NHentaiAPI:
         """
         url = f"{config.api_url}/gallery/{doujin_id}"
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, proxy=self.proxy) as response:
-                if response.ok:
-                    json = await response.json()
-                    return json
-                else:
-                    raise errors.DoujinDoesNotExist("That doujin does not exist.")
+        result = await self._get_requests(url)
+        if result:
+            return result
+        else:
+            raise errors.DoujinDoesNotExist("That doujin does not exist.")
+
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
@@ -85,16 +89,18 @@ class NHentaiAPI:
         utils.is_valid_search_parameters(page, sort_by)
 
         url = f"{config.api_gallery_url}/search"
-        parameters = {
+        params = {
             "query": query,
             "page": page,
             "sort": sort_by
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=parameters, proxy=self.proxy) as response:
-                results = await response.json()
-                return list(results["result"])
+        resp = await self._get_requests(url, params=params)
+        result = resp["result"]
+        if result:
+            return result
+        else:
+            raise errors.WrongSearch("Given search is wrong.")
 
     async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
         """Method for search doujins by tag.
@@ -113,20 +119,18 @@ class NHentaiAPI:
         utils.is_valid_search_by_tag_parameters(tag_id, page, sort_by)
 
         url = f"{config.api_gallery_url}/tagged"
-        parameters = {
+        params = {
             "tag_id": tag_id,
             "page": page,
             "sort": sort_by
         }
 
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, params=parameters, proxy=self.proxy) as response:
-                    results = await response.json()
-                    return list(results["result"])
-
-        except KeyError as exception:
-            raise errors.WrongTag("There is no tag with given tag_id") from exception
+        resp = await self._get_requests(url, params=params)
+        result = resp["result"]
+        if result:
+            return result
+        else:
+            raise errors.WrongSearch("There is no tag with given tag_id")
 
     async def get_homepage_doujins(self, page: int) -> List[dict]:
         """Method for getting doujins from.
@@ -141,15 +145,58 @@ class NHentaiAPI:
         """
 
         url = f"{config.api_gallery_url}/all"
-        parameters = {
+        params = {
             "page": page
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=parameters, proxy=self.proxy) as response:
-                results = await response.json()
-                if not results["result"]:
-                    raise errors.WrongPage("Given page is wrong.")
-                else:
-                    return list(results["result"])
+        resp = await self._get_requests(url, params=params)
+        result = resp["result"]
+        if result:
+            return result
+        else:
+            raise errors.WrongPage("Given page is wrong.")
+
+    async def search_all_by_tag(self, tag_ids: list):
+        """Method for search doujins by tag.
+        Args:
+            :tag_ids list: List of tags
+
+        Returns:
+            List of doujins JSON
+
+        Raises:
+            IsNotValidSort if sort is not a member of SortOptions.
+            WrongPage if page less than 1.
+        """
+
+        async def get_limit(tag_id):
+            utils.is_valid_search_by_tag_parameters(tag_id, 1, "date")
+
+            url = f"{config.api_gallery_url}/tagged"
+            params = {
+                "tag_id": tag_id,
+                "page": 1,
+                "sort_by": "date"
+            }
+
+            result = await self._get_requests(url, params=params)
+            if result:
+                return result["num_pages"]
+            else:
+                raise errors.WrongTag("There is no tag with given tag_id")
+
+
+        limits = await asyncio.gather(*[get_limit(tag_id) for tag_id in tag_ids])
+        limits = zip(tag_ids, limits)
+
+        data = []
+
+        for args in limits:
+            limits  = args[1]
+            tag_ids = args[0]
+            for i in range(1, limits+1):
+                data.append((tag_ids, i))
+
+        pages = await asyncio.gather(*[self.search_by_tag(*args) for args in data])
+        return [doujin for page in pages for doujin in page]
 
