@@ -156,7 +156,7 @@ class NHentaiAPI:
         else:
             raise errors.WrongPage("Given page is wrong.")
 
-    async def search_all_by_tags(self, tag_ids: list):
+    async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
         """Method for search doujins by tags.
         Args:
             :tag_ids list: List of tags
