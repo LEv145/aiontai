@@ -197,6 +197,7 @@ class NHentaiAPI:
             for i in range(1, limits+1):
                 data.append((tag_ids, i))
 
+
         pages = await asyncio.gather(*[self.search_by_tag(*args) for args in data])
         return [doujin for page in pages for doujin in page]
 
