@@ -131,11 +131,10 @@ class API:
 
         return await utils.make_doujin(response)
 
-    async def search_all_by_tag(self, tag_ids: list) -> List[models.Doujin]:
-        """
-
+    async def search_all_by_tags(self, tag_ids: list) -> List[models.Doujin]:
+        """Method for search doujins by tags.
         Args:
-            tag_ids (list): [description]
+            :tag_ids list: List of tags
 
         Returns:
             List of doujins JSON
@@ -150,6 +149,6 @@ class API:
             [Doujin(...), ...]
         """
 
-        response = await self.nhentai.search_all_by_tag(tag_ids)
+        response = await self.nhentai.search_all_by_tags(tag_ids)
 
         return await utils.make_doujin(response)
