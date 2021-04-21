@@ -169,7 +169,7 @@ class NHentaiAPI:
             WrongPage if page less than 1.
         """
 
-        async def get_limit(tag_id):
+        async def get_limit(tag_id: int) -> List[dict]:
             utils.is_valid_search_by_tag_parameters(tag_id, 1, "date")
 
             url = f"{config.api_gallery_url}/tagged"
