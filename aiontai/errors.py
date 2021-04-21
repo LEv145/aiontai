@@ -16,6 +16,8 @@ class IsNotValidSort(Exception):
 class WrongPage(Exception):
     """Exception for wrong page."""
 
+class WrongSearch(Exception):
+    """Exception for wrong search."""
 
 class WrongTag(Exception):
     """Exception for wrong tag."""
