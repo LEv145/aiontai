@@ -150,10 +150,10 @@ async def make_doujin_json(source: dict) -> dict:
 
     return json
 
-async def make_doujin(response: dict or List[dict]) -> models.Doujin:
+async def make_doujin(response: dict or List[dict]) -> models.Doujin or List[models.Doujin]:
     if isinstance(response, list):
-        results = [await make_doujin_json(json) for json in response]
-        return [models.Doujin.from_json(json) for json in results]
+        jsons = [await make_doujin_json(item) for item in response]
+        return [models.Doujin.from_json(json) for json in jsons]
     else:
         json = await make_doujin_json(response)
         return models.Doujin.from_json(json)
