@@ -4,7 +4,9 @@ from datetime import datetime
 from typing import Iterator, List
 from enum import Enum
 from dataclasses import dataclass
-from functools import cached_property
+
+from werkzeug.utils import cached_property
+
 from .config import config
 from . import utils
 
