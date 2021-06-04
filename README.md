@@ -45,7 +45,7 @@ if __name__ == "__main__":
     - Enumeration, that represents an [Image](#Image) type.
     ### Enumerations
     - jpg {str} = "j"
-    - png {str} = "p
+    - png {str} = "p"
     - gif {str} = "g"
 - ## TagType
     - Enumeration, that represents a [Tag](#Tag) type.
