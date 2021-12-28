@@ -1,7 +1,8 @@
 """Impementation of NHentaiAPI."""
 import asyncio
-from typing import Any, List, Optional
+from typing import Any, AsyncIterator, List, Optional
 from enum import Enum
+from contextlib import asynccontextmanager
 
 from aiohttp import ClientSession, ClientResponse
 
@@ -22,22 +23,27 @@ class NHentaiAPI:
     def __init__(self):
         self.client_session: Optional[ClientSession] = None
 
+    @asynccontextmanager
     async def request(
         self,
         method: str,
         url: str,
         **kwargs: Any,
-    ) -> ClientResponse:
+    ) -> AsyncIterator[ClientResponse]:
         if self.client_session is None:
-            return  # TODO
+            raise ValueError("Client session does not exist")
 
         response = await self.client_session.request(
             method,
             url,
             **kwargs,
-        )
+        )  # TODO?: Context manager
         response.raise_for_status()
-        return response
+
+        try:
+            yield response
+        finally:
+            await response.release()
 
     async def get_doujin(self, doujin_id: int) -> dict:
         """Method for getting doujin by id.
