@@ -9,9 +9,6 @@ from . import api, utils, models
 class API:
     """Impementation of NHentaiAPI wrapper."""
 
-    def __init__(self, *args, **kw) -> None:
-        self.nhentai = api.NHentaiAPI(*args, **kw)
-
     async def get_doujin(self, doujin_id: int) -> models.Doujin:
         """Method for getting doujin by id.
         Args:

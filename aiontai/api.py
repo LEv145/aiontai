@@ -1,11 +1,13 @@
 """Impementation of NHentaiAPI."""
 import asyncio
-
+from typing import Any, List, Optional
 from enum import Enum
-from typing import List, Optional
-import aiohttp
+
+from aiohttp import ClientSession, ClientResponse
+
 from . import errors, utils
 from .config import config
+
 
 class SortOptions(Enum):
     """Enumeration for sort options."""
@@ -17,13 +19,25 @@ class SortOptions(Enum):
 class NHentaiAPI:
     """Class that represents a nhentai API."""
 
-    def __init__(self, proxy: Optional[str] = None):
-        self.proxy = proxy
+    def __init__(self):
+        self.client_session: Optional[ClientSession] = None
 
-    async def _get_requests(self, *args, **kw):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(*args, **kw, proxy=self.proxy) as response:
-                return (await response.json()) if response.ok else None
+    async def request(
+        self,
+        method: str,
+        url: str,
+        **kwargs: Any,
+    ) -> ClientResponse:
+        if self.client_session is None:
+            return  # TODO
+
+        response = await self.client_session.request(
+            method,
+            url,
+            **kwargs,
+        )
+        response.raise_for_status()
+        return response
 
     async def get_doujin(self, doujin_id: int) -> dict:
         """Method for getting doujin by id.
@@ -43,7 +57,6 @@ class NHentaiAPI:
             return result
         else:
             raise errors.DoujinDoesNotExist("That doujin does not exist.")
-
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.

@@ -1,29 +1,6 @@
 """Utils for api."""
 
-from schema import SchemaError, Schema
 from . import errors, api, models
-
-
-def is_valid_structure(schema: Schema, json: dict) -> bool:
-    """Check, is structure valid to schema.
-
-    Args:
-        :schema Schema: -- structure schema for validation.
-        :json dict: -- json of structure, which we validate.
-
-    Exceptions:
-        IsNotValidStructure if structure of json is not valid to schema.
-
-    Returns:
-        True if structure is valid to schema.
-    """
-    try:
-        schema.validate(json)
-        return True
-    except SchemaError as exception:
-        raise errors.IsNotValidStructure(
-            "You cant build a class from JSON, because it havent valid JSON structure."
-        ) from exception
 
 
 def extract_digits(string: str) -> str:
