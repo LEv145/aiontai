@@ -5,7 +5,6 @@ from typing import (
     Dict,
     List,
     AsyncIterator,
-    Optional,
     Union,
 )
 from enum import Enum
@@ -15,6 +14,7 @@ from aiohttp import (
     ClientSession,
     ClientResponse,
 )
+from injector import inject
 
 from .errors import (
     DoujinDoesNotExist,
@@ -31,11 +31,11 @@ class SortOptions(Enum):
     POPULARITY = "popular"
 
 
-class NHentaiAPI:
+class NHentaiAPI():
     """Class that represents a nhentai API."""
-
-    def __init__(self):
-        self.client_session: Optional[ClientSession] = None
+    @inject
+    def __init__(self, client_session: ClientSession):
+        self.client_session = client_session
 
     @asynccontextmanager
     async def request(
@@ -217,6 +217,7 @@ class NHentaiAPI:
             return result
         else:
             raise WrongPage("Given page is wrong.")
+
 
 # async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
 #     """Method for search doujins by tags.

@@ -1,12 +1,7 @@
+# FIXME: WTF?!
+
 from typing import Any, Dict, Optional
 from datetime import datetime
-import json as _json
-
-from schema import (
-    Schema,
-    Or as SchemaOr,
-    Optional as SchemaOptional
-)
 
 from models import (
     ImageExtension,
@@ -72,6 +67,49 @@ class TitleJsonConventer():
 
 class DoujinJsonConventer():
     def convert(self, json: Dict[str, Any]) -> Doujin:
+        # media_id = int(source["media_id"])
+
+        # cover = {
+        #     "name": "cover",
+        #     "media_id": media_id,
+        #     "extension": source["images"]["cover"]["t"],
+        #     "height": source["images"]["cover"]["h"],
+        #     "width": source["images"]["cover"]["w"]
+        # }
+        # thumbnail = {
+        #     "name": "thumb",
+        #     "media_id": media_id,
+        #     "extension": source["images"]["thumbnail"]["t"],
+        #     "height": source["images"]["thumbnail"]["h"],
+        #     "width": source["images"]["thumbnail"]["w"]
+        # }
+        # pages = [
+        #     {
+        #         "name": f"{count + 1}",
+        #         "media_id": media_id,
+        #         "extension": source["images"]["pages"][count]["t"],
+        #         "height": source["images"]["pages"][count]["h"],
+        #         "width": source["images"]["pages"][count]["w"]
+        #     }
+        #     for count in range(len(source["images"]["pages"]))
+        # ]
+        # pages_count = len(pages)
+        # tags = list(source["tags"])
+
+        # json = {
+        #     "id": int(source["id"]),
+        #     "media_id": media_id,
+        #     "title": source["title"],
+        #     "cover": cover,
+        #     "thumbnail": thumbnail,
+        #     "pages": pages,
+        #     "tags": tags,
+        #     "favorites": source["num_favorites"],
+        #     "pages_count": pages_count,
+        #     "scanlator": source["scanlator"],
+        #     "upload_date": source["upload_date"]
+        # }
+
         doujin_id: int = json["id"]
         media_id: int = json["media_id"]
         favorites_count: int = json["favorites"]
@@ -83,7 +121,7 @@ class DoujinJsonConventer():
 
         title = TitleJsonConventer().convert(json["title"])
         thumbnail = ImageJsonConventer().convert(json["thumbnail"])
-        cover = ImageJsonConventer().convert(json["cover"])
+        cover = ImageJsonConventer().convert(json["images"]["cover"])
 
         tags = [
             TagJsonConventer().convert(data)
