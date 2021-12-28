@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Dict, Optional
 from datetime import datetime
 import json as _json
 
@@ -19,17 +19,7 @@ from models import (
 
 
 class ImageJsonConventer():
-    def convert(self, raw_data: str) -> Image:
-        json = _json.loads(raw_data)
-
-        Schema({
-            "name": str,
-            "media_id": int,
-            "height": int,
-            "extension": str,
-            "width": int,
-        }).validate(json)
-
+    def convert(self, json: Dict[str, Any]) -> Image:
         media_id: int = json["media_id"]
         name: str = json["name"]
         width: int = json["width"]
@@ -42,26 +32,16 @@ class ImageJsonConventer():
             width=width,
             height=height,
             extension=extension,
-            url=(
-                f"https://t.nhentai.net/galleries/{media_id}/{name}.{extension.name}"
-                if name in ("cover", "thumb") else
-                f"https://i.nhentai.net/galleries/{media_id}/{name}.{extension.name}"
+            url=(  # TODO
+                f"https://t.nhentai.net/galleries/{media_id}/{name}.{extension.name.lower()}"
+                if name in ("cover", "thumb",) else
+                f"https://i.nhentai.net/galleries/{media_id}/{name}.{extension.name.lower()}"
             )
         )
 
 
 class TagJsonConventer():
-    def convert(self, raw_data: str) -> Tag:
-        json = _json.loads(raw_data)
-
-        Schema({
-            "count": int,
-            "id": int,
-            "name": str,
-            "type": str,
-            "url": str,
-        }).validate(json)
-
+    def convert(self, json: Dict[str, Any]) -> Tag:
         id_: int = json["id"]
         count: int = json["count"]
         name: str = json["name"]
@@ -78,15 +58,7 @@ class TagJsonConventer():
 
 
 class TitleJsonConventer():
-    def convert(self, raw_data: str) -> Title:
-        json = _json.loads(raw_data)
-
-        Schema({
-            SchemaOptional("english"): SchemaOr(str, None),
-            SchemaOptional("japanese"): SchemaOr(str, None),
-            SchemaOptional("pretty"): SchemaOr(str, None),
-        }).validate(json)
-
+    def convert(self, json: Dict[str, Any]) -> Title:
         english: Optional[str] = json["english"]
         japanese: Optional[str] = json["japanese"]
         pretty: Optional[str] = json["pretty"]
@@ -99,43 +71,7 @@ class TitleJsonConventer():
 
 
 class DoujinJsonConventer():
-    def convert(self, raw_data: str) -> Doujin:
-        json = _json.loads(raw_data)
-
-        Schema({
-            "id": int,
-            "media_id": int,
-            "title": {SchemaOptional(str): SchemaOr(str, None)},
-            "cover": {
-                "name": str,
-                "extension": str,
-                "media_id": int,
-                "height": int,
-                "width": int,
-            },
-            "pages": [
-                {
-                    "name": str,
-                    "extension": str,
-                    "media_id": int,
-                    "height": int,
-                    "width": int
-                },
-            ],
-            "thumbnail": {
-                "name": str,
-                "extension": str,
-                "media_id": int,
-                "height": int,
-                "width": int
-            },
-            "tags": [{str: SchemaOr(int, str)}],
-            "favorites": int,
-            "pages_count": int,
-            "scanlator": str,
-            "upload_date": int,
-        }).validate(json)
-
+    def convert(self, json: Dict[str, Any]) -> Doujin:
         doujin_id: int = json["id"]
         media_id: int = json["media_id"]
         favorites_count: int = json["favorites"]

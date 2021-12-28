@@ -19,3 +19,7 @@ class WrongSearch(Exception):
 
 class WrongTag(Exception):
     """Exception for wrong tag."""
+
+
+class IsNotValidSort(Exception):
+    """Exception not valid sort option."""

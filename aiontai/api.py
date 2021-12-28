@@ -1,13 +1,27 @@
 """Impementation of NHentaiAPI."""
-import asyncio
-from typing import Any, AsyncIterator, List, Optional
+import re
+from typing import (
+    Any,
+    Dict,
+    List,
+    AsyncIterator,
+    Optional,
+    Union,
+)
 from enum import Enum
 from contextlib import asynccontextmanager
 
-from aiohttp import ClientSession, ClientResponse
+from aiohttp import (
+    ClientSession,
+    ClientResponse,
+)
 
-from . import errors, utils
-from .config import config
+from .errors import (
+    DoujinDoesNotExist,
+    WrongSearch,
+    WrongTag,
+    WrongPage,
+)
 
 
 class SortOptions(Enum):
@@ -45,24 +59,26 @@ class NHentaiAPI:
         finally:
             await response.release()
 
-    async def get_doujin(self, doujin_id: int) -> dict:
+    async def get_doujin(self, doujin_id: Union[int, str]) -> Dict[str, Any]:
         """Method for getting doujin by id.
         Args:
             :doujin_id int: Doujin's id, which we get.
 
         Returns:
-            JSON of doujin.
+            Doujin model.
 
         Raises:
             DoujinDoesNotExist if doujin was not found.
         """
-        url = f"{config.api_url}/gallery/{doujin_id}"
+        url = f"https://nhentai.net/api/gallery/{doujin_id}"
 
-        result = await self._get_requests(url)
-        if result:
-            return result
-        else:
-            raise errors.DoujinDoesNotExist("That doujin does not exist.")
+        try:
+            async with self.request("GET", url=url) as response:
+                json = await response.json()
+        except Exception as error:  # TODO
+            raise DoujinDoesNotExist("That doujin does not exist.") from error
+
+        return json
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
@@ -75,23 +91,33 @@ class NHentaiAPI:
         try:
             await self.get_doujin(doujin_id)
             return True
-        except errors.DoujinDoesNotExist:
+        except DoujinDoesNotExist:
             return False
 
-    async def get_random_doujin(self) -> dict:
+    async def get_random_doujin(self) -> Dict[str, Any]:
         """Method for getting random doujin.
         Returns:
-            JSON of random doujin.
+            Doujin model.
         """
-        url = f"{config.base_url}/random/"
+        url = "https://nhentai.net/random/"
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, proxy=self.proxy) as response:
-                url = response.url.human_repr()
-                doujin_id = int(utils.extract_digits(url))
-                return await self.get_doujin(doujin_id)
+        async with self.request("GET", url=url) as response:
+            url = response.url.human_repr()
+            result = re.match(r"https?://nhentai\.net/g/(\d+)/", url)
 
-    async def search(self, query: str, page: int = 1, sort_by: str = "date") -> List[dict]:
+            assert result is not None
+            doujin_id = result.group(1)
+
+        return (
+            await self.get_doujin(doujin_id)
+        )
+
+    async def search(
+        self,
+        query: str,
+        page: int = 1,
+        sort_by: SortOptions = SortOptions.DATE,
+    ) -> List[Dict[str, Any]]:
         """Method for search doujins.
         Args:
             :query str: Query for search doujins.
@@ -105,23 +131,31 @@ class NHentaiAPI:
             IsNotValidSort if sort is not a member of SortOptions.
             WrongPage if page less than 1.
         """
-        utils.is_valid_search_parameters(page, sort_by)
+        if page < 1:
+            raise WrongPage("Page can not be less than 1")
 
-        url = f"{config.api_gallery_url}/search"
+        url = "https://nhentai.net/api/galleries/search"
         params = {
             "query": query,
             "page": page,
             "sort": sort_by
         }
 
-        resp = await self._get_requests(url, params=params)
-        result = resp["result"]
+        async with self.request("GET", url, params=params) as responce:
+            json = await responce.json()
+
+        result = json["result"]
         if result:
             return result
         else:
-            raise errors.WrongSearch("Given search is wrong.")
+            raise WrongSearch("Given search is wrong.")
 
-    async def search_by_tag(self, tag_id: int, page: int = 1, sort_by: str = "date") -> List[dict]:
+    async def search_by_tag(
+        self,
+        tag_id: int,
+        page: int = 1,
+        sort_by: SortOptions = SortOptions.DATE,
+    ) -> List[dict]:
         """Method for search doujins by tag.
         Args:
             :tag_id int: Tag for search doujins.
@@ -135,21 +169,27 @@ class NHentaiAPI:
             IsNotValidSort if sort is not a member of SortOptions.
             WrongPage if page less than 1.
         """
-        utils.is_valid_search_by_tag_parameters(tag_id, page, sort_by)
+        if page < 1:
+            raise WrongPage("Page can not be less than 1")
+        elif tag_id < 1:
+            raise WrongTag("Tag id can not be less than 1")
 
-        url = f"{config.api_gallery_url}/tagged"
+        url = "https://nhentai.net/api/galleries/tagged"
+
         params = {
             "tag_id": tag_id,
             "page": page,
             "sort": sort_by
         }
 
-        resp = await self._get_requests(url, params=params)
-        result = resp["result"]
+        async with self.request("GET", url, params=params) as responce:
+            json = await responce.json()
+
+        result = json["result"]
         if result:
             return result
         else:
-            raise errors.WrongSearch("There is no tag with given tag_id")
+            raise WrongSearch("There is no tag with given tag_id")
 
     async def get_homepage_doujins(self, page: int) -> List[dict]:
         """Method for getting doujins from.
@@ -163,60 +203,62 @@ class NHentaiAPI:
             WrongPage if page less than 1 or page has no content.
         """
 
-        url = f"{config.api_gallery_url}/all"
+        url = "https://nhentai.net/api/galleries/all"
+
         params = {
             "page": page
         }
 
-        resp = await self._get_requests(url, params=params)
-        result = resp["result"]
+        async with self.request("GET", url, params=params) as responce:
+            json = await responce.json()
+
+        result = json["result"]
         if result:
             return result
         else:
-            raise errors.WrongPage("Given page is wrong.")
+            raise WrongPage("Given page is wrong.")
 
-    async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
-        """Method for search doujins by tags.
-        Args:
-            :tag_ids list: List of tags
+# async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
+#     """Method for search doujins by tags.
+#     Args:
+#         :tag_ids list: List of tags
 
-        Returns:
-            List of doujins JSON
+#     Returns:
+#         List of doujins JSON
 
-        Raises:
-            IsNotValidSort if sort is not a member of SortOptions.
-            WrongPage if page less than 1.
-        """
+#     Raises:
+#         IsNotValidSort if sort is not a member of SortOptions.
+#         WrongPage if page less than 1.
+#     """
 
-        async def get_limit(tag_id: int) -> List[dict]:
-            utils.is_valid_search_by_tag_parameters(tag_id, 1, "date")
+#     async def get_limit(tag_id: int) -> List[dict]:
+#         utils.is_valid_search_by_tag_parameters(tag_id, 1, "date")
 
-            url = f"{config.api_gallery_url}/tagged"
-            params = {
-                "tag_id": tag_id,
-                "page": 1,
-                "sort_by": "date"
-            }
+#         url = f"{config.api_gallery_url}/tagged"
+#         params = {
+#             "tag_id": tag_id,
+#             "page": 1,
+#             "sort_by": "date"
+#         }
 
-            result = await self._get_requests(url, params=params)
-            if result:
-                return result["num_pages"]
-            else:
-                raise errors.WrongTag("There is no tag with given tag_id")
-
-
-        limits = await asyncio.gather(*[get_limit(tag_id) for tag_id in tag_ids])
-        limits = zip(tag_ids, limits)
-
-        data = []
-
-        for args in limits:
-            limits  = args[1]
-            tag_ids = args[0]
-            for i in range(1, limits+1):
-                data.append((tag_ids, i))
+#         result = await self._get_requests(url, params=params)
+#         if result:
+#             return result["num_pages"]
+#         else:
+#             raise errors.WrongTag("There is no tag with given tag_id")
 
 
-        pages = await asyncio.gather(*[self.search_by_tag(*args) for args in data])
-        return [doujin for page in pages for doujin in page]
+#     limits = await asyncio.gather(*[get_limit(tag_id) for tag_id in tag_ids])
+#     limits = zip(tag_ids, limits)
 
+#     data = []
+
+#     for args in limits:
+#         limits  = args[1]
+#         tag_ids = args[0]
+#         for i in range(1, limits+1):
+#             data.append((tag_ids, i))
+
+
+#     pages = await asyncio.gather(*[self.search_by_tag(*args) for args in data])
+#     return [doujin for page in pages for doujin in page]
