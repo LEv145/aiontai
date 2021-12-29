@@ -6,10 +6,7 @@ from .client import (
     NHentaiClient,
 )
 from .converters import (
-    DoujinJsonConventer,
-    ImageJsonConventer,
-    TagJsonConventer,
-    TitleJsonConventer,
+    JsonConventer,
 )
 from .errors import (
     DoujinDoesNotExist,
@@ -27,24 +24,25 @@ from .models import (
     TagType,
     Title,
 )
+from .modules import (
+    ClientModule,
+)
 
 __all__ = [
+    "ClientModule",
     "Doujin",
     "DoujinDoesNotExist",
-    "DoujinJsonConventer",
     "Image",
     "ImageExtension",
-    "ImageJsonConventer",
     "IsNotValidSort",
     "IsNotValidStructure",
+    "JsonConventer",
     "NHentaiAPI",
     "NHentaiClient",
     "SortOptions",
     "Tag",
-    "TagJsonConventer",
     "TagType",
     "Title",
-    "TitleJsonConventer",
     "WrongPage",
     "WrongSearch",
     "WrongTag",

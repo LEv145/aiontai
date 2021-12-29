@@ -3,7 +3,7 @@
 from typing import Any, Dict, Optional
 from datetime import datetime
 
-from models import (
+from .models import (
     ImageExtension,
     TagType,
     Image,
@@ -13,124 +13,46 @@ from models import (
 )
 
 
-class ImageJsonConventer():
-    def convert(self, json: Dict[str, Any]) -> Image:
-        media_id: int = json["media_id"]
-        name: str = json["name"]
-        width: int = json["width"]
-        height: int = json["height"]
-        extension = ImageExtension(json["extension"])
-
-        return Image(
-            name=name,
-            media_id=media_id,
-            width=width,
-            height=height,
-            extension=extension,
-            url=(  # TODO
-                f"https://t.nhentai.net/galleries/{media_id}/{name}.{extension.name.lower()}"
-                if name in ("cover", "thumb",) else
-                f"https://i.nhentai.net/galleries/{media_id}/{name}.{extension.name.lower()}"
-            )
-        )
-
-
-class TagJsonConventer():
-    def convert(self, json: Dict[str, Any]) -> Tag:
-        id_: int = json["id"]
-        count: int = json["count"]
-        name: str = json["name"]
-        type = TagType(json["type"])
-        url: str = json["url"]
-
-        return Tag(
-            id=id_,
-            count=count,
-            name=name,
-            type=type,
-            url=url,
-        )
-
-
-class TitleJsonConventer():
-    def convert(self, json: Dict[str, Any]) -> Title:
-        english: Optional[str] = json["english"]
-        japanese: Optional[str] = json["japanese"]
-        pretty: Optional[str] = json["pretty"]
-
-        return Title(
-            english=english,
-            japanese=japanese,
-            pretty=pretty,
-        )
-
-
-class DoujinJsonConventer():
-    def convert(self, json: Dict[str, Any]) -> Doujin:
-        # media_id = int(source["media_id"])
-
-        # cover = {
-        #     "name": "cover",
-        #     "media_id": media_id,
-        #     "extension": source["images"]["cover"]["t"],
-        #     "height": source["images"]["cover"]["h"],
-        #     "width": source["images"]["cover"]["w"]
-        # }
-        # thumbnail = {
-        #     "name": "thumb",
-        #     "media_id": media_id,
-        #     "extension": source["images"]["thumbnail"]["t"],
-        #     "height": source["images"]["thumbnail"]["h"],
-        #     "width": source["images"]["thumbnail"]["w"]
-        # }
-        # pages = [
-        #     {
-        #         "name": f"{count + 1}",
-        #         "media_id": media_id,
-        #         "extension": source["images"]["pages"][count]["t"],
-        #         "height": source["images"]["pages"][count]["h"],
-        #         "width": source["images"]["pages"][count]["w"]
-        #     }
-        #     for count in range(len(source["images"]["pages"]))
-        # ]
-        # pages_count = len(pages)
-        # tags = list(source["tags"])
-
-        # json = {
-        #     "id": int(source["id"]),
-        #     "media_id": media_id,
-        #     "title": source["title"],
-        #     "cover": cover,
-        #     "thumbnail": thumbnail,
-        #     "pages": pages,
-        #     "tags": tags,
-        #     "favorites": source["num_favorites"],
-        #     "pages_count": pages_count,
-        #     "scanlator": source["scanlator"],
-        #     "upload_date": source["upload_date"]
-        # }
-
-        doujin_id: int = json["id"]
-        media_id: int = json["media_id"]
-        favorites_count: int = json["favorites"]
-        pages_count = len(json["pages"])
-        scanlator: str = json["scanlator"]
+class JsonConventer():  # Conventer namespase
+    @classmethod
+    def convert_doujin(
+        cls,
+        raw_data: Dict[str, Any]
+    ) -> Doujin:
+        doujin_id: int = raw_data["id"]
+        media_id: int = raw_data["media_id"]
+        favorites_count: int = raw_data["favorites"]
+        pages_count = len(raw_data["pages"])
+        scanlator: str = raw_data["scanlator"]
         upload_date = datetime.utcfromtimestamp(
-            json["upload_date"],
+            raw_data["upload_date"],
         )
 
-        title = TitleJsonConventer().convert(json["title"])
-        thumbnail = ImageJsonConventer().convert(json["thumbnail"])
-        cover = ImageJsonConventer().convert(json["images"]["cover"])
+        title = cls.convert_title(raw_data["title"])
+
+        thumbnail = cls.convert_image(
+            raw_data["images"]["thumbnail"],
+            name="thumb",
+            media_id=media_id,
+        )
+        cover = cls.convert_image(
+            raw_data["images"]["cover"],
+            name="cover",
+            media_id=media_id,
+        )
 
         tags = [
-            TagJsonConventer().convert(data)
-            for data in json["tags"]
+            cls.convert_tag(data)
+            for data in raw_data["tags"]
         ]  # TODO
 
         pages = [
-            ImageJsonConventer().convert(data)
-            for data in json["pages"]
+            cls.convert_image(
+                raw_data,
+                name=f"{index + 1}",
+                media_id=media_id,
+            )
+            for index, raw_data in enumerate(raw_data["images"]["pages"])
         ]
 
         return Doujin(
@@ -145,4 +67,62 @@ class DoujinJsonConventer():
             cover=cover,
             tags=tags,
             pages=pages,
+        )
+
+    @classmethod
+    def convert_title(
+        cls,
+        raw_data: Dict[str, Any]
+    ) -> Title:
+        english: Optional[str] = raw_data["english"]
+        japanese: Optional[str] = raw_data["japanese"]
+        pretty: Optional[str] = raw_data["pretty"]
+
+        return Title(
+            english=english,
+            japanese=japanese,
+            pretty=pretty,
+        )
+
+    @classmethod
+    def convert_image(
+        cls,
+        raw_data: Dict[str, Any],
+        name: str,
+        media_id: int,
+    ) -> Image:
+        width: int = raw_data["w"]
+        height: int = raw_data["h"]
+        type_ = ImageExtension(raw_data["t"])
+
+        return Image(
+            name=name,
+            media_id=media_id,
+            width=width,
+            height=height,
+            extension=type_,
+            url=(
+                f"https://t.nhentai.net/galleries/{media_id}/{name}.{type_.name.lower()}"
+                if name in ("cover", "thumb",) else
+                f"https://i.nhentai.net/galleries/{media_id}/{name}.{type_.name.lower()}"
+            )
+        )
+
+    @classmethod
+    def convert_tag(
+        cls,
+        raw_data: Dict[str, Any]
+    ) -> Tag:
+        id_: int = raw_data["id"]
+        count: int = raw_data["count"]
+        name: str = raw_data["name"]
+        type = TagType(raw_data["type"])
+        url: str = raw_data["url"]
+
+        return Tag(
+            id=id_,
+            count=count,
+            name=name,
+            type=type,
+            url=url,
         )

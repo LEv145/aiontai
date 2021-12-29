@@ -14,7 +14,6 @@ from aiohttp import (
     ClientSession,
     ClientResponse,
 )
-from injector import inject
 
 from .errors import (
     DoujinDoesNotExist,
@@ -33,7 +32,6 @@ class SortOptions(Enum):
 
 class NHentaiAPI():
     """Class that represents a nhentai API."""
-    @inject
     def __init__(self, client_session: ClientSession):
         self.client_session = client_session
 

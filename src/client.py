@@ -2,11 +2,9 @@
 
 from typing import TYPE_CHECKING, List
 
-from injector import inject
-
 from .api import NHentaiAPI, SortOptions
 from .converters import (
-    DoujinJsonConventer
+    JsonConventer
 )
 
 if TYPE_CHECKING:
@@ -17,8 +15,6 @@ if TYPE_CHECKING:
 
 class NHentaiClient():
     """Impementation of NHentaiAPI wrapper."""
-
-    @inject
     def __init__(self, api: NHentaiAPI) -> None:
         self.api = api
 
@@ -38,9 +34,9 @@ class NHentaiClient():
             >>> await api.get_doujin(1)
             Doujin(...)
         """
-        result = await self.api.get_doujin(doujin_id)
+        raw_data = await self.api.get_doujin(doujin_id)
 
-        return DoujinJsonConventer().convert(result)
+        return JsonConventer.convert_doujin(raw_data)
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
@@ -55,9 +51,9 @@ class NHentaiClient():
             >>> await api.is_exist(1)
             True
         """
-        result = await self.api.is_exist(doujin_id)
+        raw_data = await self.api.is_exist(doujin_id)
 
-        return result
+        return raw_data
 
     async def get_random_doujin(self) -> "Doujin":
         """Method for getting random doujin.
@@ -69,9 +65,9 @@ class NHentaiClient():
             >>> await api.random_doujin()
             Doujin(...)
         """
-        result = await self.api.get_random_doujin()
+        raw_data = await self.api.get_random_doujin()
 
-        return DoujinJsonConventer().convert(result)
+        return JsonConventer.convert_doujin(raw_data)
 
     async def search(
         self,
@@ -106,7 +102,7 @@ class NHentaiClient():
         )
 
         return [
-            DoujinJsonConventer().convert(raw_data)
+            JsonConventer.convert_doujin(raw_data)
             for raw_data in result
         ]
 
@@ -143,11 +139,15 @@ class NHentaiClient():
         )
 
         return [
-            DoujinJsonConventer().convert(raw_data)
+            JsonConventer.convert_doujin(raw_data)
             for raw_data in result
         ]
 
-    async def get_homepage_doujins(self, *, page: int = 1) -> List[Doujin]:
+    async def get_homepage_doujins(
+        self,
+        *,
+        page: int = 1
+    ) -> List["Doujin"]:
         """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.
@@ -168,7 +168,7 @@ class NHentaiClient():
         )
 
         return [
-            DoujinJsonConventer().convert(raw_data)
+            JsonConventer.convert_doujin(raw_data)
             for raw_data in result
         ]
 
