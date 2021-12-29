@@ -1,20 +1,16 @@
 from .api import (
+    DoujinDoesNotExist,
     NHentaiAPI,
     SortOptions,
+    WrongPage,
+    WrongSearch,
+    WrongTag,
 )
 from .client import (
     NHentaiClient,
 )
 from .converters import (
     JsonConventer,
-)
-from .errors import (
-    DoujinDoesNotExist,
-    IsNotValidSort,
-    IsNotValidStructure,
-    WrongPage,
-    WrongSearch,
-    WrongTag,
 )
 from .models import (
     Doujin,
@@ -34,8 +30,6 @@ __all__ = [
     "DoujinDoesNotExist",
     "Image",
     "ImageExtension",
-    "IsNotValidSort",
-    "IsNotValidStructure",
     "JsonConventer",
     "NHentaiAPI",
     "NHentaiClient",

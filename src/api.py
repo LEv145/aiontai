@@ -15,13 +15,6 @@ from aiohttp import (
     ClientResponse,
 )
 
-from .errors import (
-    DoujinDoesNotExist,
-    WrongSearch,
-    WrongTag,
-    WrongPage,
-)
-
 
 class SortOptions(Enum):
     """Enumeration for sort options."""
@@ -261,3 +254,19 @@ class NHentaiAPI():
 
 #     pages = await asyncio.gather(*[self.search_by_tag(*args) for args in data])
 #     return [doujin for page in pages for doujin in page]
+
+
+class WrongPage(Exception):
+    """Exception for wrong page."""
+
+
+class WrongSearch(Exception):
+    """Exception for wrong search."""
+
+
+class WrongTag(Exception):
+    """Exception for wrong tag."""
+
+
+class DoujinDoesNotExist(Exception):
+    """Exception for not existing doujin."""
