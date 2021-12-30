@@ -11,6 +11,7 @@ from enum import Enum
 from contextlib import asynccontextmanager
 
 from aiohttp import (
+    ClientResponseError,
     ClientSession,
     ClientResponse,
 )
@@ -35,9 +36,6 @@ class NHentaiAPI():
         url: str,
         **kwargs: Any,
     ) -> AsyncIterator[ClientResponse]:
-        if self.client_session is None:
-            raise ValueError("Client session does not exist")
-
         response = await self.client_session.request(
             method,
             url,
@@ -56,7 +54,7 @@ class NHentaiAPI():
             :doujin_id int: Doujin's id, which we get.
 
         Returns:
-            Doujin model.
+            Doujin json.
 
         Raises:
             DoujinDoesNotExist if doujin was not found.
@@ -66,8 +64,11 @@ class NHentaiAPI():
         try:
             async with self.request("GET", url=url) as response:
                 json = await response.json()
-        except Exception as error:  # TODO
-            raise DoujinDoesNotExist("That doujin does not exist.") from error
+        except ClientResponseError as error:  # TODO
+            if error.status == 404:
+                raise DoujinDoesNotExist("That doujin does not exist.") from error
+            else:
+                raise error
 
         return json
 
@@ -94,7 +95,7 @@ class NHentaiAPI():
 
         async with self.request("GET", url=url) as response:
             url = response.url.human_repr()
-            result = re.match(r"https?://nhentai\.net/g/(\d+)/", url)
+            result = re.match(r"https?://nhentai\.net/g/(\d+)/?", url)
 
             assert result is not None
             doujin_id = result.group(1)
@@ -129,7 +130,7 @@ class NHentaiAPI():
         params = {
             "query": query,
             "page": page,
-            "sort": sort_by
+            "sort": sort_by.value,
         }
 
         async with self.request("GET", url, params=params) as responce:
@@ -137,7 +138,7 @@ class NHentaiAPI():
 
         result = json["result"]
         if result:
-            return result
+            return json
         else:
             raise WrongSearch("Given search is wrong.")
 
@@ -170,7 +171,7 @@ class NHentaiAPI():
         params = {
             "tag_id": tag_id,
             "page": page,
-            "sort": sort_by
+            "sort": sort_by,
         }
 
         async with self.request("GET", url, params=params) as responce:
@@ -178,11 +179,11 @@ class NHentaiAPI():
 
         result = json["result"]
         if result:
-            return result
+            return json
         else:
             raise WrongSearch("There is no tag with given tag_id")
 
-    async def get_homepage_doujins(self, page: int) -> List[dict]:
+    async def get_homepage_doujins(self, page: int) -> List[Dict[str, Any]]:
         """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.
@@ -205,7 +206,7 @@ class NHentaiAPI():
 
         result = json["result"]
         if result:
-            return result
+            return json
         else:
             raise WrongPage("Given page is wrong.")
 
