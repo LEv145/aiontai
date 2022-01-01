@@ -134,6 +134,20 @@ class TestApi(IsolatedAsyncioTestCase):
                 sort_by=SortOptions.DATE,
             )
 
+        # Test error: DoujinDoesNotExist
+        self.response_mosk.json.return_value = {
+            "result": [],
+            "num_pages": 15181,
+            "per_page": 25,
+        }
+
+        with self.assertRaises(DoujinDoesNotExist):
+            await self.api.search(
+                query="Omakehon 2005",
+                page=1,
+                sort_by=SortOptions.DATE,
+            )
+
     async def test__search_by_tag(self):
         # Normal test
         with open(Path("./tests/testdata/doujins.json")) as fp:
@@ -166,6 +180,20 @@ class TestApi(IsolatedAsyncioTestCase):
                 sort_by=SortOptions.DATE,
             )
 
+        # Test error: DoujinDoesNotExist
+        self.response_mosk.json.return_value = {
+            "result": [],
+            "num_pages": 15181,
+            "per_page": 25,
+        }
+
+        with self.assertRaises(DoujinDoesNotExist):
+            await self.api.search_by_tag(
+                tag_id=66666,
+                page=1,
+                sort_by=SortOptions.DATE,
+            )
+
     async def test__get_homepage_doujins(self):
         with open(Path("./tests/testdata/doujins.json")) as fp:
             raw_data = json.load(fp)
@@ -178,3 +206,14 @@ class TestApi(IsolatedAsyncioTestCase):
             ),
             raw_data,
         )
+
+        self.response_mosk.json.return_value = {
+            "result": [],
+            "num_pages": 15181,
+            "per_page": 25,
+        }
+
+        with self.assertRaises(DoujinDoesNotExist):
+            await self.api.get_homepage_doujins(
+                page=66666,
+            )

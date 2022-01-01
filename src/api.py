@@ -140,7 +140,7 @@ class NHentaiAPI():
         if result:
             return json
         else:
-            raise WrongSearch("Given search is wrong.")
+            raise DoujinDoesNotExist()
 
     async def search_by_tag(
         self,
@@ -181,7 +181,7 @@ class NHentaiAPI():
         if result:
             return json
         else:
-            raise WrongSearch("There is no tag with given tag_id")
+            raise DoujinDoesNotExist()
 
     async def get_homepage_doujins(self, page: int) -> List[Dict[str, Any]]:
         """Method for getting doujins from.
@@ -208,7 +208,7 @@ class NHentaiAPI():
         if result:
             return json
         else:
-            raise WrongPage("Given page is wrong.")
+            raise DoujinDoesNotExist()
 
 
 # async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
