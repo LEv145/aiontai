@@ -3,61 +3,100 @@ from unittest import IsolatedAsyncioTestCase
 from unittest.mock import Mock, AsyncMock
 from pathlib import Path
 
-from src.api import NHentaiAPI, SortOptions
+from aiohttp import ClientResponseError
+
+from src.api import DoujinDoesNotExist, NHentaiAPI, SortOptions, WrongPage, WrongTag
 
 
 class TestApi(IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.client_session_mosk = AsyncMock()
-        self.response_mosk: AsyncMock = (
-            self.client_session_mosk.request.return_value
+        self.api = NHentaiAPI(
+            client_session=AsyncMock(),
         )
+        self.response_mosk: AsyncMock = (
+            self.api.client_session.request.return_value
+        )  # response_mosk alias
 
     async def test__request(self) -> None:
-        client_session_mosk = self.client_session_mosk
+        # Normal test
         self.response_mosk.raise_for_status = Mock()
 
-        api = NHentaiAPI(
-            client_session=client_session_mosk,
-        )
-
-        async with api.request(
+        async with self.api.request(
             "GET",
             "https://www.gnu.org/",
         ) as response:
             ...  # TODO
 
     async def test__get_doujin(self) -> None:
+        # Normal test
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
 
-        api = NHentaiAPI(
-            client_session=self.client_session_mosk,
-        )
-
         self.assertEqual(
-            await api.get_doujin(123),
+            await self.api.get_doujin(123),
             raw_data,
         )
 
+        # Test error: DoujinDoesNotExist
+        self.response_mosk.raise_for_status = Mock(
+            side_effect=ClientResponseError(
+                request_info=Mock(),
+                history=Mock(),
+                status=404,
+            )
+        )
+
+        with self.assertRaises(DoujinDoesNotExist):
+            self.assertEqual(
+                await self.api.get_doujin(123),
+                raw_data,
+            )
+
+        # Test error: ClientResponseError
+        self.response_mosk.raise_for_status = Mock(
+            side_effect=ClientResponseError(
+                request_info=Mock(),
+                history=Mock(),
+                status=201,
+            )
+        )
+
+        with self.assertRaises(ClientResponseError):
+            self.assertEqual(
+                await self.api.get_doujin(123),
+                raw_data,
+            )
+
     async def test__is_exist(self) -> None:
+        # Normal test
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
 
-        api = NHentaiAPI(
-            client_session=self.client_session_mosk,
-        )
-
         self.assertEqual(
-            await api.is_exist(123),
+            await self.api.is_exist(123),
             True,
         )
 
+        # Test error: DoujinDoesNotExist
+        self.response_mosk.raise_for_status = Mock(
+            side_effect=ClientResponseError(
+                request_info=Mock(),
+                history=Mock(),
+                status=404,
+            )
+        )
+
+        self.assertEqual(
+            await self.api.is_exist(123),
+            False,
+        )
+
     async def test__get_random_doujin(self):
+        # Normal test
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
 
@@ -66,27 +105,20 @@ class TestApi(IsolatedAsyncioTestCase):
         )
         self.response_mosk.json.return_value = raw_data
 
-        api = NHentaiAPI(
-            client_session=self.client_session_mosk,
-        )
-
         self.assertEqual(
-            await api.get_random_doujin(),
+            await self.api.get_random_doujin(),
             raw_data,
         )
 
     async def test__search(self):
+        # Normal test
         with open(Path("./tests/testdata/doujins.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
 
-        api = NHentaiAPI(
-            client_session=self.client_session_mosk,
-        )
-
         self.assertEqual(
-            await api.search(
+            await self.api.search(
                 query="Omakehon 2005",
                 page=1,
                 sort_by=SortOptions.DATE,
@@ -94,18 +126,23 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
+        # Test error: WrongPage
+        with self.assertRaises(WrongPage):
+            await self.api.search(
+                query="Omakehon 2005",
+                page=-1,
+                sort_by=SortOptions.DATE,
+            )
+
     async def test__search_by_tag(self):
+        # Normal test
         with open(Path("./tests/testdata/doujins.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
 
-        api = NHentaiAPI(
-            client_session=self.client_session_mosk,
-        )
-
         self.assertEqual(
-            await api.search_by_tag(
+            await self.api.search_by_tag(
                 tag_id=7752,
                 page=1,
                 sort_by=SortOptions.DATE,
@@ -113,18 +150,30 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
+        # Test error: WrongPage
+        with self.assertRaises(WrongPage):
+            await self.api.search_by_tag(
+                tag_id=7752,
+                page=-1,
+                sort_by=SortOptions.DATE,
+            )
+
+        # Test error: WrongTag
+        with self.assertRaises(WrongTag):
+            await self.api.search_by_tag(
+                tag_id=-1,
+                page=1,
+                sort_by=SortOptions.DATE,
+            )
+
     async def test__get_homepage_doujins(self):
         with open(Path("./tests/testdata/doujins.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
 
-        api = NHentaiAPI(
-            client_session=self.client_session_mosk,
-        )
-
         self.assertEqual(
-            await api.get_homepage_doujins(
+            await self.api.get_homepage_doujins(
                 page=1
             ),
             raw_data,

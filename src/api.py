@@ -163,7 +163,7 @@ class NHentaiAPI():
         """
         if page < 1:
             raise WrongPage("Page can not be less than 1")
-        elif tag_id < 1:
+        elif tag_id < 1:  # TODO: Better check
             raise WrongTag("Tag id can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/tagged"
