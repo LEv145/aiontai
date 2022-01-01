@@ -88,3 +88,10 @@ class Doujin:
 
     def __getitem__(self, key) -> Image:
         return self.pages[key]
+
+
+@dataclass(frozen=True)
+class DoujinsResult():
+    doujins: List[Doujin]
+    pages_count: int
+    doujins_per_page: int

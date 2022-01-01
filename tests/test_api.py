@@ -5,7 +5,13 @@ from pathlib import Path
 
 from aiohttp import ClientResponseError
 
-from src.api import DoujinDoesNotExist, NHentaiAPI, SortOptions, WrongPage, WrongTag
+from src.api import (
+    NHentaiAPI,
+    DoujinDoesNotExist,
+    SortOptions,
+    WrongPage,
+    WrongTag,
+)
 
 
 class TestApi(IsolatedAsyncioTestCase):
@@ -21,11 +27,8 @@ class TestApi(IsolatedAsyncioTestCase):
         # Normal test
         self.response_mosk.raise_for_status = Mock()
 
-        async with self.api.request(
-            "GET",
-            "https://www.gnu.org/",
-        ) as response:
-            ...  # TODO
+        async with self.api.request("GET", "https://nhentai.net/"):
+            ...
 
     async def test__get_doujin(self) -> None:
         # Normal test

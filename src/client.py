@@ -1,6 +1,6 @@
 """Module API wrapper impementation."""
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from .api import NHentaiAPI, SortOptions
 from .converters import (
@@ -10,6 +10,7 @@ from .converters import (
 if TYPE_CHECKING:
     from .models import (
         Doujin,
+        DoujinsResult,
     )
 
 
@@ -75,7 +76,7 @@ class NHentaiClient():
         *,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> List["Doujin"]:
+    ) -> "DoujinsResult":
         """Method for search doujins.
         Args:
             :query str: Query for search doujins.
@@ -101,10 +102,7 @@ class NHentaiClient():
             sort_by=sort_by,
         )
 
-        return [
-            JsonConventer.convert_doujin(raw_data)
-            for raw_data in result
-        ]
+        return JsonConventer.convert_doujins_result(result)
 
     async def search_by_tag(
         self,
@@ -112,7 +110,7 @@ class NHentaiClient():
         *,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> List["Doujin"]:
+    ) -> "DoujinsResult":
         """Method for search doujins by tag.
         Args:
             :tag id: Tag for search doujins.
@@ -138,16 +136,13 @@ class NHentaiClient():
             sort_by=sort_by,
         )
 
-        return [
-            JsonConventer.convert_doujin(raw_data)
-            for raw_data in result
-        ]
+        return JsonConventer.convert_doujins_result(result)
 
     async def get_homepage_doujins(
         self,
         *,
         page: int = 1
-    ) -> List["Doujin"]:
+    ) -> "DoujinsResult":
         """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.
@@ -167,10 +162,7 @@ class NHentaiClient():
             page=page,
         )
 
-        return [
-            JsonConventer.convert_doujin(raw_data)
-            for raw_data in result
-        ]
+        return JsonConventer.convert_doujins_result(result)
 
 # async def search_all_by_tags(self, tag_ids: list) -> List[models.Doujin]:
 #     """Method for search doujins by tags.

@@ -3,7 +3,6 @@ import re
 from typing import (
     Any,
     Dict,
-    List,
     AsyncIterator,
     Union,
 )
@@ -109,7 +108,7 @@ class NHentaiAPI():
         query: str,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Method for search doujins.
         Args:
             :query str: Query for search doujins.
@@ -147,7 +146,7 @@ class NHentaiAPI():
         tag_id: int,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> List[dict]:
+    ) -> Dict[str, Any]:
         """Method for search doujins by tag.
         Args:
             :tag_id int: Tag for search doujins.
@@ -183,7 +182,10 @@ class NHentaiAPI():
         else:
             raise DoujinDoesNotExist()
 
-    async def get_homepage_doujins(self, page: int) -> List[Dict[str, Any]]:
+    async def get_homepage_doujins(
+        self,
+        page: int
+    ) -> Dict[str, Any]:
         """Method for getting doujins from.
         Args:
             :page int: Page, from which we get doujins.

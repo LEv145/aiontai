@@ -10,10 +10,29 @@ from .models import (
     Tag,
     Title,
     Doujin,
+    DoujinsResult,
 )
 
 
 class JsonConventer():  # Conventer namespase
+    @classmethod
+    def convert_doujins_result(
+        cls,
+        raw_data: Dict[str, Any],
+    ) -> DoujinsResult:
+        doujins = [
+            cls.convert_doujin(doujin_raw_data)
+            for doujin_raw_data in raw_data["result"]
+        ]
+        pages_count: int = raw_data["num_pages"]
+        doujins_per_page: int = raw_data["per_page"]
+
+        return DoujinsResult(
+            doujins=doujins,
+            pages_count=pages_count,
+            doujins_per_page=doujins_per_page,
+        )
+
     @classmethod
     def convert_doujin(
         cls,
@@ -21,8 +40,8 @@ class JsonConventer():  # Conventer namespase
     ) -> Doujin:
         doujin_id: int = raw_data["id"]
         media_id: int = raw_data["media_id"]
-        favorites_count: int = raw_data["favorites"]
-        pages_count = len(raw_data["pages"])
+        favorites_count: int = raw_data["num_favorites"]
+        pages_count: int = raw_data["num_pages"]
         scanlator: str = raw_data["scanlator"]
         upload_date = datetime.utcfromtimestamp(
             raw_data["upload_date"],
