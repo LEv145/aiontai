@@ -38,7 +38,7 @@ class JsonConventer():  # Conventer namespase
         cls,
         raw_data: Dict[str, Any]
     ) -> Doujin:
-        doujin_id: int = raw_data["id"]
+        id: int = raw_data["id"]
         media_id: int = raw_data["media_id"]
         favorites_count: int = raw_data["num_favorites"]
         pages_count: int = raw_data["num_pages"]
@@ -75,7 +75,7 @@ class JsonConventer():  # Conventer namespase
         ]
 
         return Doujin(
-            doujin_id=doujin_id,
+            id=id,
             media_id=media_id,
             favorites_count=favorites_count,
             pages_count=pages_count,

@@ -5,18 +5,18 @@ from datetime import datetime
 from enum import Enum
 from dataclasses import dataclass
 
+from dataclasses_json import DataClassJsonMixin
 
-class ImageExtension(Enum):
+
+class ImageExtension(str, Enum):
     """Enumeration for image extension."""
-
     JPG = "j"
     PNG = "p"
     GIF = "g"
 
 
-class TagType(Enum):
+class TagType(str, Enum):
     """Enumeration for tag type."""
-
     TAG = "tag"
     CATEGORY = "category"
     ARTIST = "artist"
@@ -27,9 +27,8 @@ class TagType(Enum):
 
 
 @dataclass(frozen=True)
-class Image:
+class Image(DataClassJsonMixin):  # TODO?: new name: Page
     """Class that represents an image."""
-
     name: str
     url: str
     media_id: int
@@ -39,9 +38,8 @@ class Image:
 
 
 @dataclass(frozen=True)
-class Tag:
+class Tag(DataClassJsonMixin):
     """Class that represents a tag."""
-
     id: int
     count: int
     name: str
@@ -50,19 +48,17 @@ class Tag:
 
 
 @dataclass(frozen=True)
-class Title:
+class Title(DataClassJsonMixin):
     """Class that represents a title."""
-
     english: Optional[str]
     japanese: Optional[str]
     pretty: Optional[str]
 
 
 @dataclass(frozen=True)
-class Doujin:
+class Doujin(DataClassJsonMixin):
     """Class, that represents a doujin."""
-
-    doujin_id: int
+    id: int
     media_id: int
     title: Title
     cover: Image
@@ -78,20 +74,14 @@ class Doujin:
         return iter(self.pages)
 
     def __len__(self) -> int:
-        return self.pages_count
+        return len(self.pages)
 
-    def __reversed__(self) -> Iterator[Image]:
-        return reversed(self.pages)
-
-    def __contains__(self, page: Image) -> bool:
-        return page in self.pages
-
-    def __getitem__(self, key) -> Image:
+    def __getitem__(self, key: int) -> Image:
         return self.pages[key]
 
 
 @dataclass(frozen=True)
-class DoujinsResult():
+class DoujinsResult(DataClassJsonMixin):
     doujins: List[Doujin]
     pages_count: int
     doujins_per_page: int

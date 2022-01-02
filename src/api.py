@@ -28,6 +28,9 @@ class NHentaiAPI():
     def __init__(self, client_session: ClientSession):
         self.client_session = client_session
 
+    async def close(self):
+        await self.client_session.close()
+
     @asynccontextmanager
     async def request(
         self,

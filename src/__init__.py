@@ -14,6 +14,7 @@ from .converters import (
 )
 from .models import (
     Doujin,
+    DoujinsResult,
     Image,
     ImageExtension,
     Tag,
@@ -28,6 +29,7 @@ __all__ = [
     "ClientModule",
     "Doujin",
     "DoujinDoesNotExist",
+    "DoujinsResult",
     "Image",
     "ImageExtension",
     "JsonConventer",

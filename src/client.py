@@ -19,6 +19,9 @@ class NHentaiClient():
     def __init__(self, api: NHentaiAPI) -> None:
         self.api = api
 
+    async def close(self):
+        await self.api.close()
+
     async def get_doujin(self, doujin_id: int) -> "Doujin":
         """Method for getting doujin by id.
         Args:

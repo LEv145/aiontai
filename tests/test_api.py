@@ -36,6 +36,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
+        self.response_mosk.raise_for_status = Mock()
 
         self.assertEqual(
             await self.api.get_doujin(123),
@@ -43,12 +44,10 @@ class TestApi(IsolatedAsyncioTestCase):
         )
 
         # Test error: DoujinDoesNotExist
-        self.response_mosk.raise_for_status = Mock(
-            side_effect=ClientResponseError(
-                request_info=Mock(),
-                history=Mock(),
-                status=404,
-            )
+        self.response_mosk.raise_for_status.side_effect = ClientResponseError(
+            request_info=Mock(),
+            history=Mock(),
+            status=404,
         )
 
         with self.assertRaises(DoujinDoesNotExist):
@@ -58,12 +57,10 @@ class TestApi(IsolatedAsyncioTestCase):
             )
 
         # Test error: ClientResponseError
-        self.response_mosk.raise_for_status = Mock(
-            side_effect=ClientResponseError(
-                request_info=Mock(),
-                history=Mock(),
-                status=201,
-            )
+        self.response_mosk.raise_for_status.side_effect = ClientResponseError(
+            request_info=Mock(),
+            history=Mock(),
+            status=201,
         )
 
         with self.assertRaises(ClientResponseError):
@@ -78,6 +75,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
+        self.response_mosk.raise_for_status = Mock()
 
         self.assertEqual(
             await self.api.is_exist(123),
@@ -85,12 +83,10 @@ class TestApi(IsolatedAsyncioTestCase):
         )
 
         # Test error: DoujinDoesNotExist
-        self.response_mosk.raise_for_status = Mock(
-            side_effect=ClientResponseError(
-                request_info=Mock(),
-                history=Mock(),
-                status=404,
-            )
+        self.response_mosk.raise_for_status.side_effect = ClientResponseError(
+            request_info=Mock(),
+            history=Mock(),
+            status=404,
         )
 
         self.assertEqual(
@@ -107,6 +103,7 @@ class TestApi(IsolatedAsyncioTestCase):
             return_value="https://nhentai.net/g/123/"
         )
         self.response_mosk.json.return_value = raw_data
+        self.response_mosk.raise_for_status = Mock()
 
         self.assertEqual(
             await self.api.get_random_doujin(),
@@ -115,10 +112,11 @@ class TestApi(IsolatedAsyncioTestCase):
 
     async def test__search(self):
         # Normal test
-        with open(Path("./tests/testdata/doujins.json")) as fp:
+        with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
+        self.response_mosk.raise_for_status = Mock()
 
         self.assertEqual(
             await self.api.search(
@@ -153,10 +151,11 @@ class TestApi(IsolatedAsyncioTestCase):
 
     async def test__search_by_tag(self):
         # Normal test
-        with open(Path("./tests/testdata/doujins.json")) as fp:
+        with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
+        self.response_mosk.raise_for_status = Mock()
 
         self.assertEqual(
             await self.api.search_by_tag(
@@ -198,10 +197,11 @@ class TestApi(IsolatedAsyncioTestCase):
             )
 
     async def test__get_homepage_doujins(self):
-        with open(Path("./tests/testdata/doujins.json")) as fp:
+        with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
+        self.response_mosk.raise_for_status = Mock()
 
         self.assertEqual(
             await self.api.get_homepage_doujins(
