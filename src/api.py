@@ -1,4 +1,4 @@
-"""Impementation of NHentaiAPI."""
+"""Low level API."""
 import re
 from typing import (
     Any,
@@ -24,20 +24,29 @@ class SortOptions(Enum):
 
 
 class NHentaiAPI():
-    """Class that represents a nhentai API."""
+    """NHentai low level API."""
+
     def __init__(self, client_session: ClientSession):
+        """
+        Init object.
+
+        Args:
+            client_session (ClientSession): Aiohttp client session.
+        """
         self.client_session = client_session
 
     async def close(self):
+        """Close object."""
         await self.client_session.close()
 
     @asynccontextmanager
-    async def request(
+    async def _request(
         self,
         method: str,
         url: str,
         **kwargs: Any,
     ) -> AsyncIterator[ClientResponse]:
+        """Async context manager for requests."""
         response = await self.client_session.request(
             method,
             url,
@@ -51,20 +60,23 @@ class NHentaiAPI():
             await response.release()
 
     async def get_doujin(self, doujin_id: Union[int, str]) -> Dict[str, Any]:
-        """Method for getting doujin by id.
-        Args:
-            :doujin_id int: Doujin's id, which we get.
+        """
+        Get doujin by id.
 
-        Returns:
-            Doujin json.
+        Args:
+            doujin_id (Union[int, str]): ID of doujin.
 
         Raises:
-            DoujinDoesNotExist if doujin was not found.
+            DoujinDoesNotExist: If the doujin does not exit.
+            ClientResponseError: Error from response.
+
+        Returns:
+            Dict[str, Any]: Raw doujin from responce.
         """
         url = f"https://nhentai.net/api/gallery/{doujin_id}"
 
         try:
-            async with self.request("GET", url=url) as response:
+            async with self._request("GET", url=url) as response:
                 json = await response.json()
         except ClientResponseError as error:  # TODO
             if error.status == 404:
@@ -74,13 +86,15 @@ class NHentaiAPI():
 
         return json
 
-    async def is_exist(self, doujin_id: int) -> bool:
-        """Method for checking does doujin exist.
+    async def is_exist(self, doujin_id: Union[int, str]) -> bool:
+        """
+        Check if the doujin exists.
+
         Args:
-            :doujin_id int: Doujin's id, which we check.
+            doujin_id (Union[int, str]): ID of doujin.
 
         Returns:
-            True if doujin is exist, False if doujin is not exist.
+            bool: If the doujin is exists.
         """
         try:
             await self.get_doujin(doujin_id)
@@ -89,13 +103,15 @@ class NHentaiAPI():
             return False
 
     async def get_random_doujin(self) -> Dict[str, Any]:
-        """Method for getting random doujin.
+        """
+        Get random doujin.
+
         Returns:
-            Doujin model.
+            Dict[str, Any]: Raw doujin from responce.
         """
         url = "https://nhentai.net/random/"
 
-        async with self.request("GET", url=url) as response:
+        async with self._request("GET", url=url) as response:
             url = response.url.human_repr()
             result = re.match(r"https?://nhentai\.net/g/(\d+)/?", url)
 
@@ -112,18 +128,22 @@ class NHentaiAPI():
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
     ) -> Dict[str, Any]:
-        """Method for search doujins.
-        Args:
-            :query str: Query for search doujins.
-            :page int: Page, from which we return results.
-            :sort_by str:  Sort for search (popular or date).
+        """
+        Search doujins.
 
-        Returns:
-            List of doujins JSON
+        Args:
+            query (str): Query for search doujins.
+            page (int, optional): Number of page from which we return the results.
+                Defaults to 1.
+            sort_by (SortOptions, optional): Sort options for search.
+                Defaults to SortOptions.DATE.
 
         Raises:
-            IsNotValidSort if sort is not a member of SortOptions.
-            WrongPage if page less than 1.
+            WrongPage: If number of page is invalid.
+            DoujinDoesNotExist: If not `result` value from json response.
+
+        Returns:
+            Dict[str, Any]: Raw doujins result from responce.
         """
         if page < 1:
             raise WrongPage("Page can not be less than 1")
@@ -135,14 +155,14 @@ class NHentaiAPI():
             "sort": sort_by.value,
         }
 
-        async with self.request("GET", url, params=params) as responce:
+        async with self._request("GET", url, params=params) as responce:
             json = await responce.json()
 
         result = json["result"]
         if result:
             return json
         else:
-            raise DoujinDoesNotExist()
+            raise DoujinDoesNotExist()  # FIXME
 
     async def search_by_tag(
         self,
@@ -150,18 +170,23 @@ class NHentaiAPI():
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
     ) -> Dict[str, Any]:
-        """Method for search doujins by tag.
-        Args:
-            :tag_id int: Tag for search doujins.
-            :page int: Page, from which we return results.
-            :sort_by str: Sort for search (popular or date).
+        """
+        Search doujins by tag.
 
-        Returns:
-            List of doujins JSON
+        Args:
+            tag_id (int): Tag ID for search.
+            page (int, optional): Number of page from which we return the results.
+                Defaults to 1.
+            sort_by (SortOptions, optional): Sort options for search.
+                Defaults to SortOptions.DATE.
 
         Raises:
-            IsNotValidSort if sort is not a member of SortOptions.
-            WrongPage if page less than 1.
+            WrongPage: If number of page is invalid.
+            WrongTag: If tag ID is invalid.
+            DoujinDoesNotExist: If not `result` value from json response.
+
+        Returns:
+            Dict[str, Any]: Raw doujins result from responce.
         """
         if page < 1:
             raise WrongPage("Page can not be less than 1")
@@ -176,44 +201,45 @@ class NHentaiAPI():
             "sort": sort_by,
         }
 
-        async with self.request("GET", url, params=params) as responce:
+        async with self._request("GET", url, params=params) as responce:
             json = await responce.json()
 
         result = json["result"]
         if result:
             return json
         else:
-            raise DoujinDoesNotExist()
+            raise DoujinDoesNotExist()  # FIXME
 
     async def get_homepage_doujins(
         self,
         page: int
     ) -> Dict[str, Any]:
-        """Method for getting doujins from.
-        Args:
-            :page int: Page, from which we get doujins.
+        """
+        Get doujins from homepage.
 
-        Returns:
-            List of doujins JSON
+        Args:
+            page (int): Number of page from which we return the results.
 
         Raises:
-            WrongPage if page less than 1 or page has no content.
-        """
+            DoujinDoesNotExist: If not `result` value from json response.
 
+        Returns:
+            Dict[str, Any]: Raw doujins result from responce.
+        """
         url = "https://nhentai.net/api/galleries/all"
 
         params = {
             "page": page
         }
 
-        async with self.request("GET", url, params=params) as responce:
+        async with self._request("GET", url, params=params) as responce:
             json = await responce.json()
 
         result = json["result"]
         if result:
             return json
         else:
-            raise DoujinDoesNotExist()
+            raise DoujinDoesNotExist()  # FIXME
 
 
 # async def search_all_by_tags(self, tag_ids: list) -> List[dict]:

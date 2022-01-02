@@ -57,7 +57,7 @@ class Title(DataClassJsonMixin):
 
 @dataclass(frozen=True)
 class Doujin(DataClassJsonMixin):
-    """Class, that represents a doujin."""
+    """Class that represents a doujin."""
     id: int
     media_id: int
     title: Title
@@ -82,6 +82,7 @@ class Doujin(DataClassJsonMixin):
 
 @dataclass(frozen=True)
 class DoujinsResult(DataClassJsonMixin):
+    """Class that represents an doujins result."""
     doujins: List[Doujin]
     pages_count: int
     doujins_per_page: int
