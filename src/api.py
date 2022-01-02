@@ -51,13 +51,13 @@ class NHentaiAPI():
             method,
             url,
             **kwargs,
-        )  # TODO?: Context manager
+        )
         response.raise_for_status()
 
         try:
             yield response
         finally:
-            await response.release()
+            await response.__aexit__(None, None, None)
 
     async def get_doujin(self, doujin_id: Union[int, str]) -> Dict[str, Any]:
         """
@@ -78,7 +78,7 @@ class NHentaiAPI():
         try:
             async with self._request("GET", url=url) as response:
                 json = await response.json()
-        except ClientResponseError as error:  # TODO
+        except ClientResponseError as error:
             if error.status == 404:
                 raise DoujinDoesNotExist("That doujin does not exist.") from error
             else:
@@ -94,7 +94,7 @@ class NHentaiAPI():
             doujin_id (Union[int, str]): ID of doujin.
 
         Returns:
-            bool: If the doujin is exists.
+            bool: The doujin is exists.
         """
         try:
             await self.get_doujin(doujin_id)
@@ -190,7 +190,7 @@ class NHentaiAPI():
         """
         if page < 1:
             raise WrongPage("Page can not be less than 1")
-        elif tag_id < 1:  # TODO: Better check
+        elif tag_id < 1:  # TODO?: Better check
             raise WrongTag("Tag id can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/tagged"

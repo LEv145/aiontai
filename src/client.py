@@ -79,17 +79,7 @@ class NHentaiClient():
         *,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> DoujinsResult:
-        """AI is creating summary for search
-
-        Args:
-            query (str): [description]
-            page (int, optional): [description]. Defaults to 1.
-            sort_by (SortOptions, optional): [description]. Defaults to SortOptions.DATE.
-
-        Returns:
-            DoujinsResult: [description]
-        """        
+    ) -> "DoujinsResult":
         result = await self.api.search(
             query=query,
             page=page,
