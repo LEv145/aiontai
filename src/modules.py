@@ -10,6 +10,7 @@ from .api import NHentaiAPI
 
 
 class ClientModule(Module):
+    """Module for automatic dependencies"""
     @provider
     def provide_client(self, api: NHentaiAPI) -> NHentaiClient:
         return NHentaiClient(

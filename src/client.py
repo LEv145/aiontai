@@ -79,26 +79,17 @@ class NHentaiClient():
         *,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> "DoujinsResult":
-        """Method for search doujins.
+    ) -> DoujinsResult:
+        """AI is creating summary for search
+
         Args:
-            :query str: Query for search doujins.
-            :page int: Page, from which we return results.
-            :sort_by str: Sort for search.
+            query (str): [description]
+            page (int, optional): [description]. Defaults to 1.
+            sort_by (SortOptions, optional): [description]. Defaults to SortOptions.DATE.
 
         Returns:
-            List of doujins JSON
-
-        Raises:
-            IsNotValidSort if sort is not a member of SortOptions.
-            WrongPage if page less than 1.
-            WrongSearch if any errors
-
-        Usage:
-            >>> api = aiontai.API()
-            >>> await api.search("anime", page=2, sort_by="popular")
-            [Doujin(...), ...]
-        """
+            DoujinsResult: [description]
+        """        
         result = await self.api.search(
             query=query,
             page=page,
