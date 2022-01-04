@@ -2,9 +2,9 @@
 
 from typing import TYPE_CHECKING
 
-from .api import NHentaiAPI, SortOptions
-from .converters import (
-    JsonConventer
+from aiontai.api import NHentaiAPI, SortOptions
+from .converter import (
+    Conventer,
 )
 
 if TYPE_CHECKING:
@@ -16,8 +16,13 @@ if TYPE_CHECKING:
 
 class NHentaiClient():
     """Impementation of NHentaiAPI wrapper."""
-    def __init__(self, api: NHentaiAPI) -> None:
+    def __init__(
+        self,
+        api: NHentaiAPI,
+        conventer: Conventer,
+    ) -> None:
         self.api = api
+        self.conventer = conventer
 
     async def close(self):
         await self.api.close()
@@ -40,7 +45,7 @@ class NHentaiClient():
         """
         raw_data = await self.api.get_doujin(doujin_id)
 
-        return JsonConventer.convert_doujin(raw_data)
+        return self.conventer.convert_doujin(raw_data)
 
     async def is_exist(self, doujin_id: int) -> bool:
         """Method for checking does doujin exist.
@@ -71,7 +76,7 @@ class NHentaiClient():
         """
         raw_data = await self.api.get_random_doujin()
 
-        return JsonConventer.convert_doujin(raw_data)
+        return self.conventer.convert_doujin(raw_data)
 
     async def search(
         self,
@@ -86,7 +91,7 @@ class NHentaiClient():
             sort_by=sort_by,
         )
 
-        return JsonConventer.convert_doujins_result(result)
+        return self.conventer.convert_doujins_result(result)
 
     async def search_by_tag(
         self,
@@ -120,7 +125,7 @@ class NHentaiClient():
             sort_by=sort_by,
         )
 
-        return JsonConventer.convert_doujins_result(result)
+        return self.conventer.convert_doujins_result(result)
 
     async def get_homepage_doujins(
         self,
@@ -146,7 +151,7 @@ class NHentaiClient():
             page=page,
         )
 
-        return JsonConventer.convert_doujins_result(result)
+        return self.conventer.convert_doujins_result(result)
 
 # async def search_all_by_tags(self, tag_ids: list) -> List[models.Doujin]:
 #     """Method for search doujins by tags.

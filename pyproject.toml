@@ -14,12 +14,14 @@ dataclasses-json = "^0.5.6"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.930"
-flake9 = "^3.8.3"
 mkinit = "^0.3.4"
 black = "^21.12b0"
 coverage = {extras = ["toml"], version = "^6.2"}
 attrs = "^21.4.0"
 pydocstyle = {extras = ["toml"], version = "^6.1.1"}
+flake8-import-order = "^0.18.1"
+flake8-commas = {git = "https://github.com/LEv145/flake8-commas"}
+flake9 = "^3.8.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -35,6 +37,8 @@ disallow_any_generics = false
 
 [tool.flake8]
 max-line-length = 99
+application-import-names = "aiontai"
+import-order-style = "pep8"
 
 [tool.coverage.report]
 exclude_lines = [

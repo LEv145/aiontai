@@ -5,7 +5,7 @@ from pathlib import Path
 
 from aiohttp import ClientResponseError
 
-from src.api import (
+from aiontai.api import (
     NHentaiAPI,
     DoujinDoesNotExist,
     SortOptions,
@@ -27,7 +27,7 @@ class TestApi(IsolatedAsyncioTestCase):
         # Normal test
         self.response_mosk.raise_for_status = Mock()
 
-        async with self.api.request("GET", "https://nhentai.net/"):
+        async with self.api._request("GET", "https://nhentai.net/"):
             ...
 
     async def test__get_doujin(self) -> None:
