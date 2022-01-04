@@ -22,6 +22,7 @@ pydocstyle = {extras = ["toml"], version = "^6.1.1"}
 flake8-import-order = "^0.18.1"
 flake8-commas = {git = "https://github.com/LEv145/flake8-commas"}
 flake9 = "^3.8.3"
+poethepoet = "^0.11.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -55,3 +56,6 @@ exclude_lines = [
     "\\.\\.\\.",
     "pass",
 ]
+
+[tool.poe.tasks]
+mkinit = "mkinit aiontai -w --black --nomods --relative --recursive"

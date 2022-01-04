@@ -27,12 +27,12 @@ from .modules import (
 
 __all__ = [
     "ClientModule",
+    "Conventer",
     "Doujin",
     "DoujinDoesNotExist",
     "DoujinsResult",
     "Image",
     "ImageExtension",
-    "Conventer",
     "NHentaiAPI",
     "NHentaiClient",
     "SortOptions",
