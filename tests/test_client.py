@@ -1,13 +1,13 @@
 import json
 from pathlib import Path
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 
-from src.client import (
+from aiontai.client import (
     NHentaiClient,
     SortOptions,
 )
-from src.models import (
+from aiontai.models import (
     Doujin,
     DoujinsResult,
 )
@@ -17,6 +17,7 @@ class TestClient(IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.client = NHentaiClient(
             api=AsyncMock(),
+            conventer=Mock(),
         )
 
     async def test__get_doujin(self):

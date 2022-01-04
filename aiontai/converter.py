@@ -12,14 +12,13 @@ from .models import (
 )
 
 
-class JsonConventer():  # Conventer namespase
-    @classmethod
+class Conventer():
     def convert_doujins_result(
-        cls,
+        self,
         raw_data: Dict[str, Any],
     ) -> DoujinsResult:
         doujins = [
-            cls.convert_doujin(doujin_raw_data)
+            self.convert_doujin(doujin_raw_data)
             for doujin_raw_data in raw_data["result"]
         ]
         pages_count: int = raw_data["num_pages"]
@@ -31,10 +30,9 @@ class JsonConventer():  # Conventer namespase
             doujins_per_page=doujins_per_page,
         )
 
-    @classmethod
     def convert_doujin(
-        cls,
-        raw_data: Dict[str, Any]
+        self,
+        raw_data: Dict[str, Any],
     ) -> Doujin:
         id: int = raw_data["id"]
         media_id: int = raw_data["media_id"]
@@ -45,26 +43,26 @@ class JsonConventer():  # Conventer namespase
             raw_data["upload_date"],
         )
 
-        title = cls.convert_title(raw_data["title"])
+        title = self.convert_title(raw_data["title"])
 
-        thumbnail = cls.convert_image(
+        thumbnail = self.convert_image(
             raw_data["images"]["thumbnail"],
             name="thumb",
             media_id=media_id,
         )
-        cover = cls.convert_image(
+        cover = self.convert_image(
             raw_data["images"]["cover"],
             name="cover",
             media_id=media_id,
         )
 
         tags = [
-            cls.convert_tag(data)
+            self.convert_tag(data)
             for data in raw_data["tags"]
         ]  # TODO
 
         pages = [
-            cls.convert_image(
+            self.convert_image(
                 raw_data,
                 name=f"{index + 1}",
                 media_id=media_id,
@@ -86,10 +84,9 @@ class JsonConventer():  # Conventer namespase
             pages=pages,
         )
 
-    @classmethod
     def convert_title(
-        cls,
-        raw_data: Dict[str, Any]
+        self,
+        raw_data: Dict[str, Any],
     ) -> Title:
         english: Optional[str] = raw_data["english"]
         japanese: Optional[str] = raw_data["japanese"]
@@ -101,34 +98,32 @@ class JsonConventer():  # Conventer namespase
             pretty=pretty,
         )
 
-    @classmethod
     def convert_image(
-        cls,
+        self,
         raw_data: Dict[str, Any],
         name: str,
         media_id: int,
     ) -> Image:
         width: int = raw_data["w"]
         height: int = raw_data["h"]
-        type_ = ImageExtension(raw_data["t"])
+        image_type = ImageExtension(raw_data["t"])
 
         return Image(
             name=name,
             media_id=media_id,
             width=width,
             height=height,
-            extension=type_,
+            extension=image_type,
             url=(
-                f"https://t.nhentai.net/galleries/{media_id}/{name}.{type_.name.lower()}"
+                f"https://t.nhentai.net/galleries/{media_id}/{name}.{image_type.name.lower()}"
                 if name in ("cover", "thumb",) else
-                f"https://i.nhentai.net/galleries/{media_id}/{name}.{type_.name.lower()}"
+                f"https://i.nhentai.net/galleries/{media_id}/{name}.{image_type.name.lower()}"
             )
         )
 
-    @classmethod
     def convert_tag(
-        cls,
-        raw_data: Dict[str, Any]
+        self,
+        raw_data: Dict[str, Any],
     ) -> Tag:
         id_: int = raw_data["id"]
         count: int = raw_data["count"]

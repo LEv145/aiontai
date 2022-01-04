@@ -9,8 +9,8 @@ from .api import (
 from .client import (
     NHentaiClient,
 )
-from .converters import (
-    JsonConventer,
+from .converter import (
+    Conventer,
 )
 from .models import (
     Doujin,
@@ -32,7 +32,7 @@ __all__ = [
     "DoujinsResult",
     "Image",
     "ImageExtension",
-    "JsonConventer",
+    "Conventer",
     "NHentaiAPI",
     "NHentaiClient",
     "SortOptions",

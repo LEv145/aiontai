@@ -7,6 +7,7 @@ from injector import (
 
 from .client import NHentaiClient
 from .api import NHentaiAPI
+from .converter import Conventer
 
 
 class ClientModule(Module):
@@ -15,6 +16,7 @@ class ClientModule(Module):
     def provide_client(self, api: NHentaiAPI) -> NHentaiClient:
         return NHentaiClient(
             api=api,
+            conventer=Conventer(),
         )
 
     @singleton
