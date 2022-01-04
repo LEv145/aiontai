@@ -17,7 +17,7 @@ class ClientModule(Module):
 
     @provider
     def provide_client(self, api: NHentaiAPI) -> NHentaiClient:
-        """Provide NHentaiClient."""
+        """Provide `NHentaiClient`."""
         return NHentaiClient(
             api=api,
             conventer=Conventer(),
@@ -26,12 +26,12 @@ class ClientModule(Module):
     @singleton
     @provider
     def provide_api(self, client_session: ClientSession) -> NHentaiAPI:
-        """Provide NHentaiAPI."""
+        """Provide `NHentaiAPI`."""
         return NHentaiAPI(
             client_session=client_session,
         )
 
     @provider
     def provide_client_session(self) -> ClientSession:
-        """Provide ClientSession."""
+        """Provide `ClientSession`."""
         return ClientSession(trust_env=True)

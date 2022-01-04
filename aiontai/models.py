@@ -1,4 +1,4 @@
-"""Models for API."""
+"""API Models."""
 
 from typing import Iterator, List, Optional
 from enum import Enum
@@ -9,7 +9,7 @@ from dataclasses_json import DataClassJsonMixin
 
 
 class ImageExtension(str, Enum):
-    """Enumeration for image extension."""
+    """Enum for image extension."""
 
     JPG = "j"
     PNG = "p"
@@ -17,7 +17,7 @@ class ImageExtension(str, Enum):
 
 
 class TagType(str, Enum):
-    """Enumeration for tag type."""
+    """Enum for tag type."""
 
     TAG = "tag"
     CATEGORY = "category"

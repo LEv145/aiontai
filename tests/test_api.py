@@ -23,6 +23,13 @@ class TestApi(IsolatedAsyncioTestCase):
             self.api.client_session.request.return_value
         )  # response_mosk alias
 
+    async def test__context_manager(self):  # TODO?
+        async with self.api as client:
+            self.assertIsInstance(
+                client,
+                type(self.api),
+            )
+
     async def test__request(self) -> None:
         # Normal test
         self.response_mosk.raise_for_status = Mock()

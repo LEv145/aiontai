@@ -65,7 +65,7 @@ class Conventer():
         tags = [
             self.convert_tag(data)
             for data in raw_data["tags"]
-        ]  # TODO
+        ]
 
         pages = [
             self.convert_image(

@@ -20,6 +20,13 @@ class TestClient(IsolatedAsyncioTestCase):
             conventer=Mock(),
         )
 
+    async def test__context_manager(self):  # TODO?
+        async with self.client as client:
+            self.assertIsInstance(
+                client,
+                type(self.client),
+            )
+
     async def test__get_doujin(self):
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)

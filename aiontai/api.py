@@ -1,9 +1,12 @@
 """Low level API."""
+
 import re
+from types import TracebackType
 from typing import (
     Any,
     Dict,
     AsyncIterator,
+    Type,
 )
 from enum import Enum
 from contextlib import asynccontextmanager
@@ -33,6 +36,17 @@ class NHentaiAPI():
             client_session (ClientSession): Aiohttp client session.
         """
         self.client_session = client_session
+
+    async def __aenter__(self) -> "NHentaiAPI":
+        return self
+
+    async def __aexit__(
+        self,
+        _exception_type: Type[BaseException],
+        _exception: BaseException,
+        _traceback: TracebackType,
+    ) -> None:
+        await self.close()
 
     async def close(self):
         """Close object."""

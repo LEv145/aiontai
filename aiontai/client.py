@@ -1,4 +1,7 @@
-"""Module API wrapper impementation."""
+"""Client (High level API)."""
+
+from types import TracebackType
+from typing import Type
 
 from .api import NHentaiAPI, SortOptions
 from .converter import (
@@ -11,7 +14,7 @@ from .models import (
 
 
 class NHentaiClient():
-    """Impementation of NHentaiAPI wrapper."""
+    """NHentai client (high level API)"""
 
     def __init__(
         self,
@@ -27,6 +30,17 @@ class NHentaiClient():
         """
         self.api = api
         self.conventer = conventer
+
+    async def __aenter__(self) -> "NHentaiClient":
+        return self
+
+    async def __aexit__(
+        self,
+        _exception_type: Type[BaseException],
+        _exception: BaseException,
+        _traceback: TracebackType,
+    ) -> None:
+        await self.close()
 
     async def close(self):
         """Close object."""
