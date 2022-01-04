@@ -4,7 +4,6 @@ from typing import (
     Any,
     Dict,
     AsyncIterator,
-    Union,
 )
 from enum import Enum
 from contextlib import asynccontextmanager
@@ -39,32 +38,12 @@ class NHentaiAPI():
         """Close object."""
         await self.client_session.close()
 
-    @asynccontextmanager
-    async def _request(
-        self,
-        method: str,
-        url: str,
-        **kwargs: Any,
-    ) -> AsyncIterator[ClientResponse]:
-        """Async context manager for requests."""
-        response = await self.client_session.request(
-            method,
-            url,
-            **kwargs,
-        )
-        response.raise_for_status()
-
-        try:
-            yield response
-        finally:
-            await response.__aexit__(None, None, None)
-
-    async def get_doujin(self, doujin_id: Union[int, str]) -> Dict[str, Any]:
+    async def get_doujin(self, doujin_id: int) -> Dict[str, Any]:
         """
-        Get doujin by id.
+        Get raw doujin by id.
 
         Args:
-            doujin_id (Union[int, str]): ID of doujin.
+            doujin_id (int): ID of doujin.
 
         Raises:
             DoujinDoesNotExist: If the doujin does not exit.
@@ -86,12 +65,12 @@ class NHentaiAPI():
 
         return json
 
-    async def is_exist(self, doujin_id: Union[int, str]) -> bool:
+    async def is_exist(self, doujin_id: int) -> bool:
         """
         Check if the doujin exists.
 
         Args:
-            doujin_id (Union[int, str]): ID of doujin.
+            doujin_id (int): ID of doujin.
 
         Returns:
             bool: The doujin is exists.
@@ -104,7 +83,7 @@ class NHentaiAPI():
 
     async def get_random_doujin(self) -> Dict[str, Any]:
         """
-        Get random doujin.
+        Get random raw doujin.
 
         Returns:
             Dict[str, Any]: Raw doujin from responce.
@@ -116,7 +95,7 @@ class NHentaiAPI():
             result = re.match(r"https?://nhentai\.net/g/(\d+)/?", url)
 
             assert result is not None
-            doujin_id = result.group(1)
+            doujin_id = int(result.group(1))
 
         return (
             await self.get_doujin(doujin_id)
@@ -129,7 +108,7 @@ class NHentaiAPI():
         sort_by: SortOptions = SortOptions.DATE,
     ) -> Dict[str, Any]:
         """
-        Search doujins.
+        Search raw doujins result.
 
         Args:
             query (str): Query for search doujins.
@@ -171,7 +150,7 @@ class NHentaiAPI():
         sort_by: SortOptions = SortOptions.DATE,
     ) -> Dict[str, Any]:
         """
-        Search doujins by tag.
+        Search raw doujins result by tag.
 
         Args:
             tag_id (int): Tag ID for search.
@@ -212,13 +191,14 @@ class NHentaiAPI():
 
     async def get_homepage_doujins(
         self,
-        page: int
+        page: int = 1,
     ) -> Dict[str, Any]:
         """
-        Get doujins from homepage.
+        Get raw doujins from homepage.
 
         Args:
-            page (int): Number of page from which we return the results.
+            page (int, optional): Number of page from which we return the results.
+                Defaults to 1.
 
         Raises:
             DoujinDoesNotExist: If not `result` value from json response.
@@ -241,6 +221,25 @@ class NHentaiAPI():
         else:
             raise DoujinDoesNotExist()  # FIXME
 
+    @asynccontextmanager
+    async def _request(
+        self,
+        method: str,
+        url: str,
+        **kwargs: Any,
+    ) -> AsyncIterator[ClientResponse]:
+        """Async context manager for requests."""
+        response = await self.client_session.request(
+            method,
+            url,
+            **kwargs,
+        )
+        response.raise_for_status()
+
+        try:
+            yield response
+        finally:
+            await response.__aexit__(None, None, None)
 
 # async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
 #     """Method for search doujins by tags.
@@ -289,16 +288,16 @@ class NHentaiAPI():
 
 
 class WrongPage(Exception):
-    """Exception for wrong page."""
+    """Wrong page."""
 
 
 class WrongSearch(Exception):
-    """Exception for wrong search."""
+    """Wrong search."""
 
 
 class WrongTag(Exception):
-    """Exception for wrong tag."""
+    """Wrong tag."""
 
 
 class DoujinDoesNotExist(Exception):
-    """Exception for not existing doujin."""
+    """Doujin does noe exist."""

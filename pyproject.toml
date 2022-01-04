@@ -37,8 +37,13 @@ disallow_any_generics = false
 
 [tool.flake8]
 max-line-length = 99
+
 application-import-names = "aiontai"
 import-order-style = "pep8"
+
+[tool.coverage.run]
+branch = true
+command_line = "-m unittest discover tests"
 
 [tool.coverage.report]
 exclude_lines = [

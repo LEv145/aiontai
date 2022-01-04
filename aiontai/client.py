@@ -16,63 +16,60 @@ if TYPE_CHECKING:
 
 class NHentaiClient():
     """Impementation of NHentaiAPI wrapper."""
+
     def __init__(
         self,
         api: NHentaiAPI,
         conventer: Conventer,
     ) -> None:
+        """
+        Init object.
+
+        Args:
+            api (NHentaiAPI): Low level api.
+            conventer (Conventer): Raw data conventer.
+        """
         self.api = api
         self.conventer = conventer
 
     async def close(self):
+        """Close object."""
         await self.api.close()
 
     async def get_doujin(self, doujin_id: int) -> "Doujin":
-        """Method for getting doujin by id.
+        """
+        Get doujin model by id.
+
         Args:
-            :doujin_id int: Doujin's id, which we get.
+            doujin_id (int): ID of doujin.
 
         Returns:
-            JSON of doujin.
-
-        Raises:
-            DoujinDoesNotExist if doujin was not found.
-
-        Usage:
-            >>> api = aiontai.API()
-            >>> await api.get_doujin(1)
-            Doujin(...)
+            Doujin: doujin model.
         """
         raw_data = await self.api.get_doujin(doujin_id)
 
         return self.conventer.convert_doujin(raw_data)
 
     async def is_exist(self, doujin_id: int) -> bool:
-        """Method for checking does doujin exist.
+        """
+        Check if the doujin exists.
+
         Args:
-            :doujin_id int: Doujin's id, which we check.
+            doujin_id (int): ID of doujin.
 
         Returns:
-            True if doujin is exist, False if doujin is not exist.
-
-        Usage:
-            >>> api = aiontai.API()
-            >>> await api.is_exist(1)
-            True
+            bool: The doujin is exists.
         """
         raw_data = await self.api.is_exist(doujin_id)
 
         return raw_data
 
     async def get_random_doujin(self) -> "Doujin":
-        """Method for getting random doujin.
-        Returns:
-            JSON of random doujin.
+        """
+        Get random doujin model.
 
-        Usage:
-            >>> api = aiontai.API()
-            >>> await api.random_doujin()
-            Doujin(...)
+        Returns:
+            Doujin: doujin model.
         """
         raw_data = await self.api.get_random_doujin()
 
@@ -85,6 +82,19 @@ class NHentaiClient():
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
     ) -> "DoujinsResult":
+        """
+        Search doujins result model.
+
+        Args:
+            query (str): Query for search doujins.
+            page (int, optional): Number of page from which we return the results.
+                Defaults to 1.
+            sort_by (SortOptions, optional): Sort options for search.
+                Defaults to SortOptions.DATE.
+
+        Returns:
+            DoujinsResult: doujins result model.
+        """
         result = await self.api.search(
             query=query,
             page=page,
@@ -100,24 +110,18 @@ class NHentaiClient():
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
     ) -> "DoujinsResult":
-        """Method for search doujins by tag.
+        """
+        Search doujins result model by tag.
+
         Args:
-            :tag id: Tag for search doujins.
-            :page int: Page, from which we return results.
-            :sort_by str: Sort for search.
+            tag_id (int): Tag ID for search.
+            page (int, optional): Number of page from which we return the results.
+                Defaults to 1.
+            sort_by (SortOptions, optional): Sort options for search.
+                Defaults to SortOptions.DATE.
 
         Returns:
-            List of doujins JSON
-
-        Raises:
-            IsNotValidSort if sort is not a member of SortOptions.
-            WrongPage if page less than 1 or page has no content.
-            WrongTag if tag with given id does not exist.
-
-        Usage:
-            >>> api = aiontai.API()
-            >>> await api.search_by_tag(1, page=2, sort_by="popular")
-            [Doujin(...), ...]
+            DoujinsResult: doujins result model.
         """
         result = await self.api.search_by_tag(
             tag_id=tag_id,
@@ -132,20 +136,15 @@ class NHentaiClient():
         *,
         page: int = 1
     ) -> "DoujinsResult":
-        """Method for getting doujins from.
+        """
+        Get doujins result model from homepage.
+
         Args:
-            :page int: Page, from which we get doujins.
+            page (int, optional):  Number of page from which we return the results.
+                Defaults to 1.
 
         Returns:
-            List of doujins JSON
-
-        Raises:
-            WrongPage if page less than 1 or page has no content.
-
-        Usage:
-            >>> api = aiontai.API()
-            >>> await api.get_homepage_doujins(1)
-            [Doujin(...), ...]
+            DoujinsResult: doujins result model.
         """
         result = await self.api.get_homepage_doujins(
             page=page,
