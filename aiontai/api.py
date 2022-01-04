@@ -228,7 +228,6 @@ class NHentaiAPI():
         url: str,
         **kwargs: Any,
     ) -> AsyncIterator[ClientResponse]:
-        """Async context manager for requests."""
         response = await self.client_session.request(
             method,
             url,
