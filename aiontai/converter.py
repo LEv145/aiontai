@@ -41,7 +41,7 @@ class Conventer():
     ) -> Doujin:
         """Convert raw data to Doujin model."""
         id: int = raw_data["id"]
-        media_id: int = raw_data["media_id"]
+        media_id = int(raw_data["media_id"])
         favorites_count: int = raw_data["num_favorites"]
         pages_count: int = raw_data["num_pages"]
         scanlator: str = raw_data["scanlator"]

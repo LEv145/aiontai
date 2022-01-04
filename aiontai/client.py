@@ -134,7 +134,7 @@ class NHentaiClient():
     async def get_homepage_doujins(
         self,
         *,
-        page: int = 1
+        page: int = 1,
     ) -> "DoujinsResult":
         """
         Get doujins result model from homepage.
