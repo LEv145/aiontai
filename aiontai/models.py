@@ -10,6 +10,7 @@ from dataclasses_json import DataClassJsonMixin
 
 class ImageExtension(str, Enum):
     """Enumeration for image extension."""
+
     JPG = "j"
     PNG = "p"
     GIF = "g"
@@ -17,6 +18,7 @@ class ImageExtension(str, Enum):
 
 class TagType(str, Enum):
     """Enumeration for tag type."""
+
     TAG = "tag"
     CATEGORY = "category"
     ARTIST = "artist"
@@ -28,7 +30,8 @@ class TagType(str, Enum):
 
 @dataclass(frozen=True)
 class Image(DataClassJsonMixin):  # TODO?: new name: Page
-    """Class that represents an image."""
+    """Image model."""
+
     name: str
     url: str
     media_id: int
@@ -39,7 +42,8 @@ class Image(DataClassJsonMixin):  # TODO?: new name: Page
 
 @dataclass(frozen=True)
 class Tag(DataClassJsonMixin):
-    """Class that represents a tag."""
+    """Tag model."""
+
     id: int
     count: int
     name: str
@@ -49,7 +53,8 @@ class Tag(DataClassJsonMixin):
 
 @dataclass(frozen=True)
 class Title(DataClassJsonMixin):
-    """Class that represents a title."""
+    """Title model."""
+
     english: Optional[str]
     japanese: Optional[str]
     pretty: Optional[str]
@@ -57,7 +62,8 @@ class Title(DataClassJsonMixin):
 
 @dataclass(frozen=True)
 class Doujin(DataClassJsonMixin):
-    """Class that represents a doujin."""
+    """Doujin model."""
+
     id: int
     media_id: int
     title: Title
@@ -71,18 +77,22 @@ class Doujin(DataClassJsonMixin):
     upload_date: datetime
 
     def __iter__(self) -> Iterator[Image]:
+        """Pages iterator."""
         return iter(self.pages)
 
     def __len__(self) -> int:
+        """Pages len."""
         return len(self.pages)
 
     def __getitem__(self, key: int) -> Image:
+        """Get page by key."""
         return self.pages[key]
 
 
 @dataclass(frozen=True)
 class DoujinsResult(DataClassJsonMixin):
-    """Class that represents an doujins result."""
+    """DoujinsResult model."""
+
     doujins: List[Doujin]
     pages_count: int
     doujins_per_page: int

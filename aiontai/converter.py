@@ -1,3 +1,5 @@
+"""Conventer module."""
+
 from typing import Any, Dict, Optional
 from datetime import datetime
 
@@ -13,10 +15,13 @@ from .models import (
 
 
 class Conventer():
+    """Conventer for convert raw data to models."""
+
     def convert_doujins_result(
         self,
         raw_data: Dict[str, Any],
     ) -> DoujinsResult:
+        """Convert raw data to DoujinsResult model."""
         doujins = [
             self.convert_doujin(doujin_raw_data)
             for doujin_raw_data in raw_data["result"]
@@ -34,6 +39,7 @@ class Conventer():
         self,
         raw_data: Dict[str, Any],
     ) -> Doujin:
+        """Convert raw data to Doujin model."""
         id: int = raw_data["id"]
         media_id: int = raw_data["media_id"]
         favorites_count: int = raw_data["num_favorites"]
@@ -88,6 +94,7 @@ class Conventer():
         self,
         raw_data: Dict[str, Any],
     ) -> Title:
+        """Convert raw data to Title model."""
         english: Optional[str] = raw_data["english"]
         japanese: Optional[str] = raw_data["japanese"]
         pretty: Optional[str] = raw_data["pretty"]
@@ -104,6 +111,7 @@ class Conventer():
         name: str,
         media_id: int,
     ) -> Image:
+        """Convert raw data to Image model."""
         width: int = raw_data["w"]
         height: int = raw_data["h"]
         image_type = ImageExtension(raw_data["t"])
@@ -125,6 +133,7 @@ class Conventer():
         self,
         raw_data: Dict[str, Any],
     ) -> Tag:
+        """Convert raw data to Tag model."""
         id_: int = raw_data["id"]
         count: int = raw_data["count"]
         name: str = raw_data["name"]
