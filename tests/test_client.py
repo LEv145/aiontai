@@ -25,6 +25,9 @@ class TestClient(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.client.api.get_doujin.return_value = raw_data
+        self.client.conventer.convert_doujin.return_value = Mock(
+            spec=Doujin,
+        )
 
         result = await self.client.get_doujin(123)
 
@@ -57,6 +60,9 @@ class TestClient(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.client.api.get_random_doujin.return_value = raw_data
+        self.client.conventer.convert_doujin.return_value = Mock(
+            spec=Doujin,
+        )
 
         result = await self.client.get_random_doujin()
 
@@ -70,6 +76,9 @@ class TestClient(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.client.api.search.return_value = raw_data
+        self.client.conventer.convert_doujins_result.return_value = Mock(
+            spec=DoujinsResult,
+        )
 
         result = await self.client.search(
             query="Omakehon 2005",
@@ -87,6 +96,9 @@ class TestClient(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.client.api.search_by_tag.return_value = raw_data
+        self.client.conventer.convert_doujins_result.return_value = Mock(
+            spec=DoujinsResult,
+        )
 
         result = await self.client.search_by_tag(
             tag_id=7752,
@@ -104,6 +116,9 @@ class TestClient(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.client.api.get_homepage_doujins.return_value = raw_data
+        self.client.conventer.convert_doujins_result.return_value = Mock(
+            spec=DoujinsResult,
+        )
 
         result = await self.client.get_homepage_doujins(
             page=1,

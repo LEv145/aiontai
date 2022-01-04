@@ -1,8 +1,8 @@
 from unittest import IsolatedAsyncioTestCase
 
 from injector import Injector
-from aiontai.client import NHentaiClient
 
+from aiontai.client import NHentaiClient
 from aiontai.modules import ClientModule
 
 

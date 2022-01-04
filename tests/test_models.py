@@ -1,6 +1,7 @@
 from typing import Iterator
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import Mock
+
 from aiontai.models import (
     Doujin,
     Image,
