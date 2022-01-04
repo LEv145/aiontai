@@ -124,9 +124,9 @@ class Conventer():
             extension=image_type,
             url=(
                 f"https://t.nhentai.net/galleries/{media_id}/{name}.{image_type.name.lower()}"
-                if name in ("cover", "thumb",) else
+                if name in ("cover", "thumb") else
                 f"https://i.nhentai.net/galleries/{media_id}/{name}.{image_type.name.lower()}"
-            )
+            ),
         )
 
     def convert_tag(

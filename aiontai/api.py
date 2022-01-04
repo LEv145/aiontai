@@ -209,7 +209,7 @@ class NHentaiAPI():
         url = "https://nhentai.net/api/galleries/all"
 
         params = {
-            "page": page
+            "page": page,
         }
 
         async with self._request("GET", url, params=params) as responce:
