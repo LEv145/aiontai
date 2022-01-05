@@ -9,7 +9,7 @@ from aiontai.models import (
 
 
 class TestDoujin(IsolatedAsyncioTestCase):
-    async def test__iterable(self):
+    async def test__iterable(self) -> None:
         model = Doujin(
             id=Mock(),
             media_id=Mock(),

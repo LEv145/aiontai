@@ -4,8 +4,8 @@ from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, Mock
 
 from aiontai.client import (
-    NHentaiClient,
     SortOptions,
+    NHentaiClient,
 )
 from aiontai.models import (
     Doujin,
@@ -20,14 +20,14 @@ class TestClient(IsolatedAsyncioTestCase):
             conventer=Mock(),
         )
 
-    async def test__context_manager(self):
+    async def test__context_manager(self) -> None:
         async with self.client as client:
             self.assertIsInstance(
                 client,
                 type(self.client),
             )
 
-    async def test__get_doujin(self):
+    async def test__get_doujin(self) -> None:
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
 
@@ -43,7 +43,7 @@ class TestClient(IsolatedAsyncioTestCase):
             Doujin,
         )
 
-    async def test__is_exist(self):
+    async def test__is_exist(self) -> None:
         self.client.api.is_exist.return_value = False
 
         result = await self.client.is_exist(-1)
@@ -62,7 +62,7 @@ class TestClient(IsolatedAsyncioTestCase):
             True,
         )
 
-    async def test__get_random_doujin(self):
+    async def test__get_random_doujin(self) -> None:
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
 
@@ -78,7 +78,7 @@ class TestClient(IsolatedAsyncioTestCase):
             Doujin,
         )
 
-    async def test__search(self):
+    async def test__search(self) -> None:
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 
@@ -98,7 +98,7 @@ class TestClient(IsolatedAsyncioTestCase):
             DoujinsResult,
         )
 
-    async def test__search_by_tag(self):
+    async def test__search_by_tag(self) -> None:
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 
@@ -118,7 +118,7 @@ class TestClient(IsolatedAsyncioTestCase):
             DoujinsResult,
         )
 
-    async def test__get_homepage_doujins(self):
+    async def test__get_homepage_doujins(self) -> None:
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 

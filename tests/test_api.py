@@ -24,7 +24,7 @@ class TestApi(IsolatedAsyncioTestCase):
             self.api.client_session.request.return_value
         )  # response_mosk alias
 
-    async def test__context_manager(self):
+    async def test__context_manager(self) -> None:
         async with self.api as client:
             self.assertIsInstance(
                 client,
@@ -102,7 +102,7 @@ class TestApi(IsolatedAsyncioTestCase):
             False,
         )
 
-    async def test__get_random_doujin(self):
+    async def test__get_random_doujin(self) -> None:
         # Normal test
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
@@ -118,7 +118,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
-    async def test__search(self):
+    async def test__search(self) -> None:
         # Normal test
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
@@ -157,7 +157,7 @@ class TestApi(IsolatedAsyncioTestCase):
                 sort_by=SortOptions.DATE,
             )
 
-    async def test__search_by_tag(self):
+    async def test__search_by_tag(self) -> None:
         # Normal test
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
@@ -204,7 +204,7 @@ class TestApi(IsolatedAsyncioTestCase):
                 sort_by=SortOptions.DATE,
             )
 
-    async def test__get_homepage_doujins(self):
+    async def test__get_homepage_doujins(self) -> None:
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 

@@ -44,7 +44,7 @@ class NHentaiClient():
         """Close object from async context manager."""
         await self.close()
 
-    async def close(self):
+    async def close(self) -> None:
         """Close object."""
         await self.api.close()
 

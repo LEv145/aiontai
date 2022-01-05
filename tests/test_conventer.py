@@ -15,7 +15,7 @@ class TestConventer(TestCase):
     def setUp(self) -> None:
         self.conventer = Conventer()
 
-    def test__convert_doujin(self):
+    def test__convert_doujin(self) -> None:
         with open(Path("./tests/testdata/doujin.json")) as fp:
             raw_data = json.load(fp)
 
@@ -28,7 +28,7 @@ class TestConventer(TestCase):
             doujin,
         )
 
-    def test__convert_doujins_result(self):
+    def test__convert_doujins_result(self) -> None:
         with open(Path("./tests/testdata/doujins_result.json")) as fp:
             raw_data = json.load(fp)
 

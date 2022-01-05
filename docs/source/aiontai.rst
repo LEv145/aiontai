@@ -8,6 +8,7 @@ aiontai.api module
    :members:
    :undoc-members:
    :show-inheritance:
+   :special-members: __aenter__, __aexit__
 
 aiontai.client module
 ---------------------
@@ -16,6 +17,7 @@ aiontai.client module
    :members:
    :undoc-members:
    :show-inheritance:
+   :special-members: __aenter__, __aexit__
 
 aiontai.converter module
 ------------------------
@@ -32,6 +34,7 @@ aiontai.models module
    :members:
    :undoc-members:
    :show-inheritance:
+   :special-members: __iter__, __len__, __getitem__
 
 aiontai.modules module
 ----------------------

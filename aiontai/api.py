@@ -50,7 +50,7 @@ class NHentaiAPI():
         """Close object from async context manager."""
         await self.close()
 
-    async def close(self):
+    async def close(self) -> None:
         """Close object."""
         await self.client_session.close()
 
@@ -72,7 +72,7 @@ class NHentaiAPI():
 
         try:
             async with self._request("GET", url=url) as response:
-                json = await response.json()
+                json: Dict[str, Any] = await response.json()
         except ClientResponseError as error:
             if error.status == 404:
                 raise DoujinDoesNotExistError("That doujin does not exist.") from error
@@ -151,10 +151,10 @@ class NHentaiAPI():
         }
 
         async with self._request("GET", url, params=params) as responce:
-            json = await responce.json()
+            json: Dict[str, Any] = await responce.json()
 
         result = json["result"]
-        if result:
+        if not result:
             return json
         else:
             raise EmptyAPIResultError()
@@ -197,7 +197,7 @@ class NHentaiAPI():
         }
 
         async with self._request("GET", url, params=params) as responce:
-            json = await responce.json()
+            json: Dict[str, Any] = await responce.json()
 
         result = json["result"]
         if result:
@@ -229,7 +229,7 @@ class NHentaiAPI():
         }
 
         async with self._request("GET", url, params=params) as responce:
-            json = await responce.json()
+            json: Dict[str, Any] = await responce.json()
 
         result = json["result"]
         if result:
