@@ -1,1 +1,3 @@
-sphinx-pyproject
+aiohttp
+injector
+dataclasses-json
