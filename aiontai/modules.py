@@ -34,4 +34,4 @@ class ClientModule(Module):
     @provider
     def provide_client_session(self) -> ClientSession:
         """Provide `ClientSession`."""
-        return ClientSession(trust_env=True)
+        return ClientSession()
