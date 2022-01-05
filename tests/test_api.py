@@ -6,6 +6,7 @@ from pathlib import Path
 from aiohttp import ClientResponseError
 
 from aiontai.api import (
+    EmptyAPIResultError,
     NHentaiAPI,
     DoujinDoesNotExistError,
     SortOptions,
@@ -142,14 +143,14 @@ class TestApi(IsolatedAsyncioTestCase):
                 sort_by=SortOptions.DATE,
             )
 
-        # Test error: DoujinDoesNotExistError
+        # Test error: EmptyAPIResultError
         self.response_mosk.json.return_value = {
             "result": [],
             "num_pages": 15181,
             "per_page": 25,
         }
 
-        with self.assertRaises(DoujinDoesNotExistError):
+        with self.assertRaises(EmptyAPIResultError):
             await self.api.search(
                 query="Omakehon 2005",
                 page=1,
@@ -189,14 +190,14 @@ class TestApi(IsolatedAsyncioTestCase):
                 sort_by=SortOptions.DATE,
             )
 
-        # Test error: DoujinDoesNotExistError
+        # Test error: EmptyAPIResultError
         self.response_mosk.json.return_value = {
             "result": [],
             "num_pages": 15181,
             "per_page": 25,
         }
 
-        with self.assertRaises(DoujinDoesNotExistError):
+        with self.assertRaises(EmptyAPIResultError):
             await self.api.search_by_tag(
                 tag_id=66666,
                 page=1,
@@ -217,13 +218,14 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
+        # Test error: EmptyAPIResultError
         self.response_mosk.json.return_value = {
             "result": [],
             "num_pages": 15181,
             "per_page": 25,
         }
 
-        with self.assertRaises(DoujinDoesNotExistError):
+        with self.assertRaises(EmptyAPIResultError):
             await self.api.get_homepage_doujins(
                 page=66666,
             )
