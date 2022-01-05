@@ -1,11 +1,14 @@
 import json
 from pathlib import Path
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import (
+    AsyncMock,
+    Mock,
+)
 
 from aiontai.client import (
-    SortOptions,
     NHentaiClient,
+    SortOptions,
 )
 from aiontai.models import (
     Doujin,

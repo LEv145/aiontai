@@ -2,12 +2,10 @@ import json
 from pathlib import Path
 from unittest import TestCase
 
+from aiontai.converter import Conventer
 from tests.testdata.models import (
     doujin,
     doujins_result,
-)
-from aiontai.converter import (
-    Conventer,
 )
 
 
