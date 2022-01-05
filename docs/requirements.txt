@@ -1,2 +1,3 @@
 aiohttp
 dataclasses_json
+injector
