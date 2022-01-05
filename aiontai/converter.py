@@ -1,16 +1,20 @@
 """Conventer module."""
 
-from typing import Any, Dict, Optional
 from datetime import datetime
+from typing import (
+    Any,
+    Dict,
+    Optional,
+)
 
 from .models import (
-    ImageExtension,
-    TagType,
-    Image,
-    Tag,
-    Title,
     Doujin,
     DoujinsResult,
+    Image,
+    ImageExtension,
+    Tag,
+    TagType,
+    Title,
 )
 
 
