@@ -1,12 +1,15 @@
 [tool.poetry]
 name = "aiontai"
-version = "1.0.0"
+version = "1.0.1"
 description = "Async wrapper for nhentai API"
 authors = ["LEv145"]
 license = "MIT"
+readme = "README.rst"
+homepage = "https://github.com/LEv145/aiontai"
+documentation = "https://aiontai.readthedocs.io/en/latest/"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 aiohttp = "^3.8.1"
 schema = "^0.7.5"
 injector = "^0.19.0"
