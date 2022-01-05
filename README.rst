@@ -33,7 +33,7 @@ Create client
     )
 
 
-    async def main():
+    async def main() -> None:
         client_object = NHentaiClient(
             api=NHentaiAPI(
                 ClientSession(),
@@ -58,7 +58,7 @@ Or can use ``injector`` that will create the object itself (Next examples will b
     )
 
 
-    async def main():
+    async def main() -> None:
         injector = Injector(ClientModule())
         client_object = injector.get(NHentaiClient)
 
@@ -69,7 +69,7 @@ Example of using the client
 
 .. code:: python
 
-    async def main():
+    async def main() -> None:
         injector = Injector(ClientModule())
         client_object = injector.get(NHentaiClient)
 
@@ -107,7 +107,7 @@ Example of using the proxy
             return ClientSession(connector=connector)
 
 
-    async def main():
+    async def main() -> None:
         injector = Injector(
             modules=[
                 ClientModule(),
@@ -123,7 +123,7 @@ Example of using the Low level api
 
 .. code:: python
 
-    async def main():
+    async def main() -> None:
         injector = Injector(ClientModule())
         client_object = injector.get(NHentaiAPI)
         async with client_object as client:
