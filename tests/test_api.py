@@ -1,14 +1,17 @@
 import json
-from unittest import IsolatedAsyncioTestCase
-from unittest.mock import Mock, AsyncMock
 from pathlib import Path
+from unittest import IsolatedAsyncioTestCase
+from unittest.mock import (
+    AsyncMock,
+    Mock,
+)
 
 from aiohttp import ClientResponseError
 
 from aiontai.api import (
+    DoujinDoesNotExistError,
     EmptyAPIResultError,
     NHentaiAPI,
-    DoujinDoesNotExistError,
     SortOptions,
     WrongPageError,
     WrongTagError,
