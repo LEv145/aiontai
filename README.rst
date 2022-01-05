@@ -89,8 +89,22 @@ Example of using the proxy
 .. code:: python
 
     ...
+    from injector import (
+        provider,
+        Injector,
+        Module,
+    )
     from aiohttp_proxy import ProxyConnector  # pip install aiohttp_proxy
     ...
+
+    class AiohttpProxyModule(Module):
+        def __init__(self, proxi_url: str) -> None:
+            self._proxi_url = proxi_url
+
+        @provider
+        def provide_client_session(self) -> ClientSession:
+            connector = ProxyConnector.from_url(self._proxi_url)
+            return ClientSession(connector=connector)
 
 
     async def main():
