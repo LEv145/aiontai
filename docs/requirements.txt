@@ -1,0 +1,3 @@
+aiohttp
+injector
+dataclasses-json
