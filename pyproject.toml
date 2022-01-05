@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiontai"
-version = "1.0.5"
+version = "1.0.6"
 description = "Async wrapper for nhentai API"
 authors = ["LEv145"]
 license = "MIT"
