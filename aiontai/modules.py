@@ -2,7 +2,6 @@
 
 from aiohttp import ClientSession
 from injector import (
-    singleton,
     provider,
     Module,
 )
@@ -23,7 +22,6 @@ class ClientModule(Module):
             conventer=Conventer(),
         )
 
-    @singleton
     @provider
     def provide_api(self, client_session: ClientSession) -> NHentaiAPI:
         """Provide `NHentaiAPI`."""
