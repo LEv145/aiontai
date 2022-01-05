@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiontai"
-version = "0.1.0"
+version = "1.0.0"
 description = "Async wrapper for nhentai API"
 authors = ["LEv145"]
 license = "MIT"
@@ -23,6 +23,8 @@ flake8-import-order = "^0.18.1"
 flake8-commas = {git = "https://github.com/LEv145/flake8-commas"}
 flake9 = "^3.8.3"
 poethepoet = "^0.11.0"
+Sphinx = "^4.3.2"
+sphinx-rtd-theme = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

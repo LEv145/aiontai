@@ -1,9 +1,12 @@
 """Low level API."""
+
 import re
+from types import TracebackType
 from typing import (
     Any,
     Dict,
     AsyncIterator,
+    Type,
 )
 from enum import Enum
 from contextlib import asynccontextmanager
@@ -34,6 +37,19 @@ class NHentaiAPI():
         """
         self.client_session = client_session
 
+    async def __aenter__(self) -> "NHentaiAPI":
+        """Return self from async context manager."""
+        return self
+
+    async def __aexit__(
+        self,
+        _exception_type: Type[BaseException],
+        _exception: BaseException,
+        _traceback: TracebackType,
+    ) -> None:
+        """Close object from async context manager."""
+        await self.close()
+
     async def close(self):
         """Close object."""
         await self.client_session.close()
@@ -46,7 +62,7 @@ class NHentaiAPI():
             doujin_id (int): ID of doujin.
 
         Raises:
-            DoujinDoesNotExist: If the doujin does not exit.
+            DoujinDoesNotExistError: If the doujin does not exit.
             ClientResponseError: Error from response.
 
         Returns:
@@ -59,7 +75,7 @@ class NHentaiAPI():
                 json = await response.json()
         except ClientResponseError as error:
             if error.status == 404:
-                raise DoujinDoesNotExist("That doujin does not exist.") from error
+                raise DoujinDoesNotExistError("That doujin does not exist.") from error
             else:
                 raise error
 
@@ -78,7 +94,7 @@ class NHentaiAPI():
         try:
             await self.get_doujin(doujin_id)
             return True
-        except DoujinDoesNotExist:
+        except DoujinDoesNotExistError:
             return False
 
     async def get_random_doujin(self) -> Dict[str, Any]:
@@ -118,14 +134,14 @@ class NHentaiAPI():
                 Defaults to SortOptions.DATE.
 
         Raises:
-            WrongPage: If number of page is invalid.
-            DoujinDoesNotExist: If not `result` value from json response.
+            WrongPageError: If number of page is invalid.
+            EmptyAPIResultError: If api result is empty.
 
         Returns:
             Dict[str, Any]: Raw doujins result from responce.
         """
         if page < 1:
-            raise WrongPage("Page can not be less than 1")
+            raise WrongPageError("Page can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/search"
         params = {
@@ -141,7 +157,7 @@ class NHentaiAPI():
         if result:
             return json
         else:
-            raise DoujinDoesNotExist()  # FIXME
+            raise EmptyAPIResultError()
 
     async def search_by_tag(
         self,
@@ -160,17 +176,17 @@ class NHentaiAPI():
                 Defaults to SortOptions.DATE.
 
         Raises:
-            WrongPage: If number of page is invalid.
-            WrongTag: If tag ID is invalid.
-            DoujinDoesNotExist: If not `result` value from json response.
+            WrongPageError: If number of page is invalid.
+            WrongTagError: If tag ID is invalid.
+            EmptyAPIResultError: If api result is empty.
 
         Returns:
             Dict[str, Any]: Raw doujins result from responce.
         """
         if page < 1:
-            raise WrongPage("Page can not be less than 1")
-        elif tag_id < 1:  # TODO?: Better check
-            raise WrongTag("Tag id can not be less than 1")
+            raise WrongPageError("Page can not be less than 1")
+        elif tag_id < 1:
+            raise WrongTagError("Tag id can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/tagged"
 
@@ -187,7 +203,7 @@ class NHentaiAPI():
         if result:
             return json
         else:
-            raise DoujinDoesNotExist()  # FIXME
+            raise EmptyAPIResultError()
 
     async def get_homepage_doujins(
         self,
@@ -201,7 +217,7 @@ class NHentaiAPI():
                 Defaults to 1.
 
         Raises:
-            DoujinDoesNotExist: If not `result` value from json response.
+            EmptyAPIResultError: If api result is empty.
 
         Returns:
             Dict[str, Any]: Raw doujins result from responce.
@@ -219,7 +235,7 @@ class NHentaiAPI():
         if result:
             return json
         else:
-            raise DoujinDoesNotExist()  # FIXME
+            raise EmptyAPIResultError()
 
     @asynccontextmanager
     async def _request(
@@ -228,7 +244,6 @@ class NHentaiAPI():
         url: str,
         **kwargs: Any,
     ) -> AsyncIterator[ClientResponse]:
-        """Async context manager for requests."""
         response = await self.client_session.request(
             method,
             url,
@@ -241,6 +256,7 @@ class NHentaiAPI():
         finally:
             await response.__aexit__(None, None, None)
 
+# TODO
 # async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
 #     """Method for search doujins by tags.
 #     Args:
@@ -287,17 +303,21 @@ class NHentaiAPI():
 #     return [doujin for page in pages for doujin in page]
 
 
-class WrongPage(Exception):
+class WrongPageError(Exception):
     """Wrong page."""
 
 
-class WrongSearch(Exception):
+class WrongSearchError(Exception):
     """Wrong search."""
 
 
-class WrongTag(Exception):
+class WrongTagError(Exception):
     """Wrong tag."""
 
 
-class DoujinDoesNotExist(Exception):
+class DoujinDoesNotExistError(Exception):
     """Doujin does noe exist."""
+
+
+class EmptyAPIResultError(Exception):
+    """API result is empty."""

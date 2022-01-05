@@ -34,7 +34,7 @@ doujin = Doujin(
         height=352,
         extension=ImageExtension.JPG,
     ),
-    pages=[
+    images=[
         Image(
             name="1",
             url="https://i.nhentai.net/galleries/635/1.jpg",

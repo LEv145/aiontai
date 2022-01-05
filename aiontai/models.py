@@ -1,4 +1,4 @@
-"""Models for API."""
+"""API Models."""
 
 from typing import Iterator, List, Optional
 from enum import Enum
@@ -9,7 +9,7 @@ from dataclasses_json import DataClassJsonMixin
 
 
 class ImageExtension(str, Enum):
-    """Enumeration for image extension."""
+    """Enum for image extension."""
 
     JPG = "j"
     PNG = "p"
@@ -17,7 +17,7 @@ class ImageExtension(str, Enum):
 
 
 class TagType(str, Enum):
-    """Enumeration for tag type."""
+    """Enum for tag type."""
 
     TAG = "tag"
     CATEGORY = "category"
@@ -29,7 +29,7 @@ class TagType(str, Enum):
 
 
 @dataclass(frozen=True)
-class Image(DataClassJsonMixin):  # TODO?: new name: Page
+class Image(DataClassJsonMixin):
     """Image model."""
 
     name: str
@@ -69,7 +69,7 @@ class Doujin(DataClassJsonMixin):
     title: Title
     cover: Image
     thumbnail: Image
-    pages: List[Image]
+    images: List[Image]
     tags: List[Tag]
     pages_count: int
     favorites_count: int
@@ -78,15 +78,15 @@ class Doujin(DataClassJsonMixin):
 
     def __iter__(self) -> Iterator[Image]:
         """Pages iterator."""
-        return iter(self.pages)
+        return iter(self.images)
 
     def __len__(self) -> int:
         """Pages len."""
-        return len(self.pages)
+        return len(self.images)
 
     def __getitem__(self, key: int) -> Image:
         """Get page by key."""
-        return self.pages[key]
+        return self.images[key]
 
 
 @dataclass(frozen=True)

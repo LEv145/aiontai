@@ -40,7 +40,7 @@ doujins_result = DoujinsResult(
                 height=352,
                 extension=ImageExtension.JPG,
             ),
-            pages=[
+            images=[
                 Image(
                     name="1",
                     url="https://i.nhentai.net/galleries/511255/1.jpg",
@@ -316,7 +316,7 @@ doujins_result = DoujinsResult(
                 height=355,
                 extension=ImageExtension.JPG,
             ),
-            pages=[
+            images=[
                 Image(
                     name="1",
                     url="https://i.nhentai.net/galleries/520554/1.jpg",
@@ -643,7 +643,7 @@ doujins_result = DoujinsResult(
                 height=352,
                 extension=ImageExtension.JPG,
             ),
-            pages=[
+            images=[
                 Image(
                     name="1",
                     url="https://i.nhentai.net/galleries/635/1.jpg",
@@ -884,7 +884,7 @@ doujins_result = DoujinsResult(
                 height=358,
                 extension=ImageExtension.JPG,
             ),
-            pages=[
+            images=[
                 Image(
                     name="1",
                     url="https://i.nhentai.net/galleries/27197/1.jpg",

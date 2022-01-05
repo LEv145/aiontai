@@ -1,21 +1,20 @@
-"""Module API wrapper impementation."""
+"""Client (High level API)."""
 
-from typing import TYPE_CHECKING
+from types import TracebackType
+from typing import Type
 
-from aiontai.api import NHentaiAPI, SortOptions
+from .api import NHentaiAPI, SortOptions
 from .converter import (
     Conventer,
 )
-
-if TYPE_CHECKING:
-    from .models import (
-        Doujin,
-        DoujinsResult,
-    )
+from .models import (
+    Doujin,
+    DoujinsResult,
+)
 
 
 class NHentaiClient():
-    """Impementation of NHentaiAPI wrapper."""
+    """NHentai client (high level API)."""
 
     def __init__(
         self,
@@ -32,11 +31,24 @@ class NHentaiClient():
         self.api = api
         self.conventer = conventer
 
+    async def __aenter__(self) -> "NHentaiClient":
+        """Return self from async context manager."""
+        return self
+
+    async def __aexit__(
+        self,
+        _exception_type: Type[BaseException],
+        _exception: BaseException,
+        _traceback: TracebackType,
+    ) -> None:
+        """Close object from async context manager."""
+        await self.close()
+
     async def close(self):
         """Close object."""
         await self.api.close()
 
-    async def get_doujin(self, doujin_id: int) -> "Doujin":
+    async def get_doujin(self, doujin_id: int) -> Doujin:
         """
         Get doujin model by id.
 
@@ -64,7 +76,7 @@ class NHentaiClient():
 
         return raw_data
 
-    async def get_random_doujin(self) -> "Doujin":
+    async def get_random_doujin(self) -> Doujin:
         """
         Get random doujin model.
 
@@ -81,7 +93,7 @@ class NHentaiClient():
         *,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> "DoujinsResult":
+    ) -> DoujinsResult:
         """
         Search doujins result model.
 
@@ -89,8 +101,8 @@ class NHentaiClient():
             query (str): Query for search doujins.
             page (int, optional): Number of page from which we return the results.
                 Defaults to 1.
-            sort_by (SortOptions, optional): Sort options for search.
-                Defaults to SortOptions.DATE.
+            sort_by (api.SortOptions, optional): Sort options for search.
+                Defaults to api.SortOptions.DATE.
 
         Returns:
             DoujinsResult: doujins result model.
@@ -109,7 +121,7 @@ class NHentaiClient():
         *,
         page: int = 1,
         sort_by: SortOptions = SortOptions.DATE,
-    ) -> "DoujinsResult":
+    ) -> DoujinsResult:
         """
         Search doujins result model by tag.
 
@@ -117,8 +129,8 @@ class NHentaiClient():
             tag_id (int): Tag ID for search.
             page (int, optional): Number of page from which we return the results.
                 Defaults to 1.
-            sort_by (SortOptions, optional): Sort options for search.
-                Defaults to SortOptions.DATE.
+            sort_by (api.SortOptions, optional): Sort options for search.
+                Defaults to api.SortOptions.DATE.
 
         Returns:
             DoujinsResult: doujins result model.
@@ -135,7 +147,7 @@ class NHentaiClient():
         self,
         *,
         page: int = 1,
-    ) -> "DoujinsResult":
+    ) -> DoujinsResult:
         """
         Get doujins result model from homepage.
 
@@ -151,28 +163,3 @@ class NHentaiClient():
         )
 
         return self.conventer.convert_doujins_result(result)
-
-# async def search_all_by_tags(self, tag_ids: list) -> List[models.Doujin]:
-#     """Method for search doujins by tags.
-#     Args:
-#         :tag_ids list: List of tags
-
-#     Returns:
-#         List of doujins JSON
-
-#     Raises:
-#         IsNotValidSort if sort is not a member of SortOptions.
-#         WrongPage if page less than 1.
-
-#     Usage:
-#         >>> api = aiontai.API()
-#         >>> await api.search_all_by_tag([11])
-#         [Doujin(...), ...]
-#     """
-
-#     result = await self.api.search_all_by_tags(tag_ids)
-
-#     return [
-#         DoujinJsonConventer().convert(raw_data)
-#         for raw_data in result
-#     ]
