@@ -1,6 +1,3 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
 name: Python package
 
 on:
@@ -26,13 +23,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r dev-requirements.txt; fi
+        python -m pip install poetry
+        poetry install
     - name: Lint with flake8
       run: |
         flake8 aiontai
-    - name: Test with pytest
+    - name: Test with unittest
       run: |
-        pytest
+        python3 -m unittest discover tests
 
 
