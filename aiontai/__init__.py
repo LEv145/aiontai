@@ -1,10 +1,11 @@
 from .api import (
-    DoujinDoesNotExist,
+    DoujinDoesNotExistError,
+    EmptyAPIResultError,
     NHentaiAPI,
     SortOptions,
-    WrongPage,
-    WrongSearch,
-    WrongTag,
+    WrongPageError,
+    WrongSearchError,
+    WrongTagError,
 )
 from .client import (
     NHentaiClient,
@@ -29,8 +30,9 @@ __all__ = [
     "ClientModule",
     "Conventer",
     "Doujin",
-    "DoujinDoesNotExist",
+    "DoujinDoesNotExistError",
     "DoujinsResult",
+    "EmptyAPIResultError",
     "Image",
     "ImageExtension",
     "NHentaiAPI",
@@ -39,7 +41,7 @@ __all__ = [
     "Tag",
     "TagType",
     "Title",
-    "WrongPage",
-    "WrongSearch",
-    "WrongTag",
+    "WrongPageError",
+    "WrongSearchError",
+    "WrongTagError",
 ]

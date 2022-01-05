@@ -76,7 +76,7 @@ Example of using the client
         async with client_object as client:  # Will close the session itself
             doujin = await client.get_random_doujin()
 
-            for page in doujin.pages:
+            for page in doujin.images:
                 print(page.url)
 
             print(doujin.to_json())
@@ -113,7 +113,8 @@ Example of using the Low level api
         injector = Injector(ClientModule())
         client_object = injector.get(NHentaiAPI)
         async with client_object as client:
-            doujin = await client.get_random_doujin()  # Return: Dict[str, Any] from api without loss of information
+            doujin = await client.get_random_doujin()  # Return: Dict[str, Any]
+                                                       # from api without loss of information
 
             print(doujin)
 

@@ -14,7 +14,7 @@ from .models import (
 
 
 class NHentaiClient():
-    """NHentai client (high level API)"""
+    """NHentai client (high level API)."""
 
     def __init__(
         self,
@@ -32,6 +32,7 @@ class NHentaiClient():
         self.conventer = conventer
 
     async def __aenter__(self) -> "NHentaiClient":
+        """Return self from async context manager."""
         return self
 
     async def __aexit__(
@@ -40,6 +41,7 @@ class NHentaiClient():
         _exception: BaseException,
         _traceback: TracebackType,
     ) -> None:
+        """Close object from async context manager."""
         await self.close()
 
     async def close(self):
@@ -54,7 +56,7 @@ class NHentaiClient():
             doujin_id (int): ID of doujin.
 
         Returns:
-            models.Doujin: doujin model.
+            Doujin: doujin model.
         """
         raw_data = await self.api.get_doujin(doujin_id)
 
@@ -79,7 +81,7 @@ class NHentaiClient():
         Get random doujin model.
 
         Returns:
-            models.Doujin: doujin model.
+            Doujin: doujin model.
         """
         raw_data = await self.api.get_random_doujin()
 
@@ -103,7 +105,7 @@ class NHentaiClient():
                 Defaults to api.SortOptions.DATE.
 
         Returns:
-            models.DoujinsResult: doujins result model.
+            DoujinsResult: doujins result model.
         """
         result = await self.api.search(
             query=query,
@@ -131,7 +133,7 @@ class NHentaiClient():
                 Defaults to api.SortOptions.DATE.
 
         Returns:
-            models.DoujinsResult: doujins result model.
+            DoujinsResult: doujins result model.
         """
         result = await self.api.search_by_tag(
             tag_id=tag_id,
@@ -154,35 +156,10 @@ class NHentaiClient():
                 Defaults to 1.
 
         Returns:
-            models.DoujinsResult: doujins result model.
+            DoujinsResult: doujins result model.
         """
         result = await self.api.get_homepage_doujins(
             page=page,
         )
 
         return self.conventer.convert_doujins_result(result)
-
-# async def search_all_by_tags(self, tag_ids: list) -> List[models.Doujin]:
-#     """Method for search doujins by tags.
-#     Args:
-#         :tag_ids list: List of tags
-
-#     Returns:
-#         List of doujins JSON
-
-#     Raises:
-#         IsNotValidSort if sort is not a member of SortOptions.
-#         WrongPage if page less than 1.
-
-#     Usage:
-#         >>> api = aiontai.API()
-#         >>> await api.search_all_by_tag([11])
-#         [Doujin(...), ...]
-#     """
-
-#     result = await self.api.search_all_by_tags(tag_ids)
-
-#     return [
-#         DoujinJsonConventer().convert(raw_data)
-#         for raw_data in result
-#     ]

@@ -16,7 +16,7 @@ class TestDoujin(IsolatedAsyncioTestCase):
             title=Mock(),
             cover=Mock(),
             thumbnail=Mock(),
-            pages=[
+            images=[
                 Mock(spec=Image), Mock(spec=Image), Mock(spec=Image),
             ],
             tags=Mock(),

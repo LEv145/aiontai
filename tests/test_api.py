@@ -7,10 +7,10 @@ from aiohttp import ClientResponseError
 
 from aiontai.api import (
     NHentaiAPI,
-    DoujinDoesNotExist,
+    DoujinDoesNotExistError,
     SortOptions,
-    WrongPage,
-    WrongTag,
+    WrongPageError,
+    WrongTagError,
 )
 
 
@@ -23,7 +23,7 @@ class TestApi(IsolatedAsyncioTestCase):
             self.api.client_session.request.return_value
         )  # response_mosk alias
 
-    async def test__context_manager(self):  # TODO?
+    async def test__context_manager(self):
         async with self.api as client:
             self.assertIsInstance(
                 client,
@@ -50,14 +50,14 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
-        # Test error: DoujinDoesNotExist
+        # Test error: DoujinDoesNotExistError
         self.response_mosk.raise_for_status.side_effect = ClientResponseError(
             request_info=Mock(),
             history=Mock(),
             status=404,
         )
 
-        with self.assertRaises(DoujinDoesNotExist):
+        with self.assertRaises(DoujinDoesNotExistError):
             self.assertEqual(
                 await self.api.get_doujin(123),
                 raw_data,
@@ -89,7 +89,7 @@ class TestApi(IsolatedAsyncioTestCase):
             True,
         )
 
-        # Test error: DoujinDoesNotExist
+        # Test error: DoujinDoesNotExistError
         self.response_mosk.raise_for_status.side_effect = ClientResponseError(
             request_info=Mock(),
             history=Mock(),
@@ -107,7 +107,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.url.human_repr = Mock(
-            return_value="https://nhentai.net/g/123/"
+            return_value="https://nhentai.net/g/123/",
         )
         self.response_mosk.json.return_value = raw_data
         self.response_mosk.raise_for_status = Mock()
@@ -134,22 +134,22 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
-        # Test error: WrongPage
-        with self.assertRaises(WrongPage):
+        # Test error: WrongPageError
+        with self.assertRaises(WrongPageError):
             await self.api.search(
                 query="Omakehon 2005",
                 page=-1,
                 sort_by=SortOptions.DATE,
             )
 
-        # Test error: DoujinDoesNotExist
+        # Test error: DoujinDoesNotExistError
         self.response_mosk.json.return_value = {
             "result": [],
             "num_pages": 15181,
             "per_page": 25,
         }
 
-        with self.assertRaises(DoujinDoesNotExist):
+        with self.assertRaises(DoujinDoesNotExistError):
             await self.api.search(
                 query="Omakehon 2005",
                 page=1,
@@ -173,30 +173,30 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
-        # Test error: WrongPage
-        with self.assertRaises(WrongPage):
+        # Test error: WrongPageError
+        with self.assertRaises(WrongPageError):
             await self.api.search_by_tag(
                 tag_id=7752,
                 page=-1,
                 sort_by=SortOptions.DATE,
             )
 
-        # Test error: WrongTag
-        with self.assertRaises(WrongTag):
+        # Test error: WrongTagError
+        with self.assertRaises(WrongTagError):
             await self.api.search_by_tag(
                 tag_id=-1,
                 page=1,
                 sort_by=SortOptions.DATE,
             )
 
-        # Test error: DoujinDoesNotExist
+        # Test error: DoujinDoesNotExistError
         self.response_mosk.json.return_value = {
             "result": [],
             "num_pages": 15181,
             "per_page": 25,
         }
 
-        with self.assertRaises(DoujinDoesNotExist):
+        with self.assertRaises(DoujinDoesNotExistError):
             await self.api.search_by_tag(
                 tag_id=66666,
                 page=1,
@@ -212,7 +212,7 @@ class TestApi(IsolatedAsyncioTestCase):
 
         self.assertEqual(
             await self.api.get_homepage_doujins(
-                page=1
+                page=1,
             ),
             raw_data,
         )
@@ -223,7 +223,7 @@ class TestApi(IsolatedAsyncioTestCase):
             "per_page": 25,
         }
 
-        with self.assertRaises(DoujinDoesNotExist):
+        with self.assertRaises(DoujinDoesNotExistError):
             await self.api.get_homepage_doujins(
                 page=66666,
             )

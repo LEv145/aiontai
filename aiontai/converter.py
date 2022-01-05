@@ -67,7 +67,7 @@ class Conventer():
             for data in raw_data["tags"]
         ]
 
-        pages = [
+        images = [
             self.convert_image(
                 raw_data,
                 name=f"{index + 1}",
@@ -87,7 +87,7 @@ class Conventer():
             thumbnail=thumbnail,
             cover=cover,
             tags=tags,
-            pages=pages,
+            images=images,
         )
 
     def convert_title(

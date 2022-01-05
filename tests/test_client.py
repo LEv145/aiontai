@@ -20,7 +20,7 @@ class TestClient(IsolatedAsyncioTestCase):
             conventer=Mock(),
         )
 
-    async def test__context_manager(self):  # TODO?
+    async def test__context_manager(self):
         async with self.client as client:
             self.assertIsInstance(
                 client,
