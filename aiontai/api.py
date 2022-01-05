@@ -156,7 +156,7 @@ class NHentaiAPI():
             json: Dict[str, Any] = await responce.json()
 
         result = json["result"]
-        if not result:
+        if result:
             return json
         else:
             raise EmptyAPIResultError()
