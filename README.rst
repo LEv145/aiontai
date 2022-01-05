@@ -17,7 +17,8 @@ Installation
 How to use
 ==========
 
-Init client
+
+Create client
 
 .. code:: python
 
@@ -30,7 +31,7 @@ Init client
         NHentaiAPI,
         Conventer,
     )
-    ...
+
 
     async def main():
         client_object = NHentaiClient(
@@ -41,6 +42,7 @@ Init client
         )
 
     asyncio.run(main())
+
 
 Or can use ``injector`` that will create the object itself (Next examples will be using it)
 
@@ -54,7 +56,7 @@ Or can use ``injector`` that will create the object itself (Next examples will b
         NHentaiClient,
         ClientModule,
     )
-    ...
+
 
     async def main():
         injector = Injector(ClientModule())
@@ -90,6 +92,7 @@ Example of using the proxy
     from aiohttp_proxy import ProxyConnector  # pip install aiohttp_proxy
     ...
 
+
     async def main():
         injector = Injector(
             modules=[
@@ -98,5 +101,21 @@ Example of using the proxy
             ],
         )
         client_object = injector.get(NHentaiClient)
+
+    asyncio.run(main())
+
+
+Example of using the Low level api
+
+.. code:: python
+
+    async def main():
+        injector = Injector(ClientModule())
+        client_object = injector.get(NHentaiAPI)
+        async with client_object as client:
+            doujin = await client.get_random_doujin()  # Return: Dict[str, Any] from api without loss of information
+
+            print(doujin)
+
 
     asyncio.run(main())
