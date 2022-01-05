@@ -11,7 +11,6 @@ documentation = "https://aiontai.readthedocs.io/en/latest/"
 [tool.poetry.dependencies]
 python = "^3.8"
 aiohttp = "^3.8.1"
-schema = "^0.7.5"
 injector = "^0.19.0"
 dataclasses-json = "^0.5.6"
 
