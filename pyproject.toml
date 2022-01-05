@@ -21,12 +21,12 @@ black = "^21.12b0"
 coverage = {extras = ["toml"], version = "^6.2"}
 attrs = "^21.4.0"
 pydocstyle = {extras = ["toml"], version = "^6.1.1"}
-flake8-import-order = "^0.18.1"
 flake8-commas = {git = "https://github.com/LEv145/flake8-commas"}
 flake9 = "^3.8.3"
 poethepoet = "^0.11.0"
 Sphinx = "^4.3.2"
 sphinx-rtd-theme = "^1.0.0"
+isort = "^5.10.1"
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -34,11 +34,15 @@ strict_optional = true
 implicit_reexport = true
 warn_unused_ignores = false
 
+[tool.isort]
+include_trailing_comma = true
+multi_line_output = 3
+force_grid_wrap = 2
+lines_after_imports = 2
+src_paths = ["aiontai", "tests"]
+
 [tool.flake8]
 max-line-length = 99
-
-application-import-names = "aiontai,tests"
-import-order-style = "pep8"
 
 [tool.coverage.run]
 branch = true

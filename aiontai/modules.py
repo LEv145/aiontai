@@ -2,12 +2,12 @@
 
 from aiohttp import ClientSession
 from injector import (
-    provider,
     Module,
+    provider,
 )
 
-from .client import NHentaiClient
 from .api import NHentaiAPI
+from .client import NHentaiClient
 from .converter import Conventer
 
 

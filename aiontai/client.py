@@ -1,12 +1,16 @@
 """Client (High level API)."""
 
 from types import TracebackType
-from typing import Type
-
-from .api import NHentaiAPI, SortOptions
-from .converter import (
-    Conventer,
+from typing import (
+    Type,
+    TypeVar,
 )
+
+from .api import (
+    NHentaiAPI,
+    SortOptions,
+)
+from .converter import Conventer
 from .models import (
     Doujin,
     DoujinsResult,
@@ -15,6 +19,7 @@ from .models import (
 
 class NHentaiClient():
     """NHentai client (high level API)."""
+    NHentaiClientType = TypeVar("NHentaiClientType", bound="NHentaiClient")
 
     def __init__(
         self,
@@ -31,7 +36,7 @@ class NHentaiClient():
         self.api = api
         self.conventer = conventer
 
-    async def __aenter__(self) -> "NHentaiClient":
+    async def __aenter__(self: NHentaiClientType) -> NHentaiClientType:
         """Return self from async context manager."""
         return self
 

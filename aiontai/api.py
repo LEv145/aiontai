@@ -1,20 +1,21 @@
 """Low level API."""
 
 import re
+from contextlib import asynccontextmanager
+from enum import Enum
 from types import TracebackType
 from typing import (
     Any,
-    Dict,
     AsyncIterator,
+    Dict,
     Type,
+    TypeVar,
 )
-from enum import Enum
-from contextlib import asynccontextmanager
 
 from aiohttp import (
+    ClientResponse,
     ClientResponseError,
     ClientSession,
-    ClientResponse,
 )
 
 
@@ -27,6 +28,7 @@ class SortOptions(Enum):
 
 class NHentaiAPI():
     """NHentai low level API."""
+    NHentaiAPIType = TypeVar("NHentaiAPIType", bound="NHentaiAPI")
 
     def __init__(self, client_session: ClientSession):
         """
@@ -37,7 +39,7 @@ class NHentaiAPI():
         """
         self.client_session = client_session
 
-    async def __aenter__(self) -> "NHentaiAPI":
+    async def __aenter__(self: NHentaiAPIType) -> NHentaiAPIType:
         """Return self from async context manager."""
         return self
 
@@ -255,6 +257,7 @@ class NHentaiAPI():
             yield response
         finally:
             await response.__aexit__(None, None, None)
+
 
 # TODO
 # async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
