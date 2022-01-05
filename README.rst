@@ -10,7 +10,7 @@ Installation
 
 .. code:: shell
 
-    $ pip install git+https://github.com/LEv145/aiontai
+    $ pip install aiontai
 
 
 ==========
