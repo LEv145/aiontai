@@ -26,13 +26,13 @@ class Conventer():
         raw_data: Dict[str, Any],
     ) -> DoujinsResult:
         """
-        Convert raw data to DoujinsResult model.
+        Convert raw data to doujins result model.
 
         Args:
             raw_data: Model raw data.
 
         Returns:
-            Model.
+            Doujins result model.
         """
         doujins = [
             self.convert_doujin(doujin_raw_data)
@@ -52,13 +52,13 @@ class Conventer():
         raw_data: Dict[str, Any],
     ) -> Doujin:
         """
-        Convert raw data to Doujin model.
+        Convert raw data to doujin model.
 
         Args:
             raw_data: Model raw data.
 
         Returns:
-            Model.
+            Doujin model.
         """
         id: int = raw_data["id"]
         media_id = int(raw_data["media_id"])
@@ -115,13 +115,13 @@ class Conventer():
         raw_data: Dict[str, Any],
     ) -> Title:
         """
-        Convert raw data to Title model.
+        Convert raw data to title model.
 
         Args:
             raw_data: model raw data.
 
         Returns:
-            Model.
+            Title model.
         """
         english: Optional[str] = raw_data["english"]
         japanese: Optional[str] = raw_data["japanese"]
@@ -140,7 +140,7 @@ class Conventer():
         media_id: int,
     ) -> Image:
         """
-        Convert raw data to Image model.
+        Convert raw data to image model.
 
         Args:
             raw_data: Model raw data.
@@ -148,7 +148,7 @@ class Conventer():
             media_id: Image media id.
 
         Returns:
-            Model.
+            Image model.
         """
         width: int = raw_data["w"]
         height: int = raw_data["h"]
@@ -172,13 +172,13 @@ class Conventer():
         raw_data: Dict[str, Any],
     ) -> Tag:
         """
-        Convert raw data to Tag model.
+        Convert raw data to tag model.
 
         Args:
             raw_data: Model raw data.
 
         Returns:
-            Model.
+            Tag model.
         """
         id_: int = raw_data["id"]
         count: int = raw_data["count"]

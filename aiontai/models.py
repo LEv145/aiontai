@@ -103,7 +103,7 @@ class Doujin(DataClassJsonMixin):
         Get page by key.
 
         Args:
-            index: list index.
+            index: List index.
 
         Returns:
             Model.
