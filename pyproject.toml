@@ -28,6 +28,7 @@ poethepoet = "^0.11.0"
 Sphinx = "^4.3.2"
 sphinx-rtd-theme = "^1.0.0"
 isort = "^5.10.1"
+tox = "^3.24.5"
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -63,6 +64,49 @@ exclude_lines = [
 
 [tool.poe.tasks]
 mkinit = "mkinit aiontai -w --black --nomods --relative --recursive"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist =
+    linters,
+    coverage,
+    3.8,
+    3.9,
+    3.10,
+
+
+isolated_build = true
+
+
+[gh-actions]
+python =
+    3.8: py38, linters, coverage
+    3.9: py39
+    3.10: py310
+
+[testenv]
+deps = coverage
+
+commands =
+    python3 -m unittest discover tests "test_*"
+
+
+[testenv:linters]
+deps =
+    mypy
+
+commands =
+    mypy aiontai/
+
+
+[testenv:coverage]
+deps = coverage[toml]
+
+commands =
+    coverage run
+    coverage report -m
+"""
 
 
 [build-system]
