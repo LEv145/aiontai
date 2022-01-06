@@ -30,8 +30,8 @@ class NHentaiClient():
         Init object.
 
         Args:
-            api (NHentaiAPI): Low level api.
-            conventer (Conventer): Raw data conventer.
+            api: Low level api.
+            conventer: Raw data conventer.
         """
         self.api = api
         self.conventer = conventer
@@ -41,7 +41,7 @@ class NHentaiClient():
         Open async context manager.
 
         Returns:
-            NHentaiClientType: class object.
+            Class object.
         """
         return self
 
@@ -63,10 +63,10 @@ class NHentaiClient():
         Get doujin model by id.
 
         Args:
-            doujin_id (int): ID of doujin.
+            doujin_id: ID of doujin.
 
         Returns:
-            Doujin: doujin model.
+            Doujin model.
         """
         raw_data = await self.api.get_doujin(doujin_id)
 
@@ -74,13 +74,13 @@ class NHentaiClient():
 
     async def is_exist(self, doujin_id: int) -> bool:
         """
-        Check if the doujin exists.
+        Check if doujin exists.
 
         Args:
-            doujin_id (int): ID of doujin.
+            doujin_id: ID of doujin.
 
         Returns:
-            bool: The doujin is exists.
+            Doujin is exists.
         """
         raw_data = await self.api.is_exist(doujin_id)
 
@@ -91,7 +91,7 @@ class NHentaiClient():
         Get random doujin model.
 
         Returns:
-            Doujin: doujin model.
+            Doujin model.
         """
         raw_data = await self.api.get_random_doujin()
 
@@ -108,14 +108,14 @@ class NHentaiClient():
         Search doujins result model.
 
         Args:
-            query (str): Query for search doujins.
-            page (int, optional): Number of page from which we return the results.
+            query: Query for search doujins.
+            page: Number of page from which we return results.
                 Defaults to 1.
-            sort_by (api.SortOptions, optional): Sort options for search.
+            sort_by: Sort options for search.
                 Defaults to api.SortOptions.DATE.
 
         Returns:
-            DoujinsResult: doujins result model.
+            Doujins result model.
         """
         result = await self.api.search(
             query=query,
@@ -136,14 +136,14 @@ class NHentaiClient():
         Search doujins result model by tag.
 
         Args:
-            tag_id (int): Tag ID for search.
-            page (int, optional): Number of page from which we return the results.
+            tag_id: Tag ID for search.
+            page: Number of page from which we return results.
                 Defaults to 1.
-            sort_by (api.SortOptions, optional): Sort options for search.
+            sort_by: Sort options for search.
                 Defaults to api.SortOptions.DATE.
 
         Returns:
-            DoujinsResult: doujins result model.
+            Doujins result model.
         """
         result = await self.api.search_by_tag(
             tag_id=tag_id,
@@ -162,11 +162,11 @@ class NHentaiClient():
         Get doujins result model from homepage.
 
         Args:
-            page (int, optional):  Number of page from which we return the results.
+            page: Number of page from which we return results.
                 Defaults to 1.
 
         Returns:
-            DoujinsResult: doujins result model.
+            Doujins result model.
         """
         result = await self.api.get_homepage_doujins(
             page=page,

@@ -85,7 +85,7 @@ class Doujin(DataClassJsonMixin):
         Pages iterator.
 
         Returns:
-            Iterator[Image]: images iterator.
+            Images iterator.
         """
         return iter(self.images)
 
@@ -94,7 +94,7 @@ class Doujin(DataClassJsonMixin):
         Pages len.
 
         Returns:
-            int: len of images.
+            Len of images.
         """
         return len(self.images)
 
@@ -106,7 +106,7 @@ class Doujin(DataClassJsonMixin):
             index: list index.
 
         Returns:
-            Image: model.
+            Model.
         """
         return self.images[index]
 

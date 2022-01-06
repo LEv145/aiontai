@@ -20,10 +20,10 @@ class ClientModule(Module):
         Provide `NHentaiClient`.
 
         Args:
-            api (NHentaiAPI): Object required for dependence.
+            api: Object required for dependence.
 
         Returns:
-            NHentaiClient: Provided object for injector.
+            Provided object for injector.
         """
         return NHentaiClient(
             api=api,
@@ -36,10 +36,10 @@ class ClientModule(Module):
         Provide `NHentaiAPI`.
 
         Args:
-            client_session (ClientSession): Object required for dependence.
+            client_session: Object required for dependence.
 
         Returns:
-            NHentaiAPI: Provided object for injector.
+            Provided object for injector.
         """
         return NHentaiAPI(
             client_session=client_session,
@@ -51,6 +51,6 @@ class ClientModule(Module):
         Provide `ClientSession`.
 
         Returns:
-            ClientSession: Provided object for injector.
+            Provided object for injector.
         """
         return ClientSession()

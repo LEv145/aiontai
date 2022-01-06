@@ -29,10 +29,10 @@ class Conventer():
         Convert raw data to DoujinsResult model.
 
         Args:
-            raw_data (Dict[str, Any]): model raw data.
+            raw_data: Model raw data.
 
         Returns:
-            DoujinsResult: model.
+            Model.
         """
         doujins = [
             self.convert_doujin(doujin_raw_data)
@@ -55,10 +55,10 @@ class Conventer():
         Convert raw data to Doujin model.
 
         Args:
-            raw_data (Dict[str, Any]): model raw data.
+            raw_data: Model raw data.
 
         Returns:
-            Doujin: model.
+            Model.
         """
         id: int = raw_data["id"]
         media_id = int(raw_data["media_id"])
@@ -118,10 +118,10 @@ class Conventer():
         Convert raw data to Title model.
 
         Args:
-            raw_data (Dict[str, Any]): model raw data.
+            raw_data: model raw data.
 
         Returns:
-            Title: model.
+            Model.
         """
         english: Optional[str] = raw_data["english"]
         japanese: Optional[str] = raw_data["japanese"]
@@ -143,12 +143,12 @@ class Conventer():
         Convert raw data to Image model.
 
         Args:
-            raw_data (Dict[str, Any]): model raw data.
-            name (str): Name of image.
-            media_id (int): Image media id.
+            raw_data: Model raw data.
+            name: Name of image.
+            media_id: Image media id.
 
         Returns:
-            Image: model.
+            Model.
         """
         width: int = raw_data["w"]
         height: int = raw_data["h"]
@@ -175,10 +175,10 @@ class Conventer():
         Convert raw data to Tag model.
 
         Args:
-            raw_data (Dict[str, Any]): model raw data.
+            raw_data: Model raw data.
 
         Returns:
-            Tag: model.
+            Model.
         """
         id_: int = raw_data["id"]
         count: int = raw_data["count"]

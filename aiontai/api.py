@@ -35,7 +35,7 @@ class NHentaiAPI():
         Init object.
 
         Args:
-            client_session (ClientSession): Aiohttp client session.
+            client_session: Aiohttp client session.
         """
         self.client_session = client_session
 
@@ -44,7 +44,7 @@ class NHentaiAPI():
         Open async context manager.
 
         Returns:
-            NHentaiAPIType: class object.
+            Class object.
         """
         return self
 
@@ -66,14 +66,14 @@ class NHentaiAPI():
         Get doujin raw data by id.
 
         Args:
-            doujin_id (int): ID of doujin.
+            doujin_id: ID of doujin.
 
         Raises:
-            DoujinDoesNotExistError: If the doujin does not exit.
+            DoujinDoesNotExistError: If doujin does not exit.
             ClientResponseError: Error from response.
 
         Returns:
-            Dict[str, Any]: Doujin raw data from responce.
+            Doujin raw data from responce.
         """
         url = f"https://nhentai.net/api/gallery/{doujin_id}"
 
@@ -90,13 +90,13 @@ class NHentaiAPI():
 
     async def is_exist(self, doujin_id: int) -> bool:
         """
-        Check if the doujin exists.
+        Check if doujin exists.
 
         Args:
-            doujin_id (int): ID of doujin.
+            doujin_id: ID of doujin.
 
         Returns:
-            bool: The doujin is exists.
+            Doujin is exists.
         """
         try:
             await self.get_doujin(doujin_id)
@@ -109,7 +109,7 @@ class NHentaiAPI():
         Get random doujin raw data.
 
         Returns:
-            Dict[str, Any]: Doujin raw data from responce.
+            Doujin raw data from responce.
         """
         url = "https://nhentai.net/random/"
 
@@ -134,10 +134,10 @@ class NHentaiAPI():
         Search doujins raw data result.
 
         Args:
-            query (str): Query for search doujins.
-            page (int): Number of page from which we return the results.
+            query: Query for search doujins.
+            page: Number of page from which we return results.
                 Defaults to 1.
-            sort_by (SortOptions): Sort options for search.
+            sort_by: Sort options for search.
                 Defaults to SortOptions.DATE.
 
         Raises:
@@ -145,7 +145,7 @@ class NHentaiAPI():
             EmptyAPIResultError: If api result is empty.
 
         Returns:
-            Dict[str, Any]: Doujins raw data result from responce.
+            Doujins raw data result from responce.
         """
         if page < 1:
             raise WrongPageError("Page can not be less than 1")
@@ -176,10 +176,10 @@ class NHentaiAPI():
         Search doujins raw data result by tag.
 
         Args:
-            tag_id (int): Tag ID for search.
-            page (int): Number of page from which we return the results.
+            tag_id: Tag ID for search.
+            page: Number of page from which we return results.
                 Defaults to 1.
-            sort_by (SortOptions): Sort options for search.
+            sort_by: Sort options for search.
                 Defaults to SortOptions.DATE.
 
         Raises:
@@ -188,7 +188,7 @@ class NHentaiAPI():
             EmptyAPIResultError: If api result is empty.
 
         Returns:
-            Dict[str, Any]: Doujins raw data result from responce.
+            Doujins raw data result from responce.
         """
         if page < 1:
             raise WrongPageError("Page can not be less than 1")
@@ -220,14 +220,14 @@ class NHentaiAPI():
         Get doujins raw data from homepage.
 
         Args:
-            page (int): Number of page from which we return the results.
+            page: Number of page from which we return results.
                 Defaults to 1.
 
         Raises:
             EmptyAPIResultError: If api result is empty.
 
         Returns:
-            Dict[str, Any]: Doujins raw data result from responce.
+            Doujins raw data result from responce.
         """
         url = "https://nhentai.net/api/galleries/all"
 
