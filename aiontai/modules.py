@@ -16,7 +16,15 @@ class ClientModule(Module):
 
     @provider
     def provide_client(self, api: NHentaiAPI) -> NHentaiClient:
-        """Provide `NHentaiClient`."""
+        """
+        Provide `NHentaiClient`.
+
+        Args:
+            api: Object required for dependence.
+
+        Returns:
+            Provided object for injector.
+        """
         return NHentaiClient(
             api=api,
             conventer=Conventer(),
@@ -24,12 +32,25 @@ class ClientModule(Module):
 
     @provider
     def provide_api(self, client_session: ClientSession) -> NHentaiAPI:
-        """Provide `NHentaiAPI`."""
+        """
+        Provide `NHentaiAPI`.
+
+        Args:
+            client_session: Object required for dependence.
+
+        Returns:
+            Provided object for injector.
+        """
         return NHentaiAPI(
             client_session=client_session,
         )
 
     @provider
     def provide_client_session(self) -> ClientSession:
-        """Provide `ClientSession`."""
+        """
+        Provide `ClientSession`.
+
+        Returns:
+            Provided object for injector.
+        """
         return ClientSession()
