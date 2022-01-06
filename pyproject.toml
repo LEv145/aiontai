@@ -13,6 +13,7 @@ python = "^3.8"
 aiohttp = "^3.8.1"
 injector = "^0.19.0"
 dataclasses-json = "^0.5.6"
+darglint = "^1.8.1"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.930"
@@ -43,6 +44,7 @@ src_paths = ["aiontai", "tests"]
 
 [tool.flake8]
 max-line-length = 99
+docstring_style="google"
 
 [tool.coverage.run]
 branch = true

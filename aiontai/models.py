@@ -81,16 +81,34 @@ class Doujin(DataClassJsonMixin):
     upload_date: datetime
 
     def __iter__(self) -> Iterator[Image]:
-        """Pages iterator."""
+        """
+        Pages iterator.
+
+        Returns:
+            Iterator[Image]: images iterator.
+        """
         return iter(self.images)
 
     def __len__(self) -> int:
-        """Pages len."""
+        """
+        Pages len.
+
+        Returns:
+            int: len of images.
+        """
         return len(self.images)
 
-    def __getitem__(self, key: int) -> Image:
-        """Get page by key."""
-        return self.images[key]
+    def __getitem__(self, index: int) -> Image:
+        """
+        Get page by key.
+
+        Args:
+            index: list index.
+
+        Returns:
+            Image: model.
+        """
+        return self.images[index]
 
 
 @dataclass(frozen=True)

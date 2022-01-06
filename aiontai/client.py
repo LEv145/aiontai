@@ -37,7 +37,12 @@ class NHentaiClient():
         self.conventer = conventer
 
     async def __aenter__(self: NHentaiClientType) -> NHentaiClientType:
-        """Return self from async context manager."""
+        """
+        Open async context manager.
+
+        Returns:
+            NHentaiClientType: class object.
+        """
         return self
 
     async def __aexit__(
