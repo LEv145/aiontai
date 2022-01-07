@@ -107,6 +107,9 @@ class Doujin(DataClassJsonMixin):
 
         Returns:
             Model.
+
+        Raises:
+            IndexError: If page index out of range.
         """
         return self.images[index]
 

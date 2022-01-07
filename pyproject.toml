@@ -21,7 +21,6 @@ mkinit = "^0.3.4"
 black = "^21.12b0"
 coverage = {extras = ["toml"], version = "^6.2"}
 attrs = "^21.4.0"
-pydocstyle = {extras = ["toml"], version = "^6.1.1"}
 flake8-commas = {git = "https://github.com/LEv145/flake8-commas"}
 flake9 = "^3.8.3"
 poethepoet = "^0.11.0"

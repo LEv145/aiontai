@@ -68,12 +68,12 @@ class NHentaiAPI():
         Args:
             doujin_id: ID of doujin.
 
+        Returns:
+            Doujin raw data from responce.
+
         Raises:
             DoujinDoesNotExistError: If doujin does not exit.
             ClientResponseError: Error from response.
-
-        Returns:
-            Doujin raw data from responce.
         """
         url = f"https://nhentai.net/api/gallery/{doujin_id}"
 
@@ -140,12 +140,12 @@ class NHentaiAPI():
             sort_by: Sort options for search.
                 Defaults to SortOptions.DATE.
 
+        Returns:
+            Doujins raw data result from responce.
+
         Raises:
             WrongPageError: If number of page is invalid.
             EmptyAPIResultError: If api result is empty.
-
-        Returns:
-            Doujins raw data result from responce.
         """
         if page < 1:
             raise WrongPageError("Page can not be less than 1")
@@ -182,13 +182,13 @@ class NHentaiAPI():
             sort_by: Sort options for search.
                 Defaults to SortOptions.DATE.
 
+        Returns:
+            Doujins raw data result from responce.
+
         Raises:
             WrongPageError: If number of page is invalid.
             WrongTagError: If tag ID is invalid.
             EmptyAPIResultError: If api result is empty.
-
-        Returns:
-            Doujins raw data result from responce.
         """
         if page < 1:
             raise WrongPageError("Page can not be less than 1")
@@ -223,11 +223,11 @@ class NHentaiAPI():
             page: Number of page from which we return results.
                 Defaults to 1.
 
-        Raises:
-            EmptyAPIResultError: If api result is empty.
-
         Returns:
             Doujins raw data result from responce.
+
+        Raises:
+            EmptyAPIResultError: If api result is empty.
         """
         url = "https://nhentai.net/api/galleries/all"
 

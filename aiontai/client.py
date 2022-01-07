@@ -67,6 +67,10 @@ class NHentaiClient():
 
         Returns:
             Doujin model.
+
+        Raises:
+            DoujinDoesNotExistError: If doujin does not exit.
+            ClientResponseError: Error from response.
         """
         raw_data = await self.api.get_doujin(doujin_id)
 
@@ -116,6 +120,10 @@ class NHentaiClient():
 
         Returns:
             Doujins result model.
+
+        Raises:
+            WrongPageError: If number of page is invalid.
+            EmptyAPIResultError: If api result is empty.
         """
         result = await self.api.search(
             query=query,
@@ -144,6 +152,11 @@ class NHentaiClient():
 
         Returns:
             Doujins result model.
+
+        Raises:
+            WrongPageError: If number of page is invalid.
+            WrongTagError: If tag ID is invalid.
+            EmptyAPIResultError: If api result is empty.
         """
         result = await self.api.search_by_tag(
             tag_id=tag_id,
@@ -167,6 +180,9 @@ class NHentaiClient():
 
         Returns:
             Doujins result model.
+
+        Raises:
+            EmptyAPIResultError: If api result is empty.
         """
         result = await self.api.get_homepage_doujins(
             page=page,
