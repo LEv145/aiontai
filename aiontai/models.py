@@ -106,7 +106,7 @@ class Doujin(DataClassJsonMixin):
             index: List index.
 
         Returns:
-            Model.
+            Image model.
 
         Raises:
             IndexError: If page index out of range.

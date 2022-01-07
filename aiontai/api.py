@@ -97,6 +97,9 @@ class NHentaiAPI():
 
         Returns:
             Doujin is exists.
+
+        Raises:
+            ClientResponseError: Error from response.
         """
         try:
             await self.get_doujin(doujin_id)
@@ -110,6 +113,9 @@ class NHentaiAPI():
 
         Returns:
             Doujin raw data from responce.
+
+        Raises:
+            ClientResponseError: Error from response.
         """
         url = "https://nhentai.net/random/"
 
@@ -146,6 +152,7 @@ class NHentaiAPI():
         Raises:
             WrongPageError: If number of page is invalid.
             EmptyAPIResultError: If api result is empty.
+            ClientResponseError: Error from response.
         """
         if page < 1:
             raise WrongPageError("Page can not be less than 1")
@@ -189,6 +196,7 @@ class NHentaiAPI():
             WrongPageError: If number of page is invalid.
             WrongTagError: If tag ID is invalid.
             EmptyAPIResultError: If api result is empty.
+            ClientResponseError: Error from response.
         """
         if page < 1:
             raise WrongPageError("Page can not be less than 1")
@@ -228,6 +236,7 @@ class NHentaiAPI():
 
         Raises:
             EmptyAPIResultError: If api result is empty.
+            ClientResponseError: Error from response.
         """
         url = "https://nhentai.net/api/galleries/all"
 
