@@ -118,7 +118,7 @@ class Conventer():
         Convert raw data to title model.
 
         Args:
-            raw_data: model raw data.
+            raw_data: Model raw data.
 
         Returns:
             Title model.
