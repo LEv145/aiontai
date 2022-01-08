@@ -6,8 +6,6 @@ from unittest.mock import (
     Mock,
 )
 
-from aiohttp import ClientResponseError
-
 from aiontai.api import (
     DoujinDoesNotExistError,
     EmptyAPIResultError,
