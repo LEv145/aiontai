@@ -150,12 +150,12 @@ class NHentaiAPI():
             Doujins raw data result from responce.
 
         Raises:
-            WrongPageError: If number of page is invalid.
+            ValueError: If number of page is invalid.
             EmptyAPIResultError: If api result is empty.
             ClientResponseError: Error from response.
         """
         if page < 1:
-            raise WrongPageError("Page can not be less than 1")
+            raise ValueError("Page can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/search"
         params = {
@@ -193,15 +193,14 @@ class NHentaiAPI():
             Doujins raw data result from responce.
 
         Raises:
-            WrongPageError: If number of page is invalid.
-            WrongTagError: If tag ID is invalid.
+            ValueError: If number of page is invalid or tag ID is invalid.
             EmptyAPIResultError: If api result is empty.
             ClientResponseError: Error from response.
         """
         if page < 1:
-            raise WrongPageError("Page can not be less than 1")
+            raise ValueError("Page can not be less than 1")
         elif tag_id < 1:
-            raise WrongTagError("Tag id can not be less than 1")
+            raise ValueError("Tag id can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/tagged"
 
@@ -265,6 +264,9 @@ class NHentaiAPI():
             url,
             **kwargs,
         )
+        if not response.ok:
+            response.release()
+            ...
         response.raise_for_status()
 
         try:
@@ -320,21 +322,17 @@ class NHentaiAPI():
 #     return [doujin for page in pages for doujin in page]
 
 
-class WrongPageError(Exception):
-    """Wrong page."""
+class NHentaiError(Exception):
+    """Base NHentai api error."""
 
 
-class WrongSearchError(Exception):
-    """Wrong search."""
+class HTTPError(NHentaiError):  # TODO
+    """Error from responce."""
 
 
-class WrongTagError(Exception):
-    """Wrong tag."""
-
-
-class DoujinDoesNotExistError(Exception):
+class DoujinDoesNotExistError(NHentaiError):
     """Doujin does noe exist."""
 
 
-class EmptyAPIResultError(Exception):
+class EmptyAPIResultError(NHentaiError):
     """API result is empty."""
