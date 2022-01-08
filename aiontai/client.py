@@ -70,7 +70,7 @@ class NHentaiClient():
 
         Raises:
             DoujinDoesNotExistError: If doujin does not exit.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         raw_data = await self.api.get_doujin(doujin_id)
 
@@ -87,7 +87,7 @@ class NHentaiClient():
             Doujin is exists.
 
         Raises:
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         raw_data = await self.api.is_exist(doujin_id)
 
@@ -101,7 +101,7 @@ class NHentaiClient():
             Doujin model.
 
         Raises:
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         raw_data = await self.api.get_random_doujin()
 
@@ -128,9 +128,9 @@ class NHentaiClient():
             Doujins result model.
 
         Raises:
-            WrongPageError: If number of page is invalid.
+            ValueError: If number of page is invalid.
             EmptyAPIResultError: If api result is empty.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         result = await self.api.search(
             query=query,
@@ -161,10 +161,9 @@ class NHentaiClient():
             Doujins result model.
 
         Raises:
-            WrongPageError: If number of page is invalid.
-            WrongTagError: If tag ID is invalid.
+            ValueError: If number of page is invalid or tag ID is invalid.
             EmptyAPIResultError: If api result is empty.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         result = await self.api.search_by_tag(
             tag_id=tag_id,
@@ -191,7 +190,7 @@ class NHentaiClient():
 
         Raises:
             EmptyAPIResultError: If api result is empty.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         result = await self.api.get_homepage_doujins(
             page=page,

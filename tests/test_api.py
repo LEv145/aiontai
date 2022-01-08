@@ -11,10 +11,9 @@ from aiohttp import ClientResponseError
 from aiontai.api import (
     DoujinDoesNotExistError,
     EmptyAPIResultError,
+    HTTPError,
     NHentaiAPI,
     SortOptions,
-    WrongPageError,
-    WrongTagError,
 )
 
 
@@ -36,7 +35,7 @@ class TestApi(IsolatedAsyncioTestCase):
 
     async def test__request(self) -> None:
         # Normal test
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         async with self.api._request("GET", "https://nhentai.net/"):
             ...
@@ -47,7 +46,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         self.assertEqual(
             await self.api.get_doujin(123),
@@ -55,11 +54,7 @@ class TestApi(IsolatedAsyncioTestCase):
         )
 
         # Test error: DoujinDoesNotExistError
-        self.response_mosk.raise_for_status.side_effect = ClientResponseError(
-            request_info=Mock(),
-            history=Mock(),
-            status=404,
-        )
+        self.response_mosk.status = 404
 
         with self.assertRaises(DoujinDoesNotExistError):
             self.assertEqual(
@@ -67,14 +62,10 @@ class TestApi(IsolatedAsyncioTestCase):
                 raw_data,
             )
 
-        # Test error: ClientResponseError
-        self.response_mosk.raise_for_status.side_effect = ClientResponseError(
-            request_info=Mock(),
-            history=Mock(),
-            status=201,
-        )
+        # Test error: HTTPError
+        self.response_mosk.status = 500
 
-        with self.assertRaises(ClientResponseError):
+        with self.assertRaises(HTTPError):
             self.assertEqual(
                 await self.api.get_doujin(123),
                 raw_data,
@@ -86,7 +77,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         self.assertEqual(
             await self.api.is_exist(123),
@@ -94,11 +85,7 @@ class TestApi(IsolatedAsyncioTestCase):
         )
 
         # Test error: DoujinDoesNotExistError
-        self.response_mosk.raise_for_status.side_effect = ClientResponseError(
-            request_info=Mock(),
-            history=Mock(),
-            status=404,
-        )
+        self.response_mosk.status = 404
 
         self.assertEqual(
             await self.api.is_exist(123),
@@ -114,7 +101,7 @@ class TestApi(IsolatedAsyncioTestCase):
             return_value="https://nhentai.net/g/123/",
         )
         self.response_mosk.json.return_value = raw_data
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         self.assertEqual(
             await self.api.get_random_doujin(),
@@ -127,7 +114,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         self.assertEqual(
             await self.api.search(
@@ -138,8 +125,8 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
-        # Test error: WrongPageError
-        with self.assertRaises(WrongPageError):
+        # Test error: ValueError
+        with self.assertRaises(ValueError):
             await self.api.search(
                 query="Omakehon 2005",
                 page=-1,
@@ -166,7 +153,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         self.assertEqual(
             await self.api.search_by_tag(
@@ -177,16 +164,15 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data,
         )
 
-        # Test error: WrongPageError
-        with self.assertRaises(WrongPageError):
+        # Test error: ValueError
+        with self.assertRaises(ValueError):
             await self.api.search_by_tag(
                 tag_id=7752,
                 page=-1,
                 sort_by=SortOptions.DATE,
             )
 
-        # Test error: WrongTagError
-        with self.assertRaises(WrongTagError):
+        with self.assertRaises(ValueError):
             await self.api.search_by_tag(
                 tag_id=-1,
                 page=1,
@@ -212,7 +198,7 @@ class TestApi(IsolatedAsyncioTestCase):
             raw_data = json.load(fp)
 
         self.response_mosk.json.return_value = raw_data
-        self.response_mosk.raise_for_status = Mock()
+        self.response_mosk.status = 200
 
         self.assertEqual(
             await self.api.get_homepage_doujins(
