@@ -85,8 +85,7 @@ class NHentaiAPI():
                 raise DoujinDoesNotExistError(
                     "That doujin does not exist.",
                 ) from error
-            else:
-                raise error
+            raise
 
         return json
 
