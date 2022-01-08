@@ -3,9 +3,6 @@ from .api import (
     EmptyAPIResultError,
     NHentaiAPI,
     SortOptions,
-    WrongPageError,
-    WrongSearchError,
-    WrongTagError,
 )
 from .client import (
     NHentaiClient,
@@ -41,7 +38,4 @@ __all__ = [
     "Tag",
     "TagType",
     "Title",
-    "WrongPageError",
-    "WrongSearchError",
-    "WrongTagError",
 ]

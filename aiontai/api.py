@@ -8,13 +8,13 @@ from typing import (
     Any,
     AsyncIterator,
     Dict,
+    Optional,
     Type,
     TypeVar,
 )
 
 from aiohttp import (
     ClientResponse,
-    ClientResponseError,
     ClientSession,
 )
 
@@ -63,7 +63,7 @@ class NHentaiAPI():
 
     async def get_doujin(self, doujin_id: int) -> Dict[str, Any]:
         """
-        Get doujin raw data by id.
+        Get doujin raw data by ID.
 
         Args:
             doujin_id: ID of doujin.
@@ -73,16 +73,18 @@ class NHentaiAPI():
 
         Raises:
             DoujinDoesNotExistError: If doujin does not exit.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         url = f"https://nhentai.net/api/gallery/{doujin_id}"
 
         try:
             async with self._request("GET", url=url) as response:
                 json: Dict[str, Any] = await response.json()
-        except ClientResponseError as error:
-            if error.status == 404:
-                raise DoujinDoesNotExistError("That doujin does not exist.") from error
+        except HTTPError as error:
+            if error.responce.status == 404:
+                raise DoujinDoesNotExistError(
+                    "That doujin does not exist.",
+                ) from error
             else:
                 raise error
 
@@ -99,7 +101,7 @@ class NHentaiAPI():
             Doujin is exists.
 
         Raises:
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         try:
             await self.get_doujin(doujin_id)
@@ -115,7 +117,7 @@ class NHentaiAPI():
             Doujin raw data from responce.
 
         Raises:
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         url = "https://nhentai.net/random/"
 
@@ -150,12 +152,12 @@ class NHentaiAPI():
             Doujins raw data result from responce.
 
         Raises:
-            WrongPageError: If number of page is invalid.
+            ValueError: If number of page is invalid.
             EmptyAPIResultError: If api result is empty.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         if page < 1:
-            raise WrongPageError("Page can not be less than 1")
+            raise ValueError("Page can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/search"
         params = {
@@ -193,15 +195,14 @@ class NHentaiAPI():
             Doujins raw data result from responce.
 
         Raises:
-            WrongPageError: If number of page is invalid.
-            WrongTagError: If tag ID is invalid.
+            ValueError: If number of page is invalid or tag ID is invalid.
             EmptyAPIResultError: If api result is empty.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         if page < 1:
-            raise WrongPageError("Page can not be less than 1")
+            raise ValueError("Page can not be less than 1")
         elif tag_id < 1:
-            raise WrongTagError("Tag id can not be less than 1")
+            raise ValueError("Tag id can not be less than 1")
 
         url = "https://nhentai.net/api/galleries/tagged"
 
@@ -236,7 +237,7 @@ class NHentaiAPI():
 
         Raises:
             EmptyAPIResultError: If api result is empty.
-            ClientResponseError: Error from response.
+            HTTPError: Error from response.
         """
         url = "https://nhentai.net/api/galleries/all"
 
@@ -265,7 +266,10 @@ class NHentaiAPI():
             url,
             **kwargs,
         )
-        response.raise_for_status()
+
+        if response.status >= 400:
+            response.release()
+            raise HTTPError(response=response)
 
         try:
             yield response
@@ -273,68 +277,32 @@ class NHentaiAPI():
             await response.__aexit__(None, None, None)
 
 
-# TODO
-# async def search_all_by_tags(self, tag_ids: list) -> List[dict]:
-#     """Method for search doujins by tags.
-#     Args:
-#         :tag_ids list: List of tags
-
-#     Returns:
-#         List of doujins JSON
-
-#     Raises:
-#         IsNotValidSort if sort is not a member of SortOptions.
-#         WrongPage if page less than 1.
-#     """
-
-#     async def get_limit(tag_id: int) -> List[dict]:
-#         utils.is_valid_search_by_tag_parameters(tag_id, 1, "date")
-
-#         url = f"{config.api_gallery_url}/tagged"
-#         params = {
-#             "tag_id": tag_id,
-#             "page": 1,
-#             "sort_by": "date"
-#         }
-
-#         result = await self._get_requests(url, params=params)
-#         if result:
-#             return result["num_pages"]
-#         else:
-#             raise errors.WrongTag("There is no tag with given tag_id")
+class NHentaiError(Exception):
+    """Base NHentai api error."""
 
 
-#     limits = await asyncio.gather(*[get_limit(tag_id) for tag_id in tag_ids])
-#     limits = zip(tag_ids, limits)
+class HTTPError(NHentaiError):
+    """
+    Error from responce.
 
-#     data = []
+    Attributes:
+        responce: Responce object.
+        message: Message about error.
+    """
 
-#     for args in limits:
-#         limits  = args[1]
-#         tag_ids = args[0]
-#         for i in range(1, limits+1):
-#             data.append((tag_ids, i))
+    def __init__(
+        self,
+        response: ClientResponse,
+        message: Optional[str] = None,
+    ) -> None:
+        super().__init__(message)
 
-
-#     pages = await asyncio.gather(*[self.search_by_tag(*args) for args in data])
-#     return [doujin for page in pages for doujin in page]
-
-
-class WrongPageError(Exception):
-    """Wrong page."""
-
-
-class WrongSearchError(Exception):
-    """Wrong search."""
+        self.responce = response
 
 
-class WrongTagError(Exception):
-    """Wrong tag."""
-
-
-class DoujinDoesNotExistError(Exception):
+class DoujinDoesNotExistError(NHentaiError):
     """Doujin does noe exist."""
 
 
-class EmptyAPIResultError(Exception):
+class EmptyAPIResultError(NHentaiError):
     """API result is empty."""
