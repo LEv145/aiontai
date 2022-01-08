@@ -63,7 +63,7 @@ class NHentaiAPI():
 
     async def get_doujin(self, doujin_id: int) -> Dict[str, Any]:
         """
-        Get doujin raw data by id.
+        Get doujin raw data by ID.
 
         Args:
             doujin_id: ID of doujin.

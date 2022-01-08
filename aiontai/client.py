@@ -60,7 +60,7 @@ class NHentaiClient():
 
     async def get_doujin(self, doujin_id: int) -> Doujin:
         """
-        Get doujin model by id.
+        Get doujin model by ID.
 
         Args:
             doujin_id: ID of doujin.
